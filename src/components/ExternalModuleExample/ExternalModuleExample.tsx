@@ -2,9 +2,8 @@ import * as React from 'react';
 import { ExternalModule } from '../../ExternalModule';
 import { loadModule } from '../../ModuleLoader';
 
-export default class ExternalModuleExample extends React.Component<any, { text: string }> {
+export default class ExternalModuleExample extends React.Component<any, { text: string, module?: ExternalModule, moduleFound?: boolean }> {
   private server: any;
-  private module: ExternalModule;
 
   constructor(props: any) {
     super(props);
@@ -12,13 +11,15 @@ export default class ExternalModuleExample extends React.Component<any, { text: 
     this.onButtonClick = this.onButtonClick.bind(this);
   }
 
-  public async componentDidMount() {
+  public async componentWillMount() {
     try {
-      this.module = await loadModule('electron-react-external-module-example');
-      const HelloService = this.module.services.HelloService as any;
+      const module = await loadModule('electron-react-external-module-example');
+      const HelloService = module.services.HelloService as any;
       this.server = new HelloService();
       this.server.start();
+      this.setState({ module, moduleFound: true });
     } catch (error) {
+      this.setState({ moduleFound: false });
       console.log(error);
     }
   }
@@ -40,7 +41,7 @@ export default class ExternalModuleExample extends React.Component<any, { text: 
   }
 
   public render() {
-    if (!this.module) {
+    if (this.state.moduleFound === false) {
       return (
         <div>
           <h2>Sample Module not installed.</h2>
@@ -55,13 +56,18 @@ export default class ExternalModuleExample extends React.Component<any, { text: 
         </div>
       );
     }
-    const HelloWorld = this.module.components.HelloWorld;
 
-    return (
-      <section className="ExternalModules">
-        <HelloWorld text={this.state.text} />
-        <button onClick={this.onButtonClick}>Say Hello from Server</button>
-      </section>
-    );
+    if (this.state.module) {
+      const HelloWorld = this.state.module.components.HelloWorld;
+
+      return (
+        <section className="ExternalModules">
+          <HelloWorld text={this.state.text} />
+          <button onClick={this.onButtonClick}>Say Hello from Server</button>
+        </section>
+      );
+    }
+
+    return <div>Loading module...</div>;
   }
 }
