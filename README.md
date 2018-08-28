@@ -1,14 +1,15 @@
 # electron-react-module-loader
-Boilerplate with Electron and React using external modules
+Boilerplate with Electron and React.
+External modules are loaded dynamically.
 
-Sample Module: [electron-react-external-module-example](https://github.com/schirkan/electron-react-external-module-example)
+Sample Module: [dynamic-electron-react-module-example](https://github.com/schirkan/dynamic-electron-react-module-example)
 
 ## Install
 ```
-git clone https://github.com/schirkan/electron-react-module-loader
+git clone https://github.com/schirkan/dynamic-electron-react-module-loader
 npm i
 cd modules
-git clone https://github.com/schirkan/electron-react-external-module-example
+git clone https://github.com/schirkan/dynamic-electron-react-module-example
 cd ..
 npm run build-modules
 npm run start
