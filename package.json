@@ -1,5 +1,5 @@
 {
-    "name": "electron-react-module-loader",
+    "name": "dynamic-electron-react-module-loader",
     "version": "0.0.1",
     "author": {
         "name": "Martin Pietschmann",
@@ -8,7 +8,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/schirkan/electron-react-module-loader"
+        "url": "https://github.com/schirkan/dynamic-electron-react-module-loader"
     },
     "main": "main.js",
     "proxy": "http://localhost:5000",
