@@ -13,7 +13,7 @@ export default class ExternalModuleExample extends React.Component<any, { text: 
 
   public async componentWillMount() {
     try {
-      const module = await loadModule('electron-react-external-module-example');
+      const module = await loadModule('dynamic-electron-react-module-example');
       const HelloService = module.services.HelloService as any;
       this.server = new HelloService();
       this.server.start();
