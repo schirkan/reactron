@@ -15,3 +15,9 @@ cd ..
 npm run build-modules
 npm run start
 ```
+
+### License
+MIT
+
+### Inspired by
+https://github.com/natergj/dynamic-react-module
