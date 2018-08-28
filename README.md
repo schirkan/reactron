@@ -1,4 +1,4 @@
-# electron-react-module-loader
+# Dynamic Electron React Module Loader
 Boilerplate with Electron and React.
 External modules are loaded dynamically.
 
