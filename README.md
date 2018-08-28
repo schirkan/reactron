@@ -7,6 +7,7 @@ Sample Module: [dynamic-electron-react-module-example](https://github.com/schirk
 ## Install
 ```
 git clone https://github.com/schirkan/dynamic-electron-react-module-loader
+cd dynamic-electron-react-module-loader
 npm i
 cd modules
 git clone https://github.com/schirkan/dynamic-electron-react-module-example
