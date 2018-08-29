@@ -21,29 +21,32 @@ SystemJS.set('@fortawesome/fontawesome-svg-core', SystemJS.newModule(SvgCore));
 SystemJS.set('@fortawesome/free-solid-svg-icons', SystemJS.newModule(SvgIcons));
 SystemJS.set('@fortawesome/react-fontawesome', SystemJS.newModule(FontAwesome));
 
-export const loadModule = async (folderName: string): Promise<IModuleInstance> => {
-    const packageFile = path.join('modules', folderName, 'package.json');
-    const p = await SystemJS.import(packageFile);
-    console.log(packageFile, p);
+export class ModuleLoader {
+    public async loadModule(folderName: string): Promise<IModuleInstance> {
+        const packageFile = path.join('modules', folderName, 'package.json');
+        const p = await SystemJS.import(packageFile);
+        console.log(packageFile, p);
 
-    const module = {
-        name: p.name,
-        author: p.author,
-        browserFile: p.browser,
-        serverFile: p.main
-    } as IModuleInstance;
+        const module = {
+            name: p.name,
+            author: p.author,
+            browserFile: p.browser,
+            serverFile: p.main
+        } as IModuleInstance;
 
-    if (module.browserFile) {
-        module.browserFile = './' + path.join('modules', folderName, module.browserFile);
-        module.components = await SystemJS.import(module.browserFile);
-    }
+        if (module.browserFile) {
+            module.browserFile = './' + path.join('modules', folderName, module.browserFile);
+            module.components = await SystemJS.import(module.browserFile);
+        }
 
-    if (module.serverFile) {
-        module.serverFile = './' + path.join('modules', folderName, module.serverFile);
-        module.services = await electron.remote.require(module.serverFile);
-    }
+        if (module.serverFile) {
+            module.serverFile = './' + path.join('modules', folderName, module.serverFile);
+            module.services = await electron.remote.require(module.serverFile);
+        }
 
-    console.log(folderName, module);
-    return module;
-};
+        console.log(folderName, module);
+        return module;
+    };
+}
 
+export const instance = new ModuleLoader();

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IModuleInstance } from '../../../interfaces/IModuleInstance';
-import { loadModule } from '../../ModuleLoader';
+import { instance as moduleLoader } from '../../ModuleLoader';
 
 export default class ExternalModuleExample extends React.Component<any, { text: string, module?: IModuleInstance, moduleFound?: boolean }> {
   private server: any;
@@ -13,7 +13,7 @@ export default class ExternalModuleExample extends React.Component<any, { text: 
 
   public async componentWillMount() {
     try {
-      const module = await loadModule('dynamic-electron-react-module-example');
+      const module = await moduleLoader.loadModule('dynamic-electron-react-module-example');
       const HelloService = module.services.HelloService as any;
       this.server = new HelloService();
       this.server.start();

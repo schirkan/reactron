@@ -26,21 +26,34 @@ export class BackendService {
         }
     }
 
+    private readonly moduleRepository = new ModuleRepository();
     public readonly electronApp = new ElectronApp(this.config);
     public readonly expressApp = new ExpressApp(this.config);
-    private readonly moduleRepository = new ModuleRepository();
     public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository);
     public readonly serviceLoader = new ServiceLoader(this.moduleRepository);
 
     private constructor(public readonly config: IBackendServiceConfig) { }
 
-    private async start(): Promise<void>{
+    private async start(): Promise<void> {
         await this.expressApp.start();
         await this.electronApp.start();
+        await this.moduleManager.loadAllModules();
         this.electronApp.mainWindow.loadURL('http://localhost:' + this.config.frontendPort);
-
-        // this.moduleManager.
     }
 
-    // TODO: stop
+    public async stop(): Promise<void> {
+        // stop all services
+        // TODO
+
+        // quit electron
+        this.electronApp.mainWindow.close();
+    }
+
+    public async restart(): Promise<void> {
+        // stop all services
+        await this.stop();
+
+        // restart electron
+        // TODO
+    }
 }
