@@ -7,18 +7,19 @@ export class ElectronApp {
 
     private createWindow() {
         this.mainWindow = new BrowserWindow({ width: 900, height: 700 });
+        this.mainWindow.setFullScreen(true);
+        this.mainWindow.loadURL('http://localhost:' + this.port);
+        console.log('ElectronApp.start()', { port: this.port, isDev: this.isDev });
         if (this.isDev) {
             this.mainWindow.webContents.openDevTools();
         }
-        this.mainWindow.loadURL('http://localhost:' + this.port);
-        this.mainWindow.setFullScreen(true);
         this.mainWindow.on('closed', () => {
             delete (this.mainWindow);
         })
     }
 
-    public async start(): Promise<void> {
-        app.on('ready', this.createWindow);
+    public start() {
+        app.on('ready', this.createWindow.bind(this));
 
         app.on('window-all-closed', () => {
             // On OS X it is common for applications and their menu bar

@@ -13,15 +13,15 @@
     "main": "main.js",
     "proxy": "http://localhost:5000",
     "scripts": {
-        "debug": "run-p serve electron:debug",
-        "start": "npm run build && npm run electron:prod",
-        "electron:debug": "set NODE_ENV=dev& electron .",
-        "electron:prod": "set NODE_ENV=production& electron .",
-        "build-modules": "node build-modules.js",
+        "debug": "npm run build:electron && run-p debug:react debug:electron",
+        "debug:react": "react-scripts-ts start",
+        "debug:electron": "set NODE_ENV=dev& electron .",
+        "start": "npm run build && npm run start:electron",
+        "start:electron": "set NODE_ENV=production& electron .",
+        "build": "npm run build:electron && npm run build:react",
         "build:react": "react-scripts-ts build",
         "build:electron": "tsc -p ./tsconfig.electron.json",
-        "build": "npm run build:electron && npm run build:react",
-        "serve": "react-scripts-ts start",
+        "build-modules": "node build-modules.js",
         "test": "react-scripts-ts test --env=jsdom"
     },
     "dependencies": {

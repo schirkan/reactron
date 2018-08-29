@@ -7,16 +7,16 @@ export class ExpressApp {
 
     constructor(private port: number, private root: string) { }
 
-    public start(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    public start() {
+        // return new Promise<void>((resolve, reject) => {
             this.express = express();
             this.express.use('/modules', express.static(this.root + '/modules'));
             this.express.use('/node_modules', express.static(this.root + '/node_modules'));
             this.express.use('/', express.static(this.root + '/build'));
             this.server = this.express.listen(this.port, () => {
                 console.log('ExpressApp listening on Port ' + this.port);
-                resolve();
+                // resolve();
             });
-        });
+        // });
     }
 }

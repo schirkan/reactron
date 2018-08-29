@@ -1,3 +1,2 @@
 // main entry file for electron
-const backendService = require('./dist/backendService');
-backendService.instance.start(__dirname);
+require('./dist/BackendService').instance.start(__dirname);

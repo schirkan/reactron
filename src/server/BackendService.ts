@@ -6,20 +6,25 @@ class BackendService {
     public expressApp: ExpressApp;
     public root: string;
     public isDev: boolean;
-    public port: number;
+    public frontendPort: number;
+    public backendPort: number;
 
     public async start(root: string): Promise<void> {
         this.root = root;
         this.isDev = process.env.NODE_ENV !== 'production';
-        this.port = this.isDev ? 5000 : 3000;
+        this.backendPort = this.isDev ? 5000 : 3000;
+        this.frontendPort = 3000;
 
-        console.log('BackendService is starting | NODE_ENV: ' + process.env.NODE_ENV + ' | port: ' + this.port + ' | root: ' + this.root);
+        console.log('BackendService is starting | NODE_ENV: ' + process.env.NODE_ENV +
+            ' | backendPort: ' + this.backendPort +
+            ' | frontendPort: ' + this.frontendPort +
+            ' | root: ' + this.root);
 
-        this.electronApp = new ElectronApp(this.port, this.isDev);
-        await this.electronApp.start();
+        this.expressApp = new ExpressApp(this.backendPort, this.root);
+        this.expressApp.start();
 
-        this.expressApp = new ExpressApp(this.port, this.root);
-        await this.expressApp.start();
+        this.electronApp = new ElectronApp(this.frontendPort, this.isDev);
+        this.electronApp.start();
 
         console.log('BackendService is running');
     }
