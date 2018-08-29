@@ -2,7 +2,7 @@ export interface IModuleDefinition {
     folder: string;
     name: string;
     description: string;
-    author: string;
+    author: string | { name?: string, email?: string };
     repository: string;
     browserFile: string;
     serverFile: string;

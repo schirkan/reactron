@@ -1,14 +1,27 @@
 import { IBackendServiceConfig } from "../interfaces/IBackendServiceConfig";
 import { IModuleDefinition } from "../interfaces/IModuleDefinition";
 import { IModuleManagerActionResult } from "../interfaces/IModuleManagerActionResult";
+import { ModuleLoader } from "./ModuleLoader";
 import { ModuleRepository } from "./ModuleRepository";
 
 export class ModuleManager {
     private moduleDefinitions: IModuleDefinition[] = [];
+    private moduleLoader: ModuleLoader;
 
     constructor(
         private config: IBackendServiceConfig,
-        private moduleRepository: ModuleRepository) { }
+        private moduleRepository: ModuleRepository,
+    ) {
+        this.moduleLoader = new ModuleLoader(config);
+    }
+
+    public async loadAllModules() {        
+        // load Modules
+        const modules = await this.moduleLoader.loadAllModules();
+        this.moduleRepository.modules.push(...modules);
+
+        // load Services
+    }
 
     // git clone - n
     public async add(repository: string): Promise<IModuleManagerActionResult> {

@@ -10,6 +10,8 @@ var ExpressApp = /** @class */ (function () {
         console.log('ExpressApp is starting');
         return new Promise(function (resolve, reject) {
             _this.express = express();
+            _this.apiRouter = express.Router();
+            _this.express.use('/api', _this.apiRouter);
             _this.express.use('/modules', express.static(_this.config.root + '/modules'));
             _this.express.use('/node_modules', express.static(_this.config.root + '/node_modules'));
             _this.express.use('/', express.static(_this.config.root + '/build'));

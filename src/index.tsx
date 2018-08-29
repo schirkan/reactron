@@ -1,7 +1,7 @@
 // main entry file for react
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import App from './components/App/App';
+import App from './browser/components/App/App';
 import './index.css';
 
 ReactDOM.render(

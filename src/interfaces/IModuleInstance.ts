@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export interface IExternalModule {
+export interface IModuleInstance {
   name: string;
   author: string;
   browserFile: string;

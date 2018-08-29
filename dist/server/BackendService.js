@@ -37,24 +37,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ElectronApp_1 = require("./ElectronApp");
 var ExpressApp_1 = require("./ExpressApp");
-var ModuleInstaller_1 = require("./ModuleInstaller");
+var ModuleManager_1 = require("./ModuleManager");
+var ModuleRepository_1 = require("./ModuleRepository");
+var ServiceLoader_1 = require("./ServiceLoader");
 var BackendService = /** @class */ (function () {
     function BackendService(config) {
         this.config = config;
         this.electronApp = new ElectronApp_1.ElectronApp(this.config);
         this.expressApp = new ExpressApp_1.ExpressApp(this.config);
-        this.moduleInstaller = new ModuleInstaller_1.ModuleInstaller(this.config);
-        // this.expressApp = new ExpressApp(this.config);
-        // this.electronApp = new ElectronApp(this.config);
-        // this.moduleInstaller = new ModuleInstaller(this.config);
+        this.moduleRepository = new ModuleRepository_1.ModuleRepository();
+        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
+        this.serviceLoader = new ServiceLoader_1.ServiceLoader(this.moduleRepository);
     }
     BackendService.start = function (root) {
         return __awaiter(this, void 0, void 0, function () {
-            var isDev, config, instance;
+            var isDev, config;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!!BackendService.instance) return [3 /*break*/, 3];
+                        if (!!BackendService.instance) return [3 /*break*/, 2];
                         isDev = process.env.NODE_ENV !== 'production';
                         config = {
                             root: root,
@@ -63,17 +64,29 @@ var BackendService = /** @class */ (function () {
                             backendPort: isDev ? 5000 : 3000
                         };
                         console.log('BackendService is starting', config);
-                        instance = BackendService.instance = new BackendService(config);
-                        return [4 /*yield*/, instance.expressApp.start()];
+                        BackendService.instance = new BackendService(config);
+                        return [4 /*yield*/, BackendService.instance.start()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, instance.electronApp.start()];
+                        console.log('BackendService is running');
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    BackendService.prototype.start = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.expressApp.start()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.electronApp.start()];
                     case 2:
                         _a.sent();
-                        instance.electronApp.mainWindow.loadURL('http://localhost:' + instance.config.frontendPort);
-                        console.log('BackendService is running');
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
+                        this.electronApp.mainWindow.loadURL('http://localhost:' + this.config.frontendPort);
+                        return [2 /*return*/];
                 }
             });
         });

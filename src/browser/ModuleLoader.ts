@@ -4,7 +4,7 @@ import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as path from 'path';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { IExternalModule } from './IExternalModule';
+import { IModuleInstance } from '../interfaces/IModuleInstance';
 
 const electron = (window as any).require('electron') as Electron.AllElectron;
 const SystemJS = (window as any).SystemJS;
@@ -21,7 +21,7 @@ SystemJS.set('@fortawesome/fontawesome-svg-core', SystemJS.newModule(SvgCore));
 SystemJS.set('@fortawesome/free-solid-svg-icons', SystemJS.newModule(SvgIcons));
 SystemJS.set('@fortawesome/react-fontawesome', SystemJS.newModule(FontAwesome));
 
-export const loadModule = async (folderName: string): Promise<IExternalModule> => {
+export const loadModule = async (folderName: string): Promise<IModuleInstance> => {
     const packageFile = path.join('modules', folderName, 'package.json');
     const p = await SystemJS.import(packageFile);
     console.log(packageFile, p);
@@ -31,7 +31,7 @@ export const loadModule = async (folderName: string): Promise<IExternalModule> =
         author: p.author,
         browserFile: p.browser,
         serverFile: p.main
-    } as IExternalModule;
+    } as IModuleInstance;
 
     if (module.browserFile) {
         module.browserFile = './' + path.join('modules', folderName, module.browserFile);

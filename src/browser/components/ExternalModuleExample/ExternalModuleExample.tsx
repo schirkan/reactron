@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { IExternalModule } from '../../IExternalModule';
+import { IModuleInstance } from '../../../interfaces/IModuleInstance';
 import { loadModule } from '../../ModuleLoader';
 
-export default class ExternalModuleExample extends React.Component<any, { text: string, module?: IExternalModule, moduleFound?: boolean }> {
+export default class ExternalModuleExample extends React.Component<any, { text: string, module?: IModuleInstance, moduleFound?: boolean }> {
   private server: any;
 
   constructor(props: any) {
