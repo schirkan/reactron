@@ -1,4 +1,4 @@
-import { IBackendServiceConfig } from "./IBackendServiceConfig";
+import { IBackendServiceConfig } from "../interfaces/IBackendServiceConfig";
 
 export class ModuleInstaller {
 

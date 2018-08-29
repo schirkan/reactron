@@ -1,7 +1,9 @@
+import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
 import { ElectronApp } from './ElectronApp';
 import { ExpressApp } from './ExpressApp';
-import { IBackendServiceConfig } from './IBackendServiceConfig';
-import { ModuleInstaller } from './ModuleInstaller';
+import { ModuleManager } from './ModuleManager';
+import { ModuleRepository } from './ModuleRepository';
+import { ServiceLoader } from './ServiceLoader';
 
 export class BackendService {
     public static instance: BackendService;
@@ -17,10 +19,8 @@ export class BackendService {
 
             console.log('BackendService is starting', config);
 
-            const instance = BackendService.instance = new BackendService(config);
-            await instance.expressApp.start();
-            await instance.electronApp.start();
-            instance.electronApp.mainWindow.loadURL('http://localhost:' + instance.config.frontendPort);
+            BackendService.instance = new BackendService(config);
+            await BackendService.instance.start();
 
             console.log('BackendService is running');
         }
@@ -28,7 +28,19 @@ export class BackendService {
 
     public readonly electronApp = new ElectronApp(this.config);
     public readonly expressApp = new ExpressApp(this.config);
-    public readonly moduleInstaller = new ModuleInstaller(this.config);
+    private readonly moduleRepository = new ModuleRepository();
+    public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository);
+    public readonly serviceLoader = new ServiceLoader(this.moduleRepository);
 
-    constructor(public readonly config: IBackendServiceConfig) { }
+    private constructor(public readonly config: IBackendServiceConfig) { }
+
+    private async start(): Promise<void>{
+        await this.expressApp.start();
+        await this.electronApp.start();
+        this.electronApp.mainWindow.loadURL('http://localhost:' + this.config.frontendPort);
+
+        // this.moduleManager.
+    }
+
+    // TODO: stop
 }

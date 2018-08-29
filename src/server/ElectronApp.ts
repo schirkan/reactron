@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from "electron";
-import { IBackendServiceConfig } from "./IBackendServiceConfig";
+import { IBackendServiceConfig } from "../interfaces/IBackendServiceConfig";
 
 export class ElectronApp {
     public mainWindow: Electron.BrowserWindow;
