@@ -1,40 +1,48 @@
 import { app, BrowserWindow } from "electron";
+import { IBackendServiceConfig } from "./IBackendServiceConfig";
 
 export class ElectronApp {
     public mainWindow: Electron.BrowserWindow;
 
-    constructor(private port: number, private isDev: boolean) { }
+    constructor(private config: IBackendServiceConfig) { }
 
-    private createWindow() {
-        this.mainWindow = new BrowserWindow({ width: 900, height: 700 });
-        this.mainWindow.setFullScreen(true);
-        this.mainWindow.loadURL('http://localhost:' + this.port);
-        console.log('ElectronApp.start()', { port: this.port, isDev: this.isDev });
-        if (this.isDev) {
-            this.mainWindow.webContents.openDevTools();
-        }
-        this.mainWindow.on('closed', () => {
-            delete (this.mainWindow);
-        })
-    }
+    public start(): Promise<void> {
+        console.log('ElectronApp is starting');
+        return new Promise<void>((resolve: (() => void) | null) => {
+            const createWindow = () => {
+                this.mainWindow = new BrowserWindow({ width: 900, height: 700 });
+                if (this.config.isDev) {
+                    this.mainWindow.webContents.openDevTools();
+                } else {
+                    this.mainWindow.setFullScreen(true);
+                }
+                this.mainWindow.on('closed', () => {
+                    delete (this.mainWindow);
+                });
+                if (resolve) {
+                    console.log('ElectronApp is running');
+                    resolve();
+                    resolve = null;
+                }
+            };
 
-    public start() {
-        app.on('ready', this.createWindow.bind(this));
+            app.on('ready', createWindow.bind(this));
 
-        app.on('window-all-closed', () => {
-            // On OS X it is common for applications and their menu bar
-            // to stay active until the user quits explicitly with Cmd + Q
-            if (process.platform !== 'darwin') {
-                app.quit();
-            }
-        });
+            app.on('window-all-closed', () => {
+                // On OS X it is common for applications and their menu bar
+                // to stay active until the user quits explicitly with Cmd + Q
+                if (process.platform !== 'darwin') {
+                    app.quit();
+                }
+            });
 
-        app.on('activate', () => {
-            // On OS X it's common to re-create a window in the app when the
-            // dock icon is clicked and there are no other windows open.
-            if (!this.mainWindow) {
-                this.createWindow();
-            }
+            app.on('activate', () => {
+                // On OS X it's common to re-create a window in the app when the
+                // dock icon is clicked and there are no other windows open.
+                if (!this.mainWindow) {
+                    createWindow();
+                }
+            });
         });
     };
 }

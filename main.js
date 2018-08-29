@@ -1,2 +1,2 @@
 // main entry file for electron
-require('./dist/BackendService').instance.start(__dirname);
+require('./dist/BackendService').BackendService.start(__dirname);

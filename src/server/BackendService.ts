@@ -1,33 +1,34 @@
 import { ElectronApp } from './ElectronApp';
 import { ExpressApp } from './ExpressApp';
+import { IBackendServiceConfig } from './IBackendServiceConfig';
+import { ModuleInstaller } from './ModuleInstaller';
 
-class BackendService {
-    public electronApp: ElectronApp;
-    public expressApp: ExpressApp;
-    public root: string;
-    public isDev: boolean;
-    public frontendPort: number;
-    public backendPort: number;
+export class BackendService {
+    public static instance: BackendService;
+    public static async start(root: string): Promise<void> {
+        if (!BackendService.instance) {
+            const isDev = process.env.NODE_ENV !== 'production';
+            const config = {
+                root,
+                isDev,
+                frontendPort: 3000,
+                backendPort: isDev ? 5000 : 3000
+            };
 
-    public async start(root: string): Promise<void> {
-        this.root = root;
-        this.isDev = process.env.NODE_ENV !== 'production';
-        this.backendPort = this.isDev ? 5000 : 3000;
-        this.frontendPort = 3000;
+            console.log('BackendService is starting', config);
 
-        console.log('BackendService is starting | NODE_ENV: ' + process.env.NODE_ENV +
-            ' | backendPort: ' + this.backendPort +
-            ' | frontendPort: ' + this.frontendPort +
-            ' | root: ' + this.root);
+            const instance = BackendService.instance = new BackendService(config);
+            await instance.expressApp.start();
+            await instance.electronApp.start();
+            instance.electronApp.mainWindow.loadURL('http://localhost:' + instance.config.frontendPort);
 
-        this.expressApp = new ExpressApp(this.backendPort, this.root);
-        this.expressApp.start();
-
-        this.electronApp = new ElectronApp(this.frontendPort, this.isDev);
-        this.electronApp.start();
-
-        console.log('BackendService is running');
+            console.log('BackendService is running');
+        }
     }
-}
 
-export const instance = new BackendService();
+    public readonly electronApp = new ElectronApp(this.config);
+    public readonly expressApp = new ExpressApp(this.config);
+    public readonly moduleInstaller = new ModuleInstaller(this.config);
+
+    constructor(public readonly config: IBackendServiceConfig) { }
+}

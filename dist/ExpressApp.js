@@ -2,22 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var ExpressApp = /** @class */ (function () {
-    function ExpressApp(port, root) {
-        this.port = port;
-        this.root = root;
+    function ExpressApp(config) {
+        this.config = config;
     }
     ExpressApp.prototype.start = function () {
         var _this = this;
-        // return new Promise<void>((resolve, reject) => {
-        this.express = express();
-        this.express.use('/modules', express.static(this.root + '/modules'));
-        this.express.use('/node_modules', express.static(this.root + '/node_modules'));
-        this.express.use('/', express.static(this.root + '/build'));
-        this.server = this.express.listen(this.port, function () {
-            console.log('ExpressApp listening on Port ' + _this.port);
-            // resolve();
+        console.log('ExpressApp is starting');
+        return new Promise(function (resolve, reject) {
+            _this.express = express();
+            _this.express.use('/modules', express.static(_this.config.root + '/modules'));
+            _this.express.use('/node_modules', express.static(_this.config.root + '/node_modules'));
+            _this.express.use('/', express.static(_this.config.root + '/build'));
+            _this.server = _this.express.listen(_this.config.backendPort, function () {
+                console.log('ExpressApp is listening on Port ' + _this.config.backendPort);
+                resolve();
+            });
         });
-        // });
     };
     return ExpressApp;
 }());
