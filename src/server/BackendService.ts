@@ -3,7 +3,8 @@ import { ElectronApp } from './ElectronApp';
 import { ExpressApp } from './ExpressApp';
 import { ModuleManager } from './ModuleManager';
 import { ModuleRepository } from './ModuleRepository';
-import { ServiceLoader } from './ServiceLoader';
+import { ServiceManager } from './ServiceManager';
+import { ServiceRepository } from './ServiceRepository';
 
 export class BackendService {
     public static instance: BackendService;
@@ -27,10 +28,11 @@ export class BackendService {
     }
 
     private readonly moduleRepository = new ModuleRepository();
+    private readonly serviceRepository = new ServiceRepository();
     public readonly electronApp = new ElectronApp(this.config);
     public readonly expressApp = new ExpressApp(this.config);
-    public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository);
-    public readonly serviceLoader = new ServiceLoader(this.moduleRepository);
+    public readonly serviceManager = new ServiceManager(this.serviceRepository, this.moduleRepository);
+    public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository, this.serviceManager);
 
     private constructor(public readonly config: IBackendServiceConfig) { }
 

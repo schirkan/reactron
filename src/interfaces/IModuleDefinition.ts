@@ -1,3 +1,5 @@
+import { ICommandResult } from "./ICommandResult";
+
 export interface IModuleDefinition {
     folder: string;
     name: string;
@@ -10,4 +12,5 @@ export interface IModuleDefinition {
     isBuilded: boolean | null;
     canUpdaten: boolean | null;
     canBuild: boolean | null;
+    commandLog: ICommandResult[];
 }

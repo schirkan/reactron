@@ -49,6 +49,8 @@ export class ModuleLoader {
             isBuilded: true
         } as IModuleDefinition;
 
+        module.commandLog = [];
+
         if (p.browser) {
             module.browserFile = './' + path.join('modules', folderName, p.browser);
             if (!fs.existsSync(path.join(this.config.root, module.browserFile))) {

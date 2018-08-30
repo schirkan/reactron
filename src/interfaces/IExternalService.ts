@@ -1,7 +1,7 @@
-import { IServiceLoader } from "./IServiceLoader";
+import { IServiceManager } from "./IServiceManager";
 
 export interface IExternalService {
-    start(serviceLoader: IServiceLoader): Promise<void>;
+    start(serviceLoader: IServiceManager): Promise<void>;
     stop(): Promise<void>;
     log(): void;
 }
