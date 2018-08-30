@@ -44,9 +44,9 @@ export class ModuleManager {
             // // TODO: load Definition
             // const newModules = this.moduleLoader.loadAllModules();
     
-            // const module = this.getModuleDefinition(moduleName);
-            // if (module) {
-            //     module.commandLog.push(result);
+            // const moduleDefinition = this.getModuleDefinition(moduleName);
+            // if (moduleDefinition) {
+            //     moduleDefinition.commandLog.push(result);
             // }
         }
 
@@ -57,9 +57,9 @@ export class ModuleManager {
         const moduleFolder = this.getModuleFolder(moduleName);
         const result = await SystemCommand.run('git pull -n', moduleFolder);
 
-        const module = this.getModuleDefinition(moduleName);
-        if (module) {
-            module.commandLog.push(result);
+        const moduleDefinition = this.getModuleDefinition(moduleName);
+        if (moduleDefinition) {
+            moduleDefinition.commandLog.push(result);
         }
 
         return result;
@@ -69,10 +69,10 @@ export class ModuleManager {
         const moduleFolder = this.getModuleFolder(moduleName);
         const result = await SystemCommand.run('npm install', moduleFolder);
 
-        const module = this.getModuleDefinition(moduleName);
-        if (module) {
-            module.isInstalled = module.isInstalled && result.success;
-            module.commandLog.push(result);
+        const moduleDefinition = this.getModuleDefinition(moduleName);
+        if (moduleDefinition) {
+            moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
+            moduleDefinition.commandLog.push(result);
         }
 
         return result;
@@ -82,10 +82,10 @@ export class ModuleManager {
         const moduleFolder = this.getModuleFolder(moduleName);
         const result = await SystemCommand.run('npm run build', moduleFolder);
 
-        const module = this.getModuleDefinition(moduleName);
-        if (module) {
-            module.isBuilded = module.isBuilded && result.success;
-            module.commandLog.push(result);
+        const moduleDefinition = this.getModuleDefinition(moduleName);
+        if (moduleDefinition) {
+            moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
+            moduleDefinition.commandLog.push(result);
         }
 
         return result;
@@ -98,10 +98,10 @@ export class ModuleManager {
     }
 
     private getModuleFolder(moduleName: string): string {
-        const module = this.getModuleDefinition(moduleName);
-        if (!module) {
+        const moduleDefinition = this.getModuleDefinition(moduleName);
+        if (!moduleDefinition) {
             throw Error("Module '" + moduleName + "' not found.");
         }
-        return path.join(this.modulesPath, module.folder);
+        return path.join(this.modulesPath, moduleDefinition.folder);
     }
 }

@@ -13,18 +13,27 @@ export class ModuleLoader {
     }
 
     public async loadAllModules(): Promise<IModuleDefinition[]> {
-        return new Promise<IModuleDefinition[]>((resolve) => {
+        return new Promise<IModuleDefinition[]>(async (resolve, reject) => {
             const result: IModuleDefinition[] = [];
-            fs.readdir(this.modulesPath, async (err, items) => {
+
+            try {
+                const items = fs.readdirSync(this.modulesPath);
+    
                 console.log('modules', items);
                 for (const item of items) {
-                    const newModule = await this.loadModule(item);
-                    if (newModule) {
-                        result.push(newModule);
+                    const moduleFolderFull = path.join(this.modulesPath, item);
+                    if (fs.statSync(moduleFolderFull).isDirectory()) {
+                        const newModule = await this.loadModule(item);
+                        if (newModule) {
+                            result.push(newModule);
+                        }
                     }
                 }
-            });
-            resolve(result);
+    
+                resolve(result);                
+            } catch (error) {
+                reject(error);
+            }
         });
     }
 
@@ -34,13 +43,13 @@ export class ModuleLoader {
         try {
             const fileContent = fs.readFileSync(packageFile, { encoding: 'utf-8' });
             p = JSON.parse(fileContent);
-            console.log(packageFile, p);
+            console.log('reading ' + packageFile);
         } catch (error) {
             console.log('Error reading package.json', error);
             return null;
         }
 
-        const module = {
+        const moduleDefinition = {
             folder: folderName,
             name: p.name,
             description: p.description,
@@ -49,32 +58,32 @@ export class ModuleLoader {
             isBuilded: true
         } as IModuleDefinition;
 
-        module.commandLog = [];
+        moduleDefinition.commandLog = [];
 
         if (p.browser) {
-            module.browserFile = './' + path.join('modules', folderName, p.browser);
-            if (!fs.existsSync(path.join(this.config.root, module.browserFile))) {
-                module.isBuilded = false;
+            moduleDefinition.browserFile = './' + path.join('modules', folderName, p.browser);
+            if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+                moduleDefinition.isBuilded = false;
             }
         }
 
         if (p.main) {
-            module.serverFile = './' + path.join('modules', folderName, p.main);
-            if (!fs.existsSync(path.join(this.config.root, module.serverFile))) {
-                module.isBuilded = false;
+            moduleDefinition.serverFile = './' + path.join('modules', folderName, p.main);
+            if (!fs.existsSync(path.join(this.config.root, moduleDefinition.serverFile))) {
+                moduleDefinition.isBuilded = false;
             }
         }
 
-        if (!module.browserFile && !module.serverFile) {
+        if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
             console.log('No module in folder ' + folderName);
             return null;
         }
 
-        module.canBuild = p.scripts && !!p.scripts.build;
-        module.canUpdaten = !!module.repository;
-        module.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', 'node_modules'));
+        moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
+        moduleDefinition.canUpdaten = !!moduleDefinition.repository;
+        moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
 
-        console.log(folderName, module);
-        return module;
+        console.log(folderName, moduleDefinition);
+        return moduleDefinition;
     };
 }

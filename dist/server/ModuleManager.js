@@ -35,105 +35,130 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var path = require("path");
 var ModuleLoader_1 = require("./ModuleLoader");
+var SystemCommand_1 = require("./SystemCommand");
 var ModuleManager = /** @class */ (function () {
-    function ModuleManager(config, moduleRepository) {
+    function ModuleManager(config, moduleRepository, serviceManager) {
         this.config = config;
         this.moduleRepository = moduleRepository;
-        this.moduleDefinitions = [];
-        this.moduleLoader = new ModuleLoader_1.ModuleLoader(config);
+        this.serviceManager = serviceManager;
+        this.moduleLoader = new ModuleLoader_1.ModuleLoader(this.config);
+        this.modulesPath = path.join(this.config.root, 'modules');
     }
     ModuleManager.prototype.loadAllModules = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, modules;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var modules;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0: return [4 /*yield*/, this.moduleLoader.loadAllModules()];
                     case 1:
-                        modules = _b.sent();
-                        (_a = this.moduleRepository.modules).push.apply(_a, modules);
+                        modules = _a.sent();
+                        modules.forEach(this.moduleRepository.add);
+                        // load Services
+                        this.serviceManager.getAll();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    // git clone - n
+    ModuleManager.prototype.getModuleDefinitions = function () {
+        return this.moduleRepository.getAll();
+    };
+    ModuleManager.prototype.getModuleDefinition = function (moduleName) {
+        return this.moduleRepository.get(moduleName);
+    };
     ModuleManager.prototype.add = function (repository) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
-                result = {
-                    command: 'add',
-                    args: repository,
-                    timestampStart: Date.now()
-                };
-                // TODO
-                result.timestampEnd = Date.now();
-                return [2 /*return*/, result];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git clone ' + repository, this.modulesPath)];
+                    case 1:
+                        result = _a.sent();
+                        if (result.success) {
+                            // // TODO: load Definition
+                            // const newModules = this.moduleLoader.loadAllModules();
+                            // const moduleDefinition = this.getModuleDefinition(moduleName);
+                            // if (moduleDefinition) {
+                            //     moduleDefinition.commandLog.push(result);
+                            // }
+                        }
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
-    // git pull - n
     ModuleManager.prototype.update = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var moduleFolder, result, moduleDefinition;
             return __generator(this, function (_a) {
-                result = {
-                    command: 'add',
-                    args: moduleName,
-                    timestampStart: Date.now()
-                };
-                // TODO
-                result.timestampEnd = Date.now();
-                return [2 /*return*/, result];
+                switch (_a.label) {
+                    case 0:
+                        moduleFolder = this.getModuleFolder(moduleName);
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git pull -n', moduleFolder)];
+                    case 1:
+                        result = _a.sent();
+                        moduleDefinition = this.getModuleDefinition(moduleName);
+                        if (moduleDefinition) {
+                            moduleDefinition.commandLog.push(result);
+                        }
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
-    // npm install
     ModuleManager.prototype.install = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var moduleFolder, result, moduleDefinition;
             return __generator(this, function (_a) {
-                result = {
-                    command: 'add',
-                    args: moduleName,
-                    timestampStart: Date.now()
-                };
-                // TODO
-                result.timestampEnd = Date.now();
-                return [2 /*return*/, result];
+                switch (_a.label) {
+                    case 0:
+                        moduleFolder = this.getModuleFolder(moduleName);
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', moduleFolder)];
+                    case 1:
+                        result = _a.sent();
+                        moduleDefinition = this.getModuleDefinition(moduleName);
+                        if (moduleDefinition) {
+                            moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
+                            moduleDefinition.commandLog.push(result);
+                        }
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
-    //  npm run build
     ModuleManager.prototype.build = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var moduleFolder, result, moduleDefinition;
             return __generator(this, function (_a) {
-                result = {
-                    command: 'build',
-                    args: moduleName,
-                    timestampStart: Date.now()
-                };
-                // TODO
-                result.timestampEnd = Date.now();
-                return [2 /*return*/, result];
+                switch (_a.label) {
+                    case 0:
+                        moduleFolder = this.getModuleFolder(moduleName);
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm run build', moduleFolder)];
+                    case 1:
+                        result = _a.sent();
+                        moduleDefinition = this.getModuleDefinition(moduleName);
+                        if (moduleDefinition) {
+                            moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
+                            moduleDefinition.commandLog.push(result);
+                        }
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
-    // rm folder
     ModuleManager.prototype.remove = function (moduleName) {
-        var result = {
-            command: 'remove',
-            args: moduleName,
-            timestampStart: Date.now()
-        };
-        // TODO
-        result.timestampEnd = Date.now();
-        return result;
+        var moduleFolder = this.getModuleFolder(moduleName);
+        this.moduleRepository.remove(moduleName);
+        return SystemCommand_1.SystemCommand.run('rimraf ' + moduleFolder, moduleFolder);
     };
-    ModuleManager.prototype.getModuleDefinitions = function () {
-        return this.moduleDefinitions;
+    ModuleManager.prototype.getModuleFolder = function (moduleName) {
+        var moduleDefinition = this.getModuleDefinition(moduleName);
+        if (!moduleDefinition) {
+            throw Error("Module '" + moduleName + "' not found.");
+        }
+        return path.join(this.modulesPath, moduleDefinition.folder);
     };
     return ModuleManager;
 }());

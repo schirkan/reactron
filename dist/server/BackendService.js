@@ -39,15 +39,17 @@ var ElectronApp_1 = require("./ElectronApp");
 var ExpressApp_1 = require("./ExpressApp");
 var ModuleManager_1 = require("./ModuleManager");
 var ModuleRepository_1 = require("./ModuleRepository");
-var ServiceLoader_1 = require("./ServiceLoader");
+var ServiceManager_1 = require("./ServiceManager");
+var ServiceRepository_1 = require("./ServiceRepository");
 var BackendService = /** @class */ (function () {
     function BackendService(config) {
         this.config = config;
+        this.moduleRepository = new ModuleRepository_1.ModuleRepository();
+        this.serviceRepository = new ServiceRepository_1.ServiceRepository();
         this.electronApp = new ElectronApp_1.ElectronApp(this.config);
         this.expressApp = new ExpressApp_1.ExpressApp(this.config);
-        this.moduleRepository = new ModuleRepository_1.ModuleRepository();
-        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
-        this.serviceLoader = new ServiceLoader_1.ServiceLoader(this.moduleRepository);
+        this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository);
+        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository, this.serviceManager);
     }
     BackendService.start = function (root) {
         return __awaiter(this, void 0, void 0, function () {
@@ -85,7 +87,36 @@ var BackendService = /** @class */ (function () {
                         return [4 /*yield*/, this.electronApp.start()];
                     case 2:
                         _a.sent();
+                        return [4 /*yield*/, this.moduleManager.loadAllModules()];
+                    case 3:
+                        _a.sent();
                         this.electronApp.mainWindow.loadURL('http://localhost:' + this.config.frontendPort);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    BackendService.prototype.stop = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                // stop all services
+                // TODO
+                // quit electron
+                this.electronApp.mainWindow.close();
+                return [2 /*return*/];
+            });
+        });
+    };
+    BackendService.prototype.restart = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: 
+                    // stop all services
+                    return [4 /*yield*/, this.stop()];
+                    case 1:
+                        // stop all services
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });

@@ -46,53 +46,63 @@ var ModuleLoader = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve) {
-                        var result = [];
-                        fs.readdir(_this.modulesPath, function (err, items) { return __awaiter(_this, void 0, void 0, function () {
-                            var _i, items_1, item, newModule;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        console.log('modules', items);
-                                        _i = 0, items_1 = items;
-                                        _a.label = 1;
-                                    case 1:
-                                        if (!(_i < items_1.length)) return [3 /*break*/, 4];
-                                        item = items_1[_i];
-                                        return [4 /*yield*/, this.loadModule(item)];
-                                    case 2:
-                                        newModule = _a.sent();
-                                        if (newModule) {
-                                            result.push(newModule);
-                                        }
-                                        _a.label = 3;
-                                    case 3:
-                                        _i++;
-                                        return [3 /*break*/, 1];
-                                    case 4: return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        resolve(result);
-                    })];
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var result, items, _i, items_1, item, moduleFolderFull, newModule, error_1;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    result = [];
+                                    _a.label = 1;
+                                case 1:
+                                    _a.trys.push([1, 6, , 7]);
+                                    items = fs.readdirSync(this.modulesPath);
+                                    console.log('modules', items);
+                                    _i = 0, items_1 = items;
+                                    _a.label = 2;
+                                case 2:
+                                    if (!(_i < items_1.length)) return [3 /*break*/, 5];
+                                    item = items_1[_i];
+                                    moduleFolderFull = path.join(this.modulesPath, item);
+                                    if (!fs.statSync(moduleFolderFull).isDirectory()) return [3 /*break*/, 4];
+                                    return [4 /*yield*/, this.loadModule(item)];
+                                case 3:
+                                    newModule = _a.sent();
+                                    if (newModule) {
+                                        result.push(newModule);
+                                    }
+                                    _a.label = 4;
+                                case 4:
+                                    _i++;
+                                    return [3 /*break*/, 2];
+                                case 5:
+                                    resolve(result);
+                                    return [3 /*break*/, 7];
+                                case 6:
+                                    error_1 = _a.sent();
+                                    reject(error_1);
+                                    return [3 /*break*/, 7];
+                                case 7: return [2 /*return*/];
+                            }
+                        });
+                    }); })];
             });
         });
     };
     ModuleLoader.prototype.loadModule = function (folderName) {
         return __awaiter(this, void 0, void 0, function () {
-            var packageFile, p, fileContent, module;
+            var packageFile, p, fileContent, moduleDefinition;
             return __generator(this, function (_a) {
                 packageFile = path.join(this.modulesPath, folderName, 'package.json');
                 try {
                     fileContent = fs.readFileSync(packageFile, { encoding: 'utf-8' });
                     p = JSON.parse(fileContent);
-                    console.log(packageFile, p);
+                    console.log('reading ' + packageFile);
                 }
                 catch (error) {
                     console.log('Error reading package.json', error);
                     return [2 /*return*/, null];
                 }
-                module = {
+                moduleDefinition = {
                     folder: folderName,
                     name: p.name,
                     description: p.description,
@@ -100,27 +110,28 @@ var ModuleLoader = /** @class */ (function () {
                     repository: p.repository && p.repository.url,
                     isBuilded: true
                 };
+                moduleDefinition.commandLog = [];
                 if (p.browser) {
-                    module.browserFile = './' + path.join('modules', folderName, p.browser);
-                    if (!fs.existsSync(path.join(this.config.root, module.browserFile))) {
-                        module.isBuilded = false;
+                    moduleDefinition.browserFile = './' + path.join('modules', folderName, p.browser);
+                    if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+                        moduleDefinition.isBuilded = false;
                     }
                 }
                 if (p.main) {
-                    module.serverFile = './' + path.join('modules', folderName, p.main);
-                    if (!fs.existsSync(path.join(this.config.root, module.serverFile))) {
-                        module.isBuilded = false;
+                    moduleDefinition.serverFile = './' + path.join('modules', folderName, p.main);
+                    if (!fs.existsSync(path.join(this.config.root, moduleDefinition.serverFile))) {
+                        moduleDefinition.isBuilded = false;
                     }
                 }
-                if (!module.browserFile && !module.serverFile) {
+                if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
                     console.log('No module in folder ' + folderName);
                     return [2 /*return*/, null];
                 }
-                module.canBuild = p.scripts && !!p.scripts.build;
-                module.canUpdaten = !!module.repository;
-                module.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', 'node_modules'));
-                console.log(folderName, module);
-                return [2 /*return*/, module];
+                moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
+                moduleDefinition.canUpdaten = !!moduleDefinition.repository;
+                moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
+                console.log(folderName, moduleDefinition);
+                return [2 /*return*/, moduleDefinition];
             });
         });
     };

@@ -1,47 +1,25 @@
 import * as React from 'react';
-import { IModuleInstance } from '../../../interfaces/IModuleInstance';
-import { instance as moduleLoader } from '../../ModuleLoader';
+import { IDynamicReactComponentClass } from '../../../interfaces/IDynamicReactComponentClass';
+import { instance as componentLoader } from '../../ComponentLoader';
 
-export default class ExternalModuleExample extends React.Component<any, { text: string, module?: IModuleInstance, moduleFound?: boolean }> {
-  private server: any;
-
+export default class ExternalModuleExample extends React.Component<any, { helloWorldComponent?: IDynamicReactComponentClass, componentFound?: boolean }> {
   constructor(props: any) {
     super(props);
-    this.state = { text: 'Hello World' };
-    this.onButtonClick = this.onButtonClick.bind(this);
+    this.state = {};
   }
 
   public async componentWillMount() {
     try {
-      const module = await moduleLoader.loadModule('dynamic-electron-react-module-example');
-      const HelloService = module.services.HelloService as any;
-      this.server = new HelloService();
-      this.server.start();
-      this.setState({ module, moduleFound: true });
+      const helloWorldComponent = await componentLoader.loadComponent('dynamic-electron-react-module-example', 'HelloWorld');
+      this.setState({ helloWorldComponent, componentFound: !!helloWorldComponent });
     } catch (error) {
-      this.setState({ moduleFound: false });
-      console.log(error);
-    }
-  }
-
-  public componentWillUnmount() {
-    try {
-      this.server.stop();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  public onButtonClick() {
-    try {
-      this.setState({ text: this.server.sayHello('Martin') });
-    } catch (error) {
+      this.setState({ componentFound: false });
       console.log(error);
     }
   }
 
   public render() {
-    if (this.state.moduleFound === false) {
+    if (this.state.componentFound === false) {
       return (
         <div>
           <h2>Sample Module not installed.</h2>
@@ -57,17 +35,15 @@ export default class ExternalModuleExample extends React.Component<any, { text: 
       );
     }
 
-    if (this.state.module) {
-      const HelloWorld = this.state.module.components.HelloWorld;
-
+    if (this.state.helloWorldComponent) {
+      const HelloWorld = this.state.helloWorldComponent;
       return (
         <section className="ExternalModules">
-          <HelloWorld text={this.state.text} />
-          <button onClick={this.onButtonClick}>Say Hello from Server</button>
+          <HelloWorld backendService={componentLoader.backendService} options={{ text: 'Hello World' }} />
         </section>
       );
     }
 
-    return <div>Loading module...</div>;
+    return <div>Loading...</div>;
   }
 }
