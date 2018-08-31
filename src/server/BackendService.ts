@@ -40,12 +40,13 @@ export class BackendService {
         await this.expressApp.start();
         await this.electronApp.start();
         await this.moduleManager.loadAllModules();
+        await this.serviceManager.startAllServices();
         this.electronApp.mainWindow.loadURL('http://localhost:' + this.config.frontendPort);
     }
 
     public async stop(): Promise<void> {
         // stop all services
-        // TODO
+        await this.serviceManager.stopAllServices();
 
         // quit electron
         this.electronApp.mainWindow.close();
@@ -56,6 +57,6 @@ export class BackendService {
         await this.stop();
 
         // restart electron
-        // TODO
+        // 
     }
 }
