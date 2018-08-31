@@ -29,7 +29,7 @@ export class ComponentLoader {
             if (moduleDefinition && moduleDefinition.browserFile) {
                 SystemJS.import(moduleDefinition.browserFile).then(components => {
                     const component = components[componentName];
-                    console.log(moduleName + '.' + componentName, component);
+                    console.log('Component loaded: ' + moduleName + '.' + componentName);
                     resolve(component);
                 });
             } else {

@@ -11,12 +11,13 @@ export class ServiceManager {
         private moduleRepository: ModuleRepository
     ) { }
 
-    public async get(serviceName: string, moduleName: string): Promise<IExternalService | undefined> {
+    public async get(moduleName: string, serviceName: string): Promise<IExternalService | undefined> {
+        console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
         let serviceInstance = this.serviceRepository.get(moduleName, serviceName);
         if (!serviceInstance) {
             // load service
-            const loadResult = await this.startService(moduleName, serviceName);
-            if (loadResult.success) {
+            const result = await this.startService(moduleName, serviceName);
+            if (result.success) {
                 // retry
                 serviceInstance = this.serviceRepository.get(moduleName, serviceName);
             }
@@ -24,16 +25,27 @@ export class ServiceManager {
         return serviceInstance;
     }
 
-    public startAllServices(): Promise<ICommandResult> {
-        return command('startAllServices', undefined, async () => {
+    public async startAllServices(): Promise<ICommandResult> {
+        return await command('startAllServices', undefined, async () => {
             const modules = this.moduleRepository.getAll();
             const childResults: ICommandResult[] = [];
 
-            for (const m of modules) {
-                const servicesTypes = await import(m.serverFile);
-                for (const serviceName of servicesTypes) {
-                    const loadResult = await this.startService(m.name, serviceName);
-                    childResults.push(loadResult);
+            console.log('Modules: ' + JSON.stringify(modules.map(x => x.name)));
+
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < modules.length; i++) {
+                const m = modules[i];
+
+                console.log('Loading: ' + m.serverFile);
+                const servicesTypes = require(m.serverFile);
+                const exportKeys = Object.keys(servicesTypes);
+                console.log('Exports: ' + JSON.stringify(exportKeys));
+
+                // tslint:disable-next-line:prefer-for-of
+                for (let j = 0; j < exportKeys.length; j++) {
+                    const serviceName = exportKeys[j];
+                    const result = await this.startService(m.name, serviceName);
+                    childResults.push(result);
                 }
             }
         });
@@ -54,14 +66,14 @@ export class ServiceManager {
         });
     }
 
-    private stopService(serviceInstance: IExternalService, serviceKey: string): Promise<ICommandResult>{        
+    private stopService(serviceInstance: IExternalService, serviceKey: string): Promise<ICommandResult> {
         return command('stopService', serviceKey, async () => {
             await serviceInstance.stop();
         });
     }
 
     private startService(moduleName: string, serviceName: string): Promise<ICommandResult> {
-        return command('loadService', arguments, async () => {
+        return command('startService', arguments, async () => {
             if (this.serviceRepository.get(moduleName, serviceName)) {
                 return; // already running
             }
@@ -70,7 +82,15 @@ export class ServiceManager {
             if (!moduleDefinition) {
                 throw new Error('Module not found: ' + moduleName);
             }
-            const serviceTypes = await import(moduleDefinition.serverFile)
+
+            let serviceTypes: any;
+            try {
+                console.log('Loading: ' + moduleDefinition.serverFile);
+                serviceTypes = require(moduleDefinition.serverFile)
+            } catch (error) {
+                throw new Error('Error importing Module: ' + moduleDefinition.serverFile);
+            }
+
             const serviceType = serviceTypes[serviceName];
             if (!serviceType) {
                 throw new Error('Service not found: ' + serviceName);
@@ -81,6 +101,7 @@ export class ServiceManager {
             // start service
             await serviceInstance.start(this);
 
+            console.log('Service started: ' + moduleName + '.' + serviceName, serviceInstance);
             this.serviceRepository.add(moduleName, serviceName, serviceInstance);
         });
     }

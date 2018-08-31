@@ -18,8 +18,6 @@ export class ModuleLoader {
 
             try {
                 const items = fs.readdirSync(this.modulesPath);
-    
-                console.log('modules', items);
                 for (const item of items) {
                     const moduleFolderFull = path.join(this.modulesPath, item);
                     if (fs.statSync(moduleFolderFull).isDirectory()) {
@@ -29,8 +27,7 @@ export class ModuleLoader {
                         }
                     }
                 }
-    
-                resolve(result);                
+                resolve(result);
             } catch (error) {
                 reject(error);
             }
@@ -68,8 +65,8 @@ export class ModuleLoader {
         }
 
         if (p.main) {
-            moduleDefinition.serverFile = './' + path.join('modules', folderName, p.main);
-            if (!fs.existsSync(path.join(this.config.root, moduleDefinition.serverFile))) {
+            moduleDefinition.serverFile = path.join(this.config.root, 'modules', folderName, p.main);
+            if (!fs.existsSync(moduleDefinition.serverFile)) {
                 moduleDefinition.isBuilded = false;
             }
         }
@@ -83,7 +80,7 @@ export class ModuleLoader {
         moduleDefinition.canUpdaten = !!moduleDefinition.repository;
         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
 
-        console.log(folderName, moduleDefinition);
+        console.log('Module loaded: ' + moduleDefinition.name);
         return moduleDefinition;
     };
 }

@@ -90,6 +90,9 @@ var BackendService = /** @class */ (function () {
                         return [4 /*yield*/, this.moduleManager.loadAllModules()];
                     case 3:
                         _a.sent();
+                        return [4 /*yield*/, this.serviceManager.startAllServices()];
+                    case 4:
+                        _a.sent();
                         this.electronApp.mainWindow.loadURL('http://localhost:' + this.config.frontendPort);
                         return [2 /*return*/];
                 }
@@ -99,11 +102,17 @@ var BackendService = /** @class */ (function () {
     BackendService.prototype.stop = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                // stop all services
-                // TODO
-                // quit electron
-                this.electronApp.mainWindow.close();
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: 
+                    // stop all services
+                    return [4 /*yield*/, this.serviceManager.stopAllServices()];
+                    case 1:
+                        // stop all services
+                        _a.sent();
+                        // quit electron
+                        this.electronApp.mainWindow.close();
+                        return [2 /*return*/];
+                }
             });
         });
     };

@@ -56,7 +56,6 @@ var ModuleLoader = /** @class */ (function () {
                                 case 1:
                                     _a.trys.push([1, 6, , 7]);
                                     items = fs.readdirSync(this.modulesPath);
-                                    console.log('modules', items);
                                     _i = 0, items_1 = items;
                                     _a.label = 2;
                                 case 2:
@@ -118,8 +117,8 @@ var ModuleLoader = /** @class */ (function () {
                     }
                 }
                 if (p.main) {
-                    moduleDefinition.serverFile = './' + path.join('modules', folderName, p.main);
-                    if (!fs.existsSync(path.join(this.config.root, moduleDefinition.serverFile))) {
+                    moduleDefinition.serverFile = path.join(this.config.root, 'modules', folderName, p.main);
+                    if (!fs.existsSync(moduleDefinition.serverFile)) {
                         moduleDefinition.isBuilded = false;
                     }
                 }
@@ -130,7 +129,7 @@ var ModuleLoader = /** @class */ (function () {
                 moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
                 moduleDefinition.canUpdaten = !!moduleDefinition.repository;
                 moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
-                console.log(folderName, moduleDefinition);
+                console.log('Module loaded: ' + moduleDefinition.name);
                 return [2 /*return*/, moduleDefinition];
             });
         });

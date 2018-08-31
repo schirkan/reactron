@@ -35,7 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var fs = require("fs");
 var path = require("path");
+var commandResultWrapper_1 = require("./commandResultWrapper");
 var ModuleLoader_1 = require("./ModuleLoader");
 var SystemCommand_1 = require("./SystemCommand");
 var ModuleManager = /** @class */ (function () {
@@ -44,7 +46,12 @@ var ModuleManager = /** @class */ (function () {
         this.moduleRepository = moduleRepository;
         this.serviceManager = serviceManager;
         this.moduleLoader = new ModuleLoader_1.ModuleLoader(this.config);
-        this.modulesPath = path.join(this.config.root, 'modules');
+        this.modulesRootPath = path.join(this.config.root, 'modules');
+        this.add = commandResultWrapper_1.wrapCall(this.add);
+        this.build = commandResultWrapper_1.wrapCall(this.build);
+        this.update = commandResultWrapper_1.wrapCall(this.update);
+        this.remove = commandResultWrapper_1.wrapCall(this.remove);
+        this.install = commandResultWrapper_1.wrapCall(this.install);
     }
     ModuleManager.prototype.loadAllModules = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -55,8 +62,6 @@ var ModuleManager = /** @class */ (function () {
                     case 1:
                         modules = _a.sent();
                         modules.forEach(this.moduleRepository.add);
-                        // load Services
-                        this.serviceManager.getAll();
                         return [2 /*return*/];
                 }
             });
@@ -70,33 +75,53 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.add = function (repository) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var parts, folderName, fullModulePath, result, moduleDefinition;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git clone ' + repository, this.modulesPath)];
+                    case 0:
+                        repository = (repository || '').trim();
+                        // remove / from end
+                        if (repository.endsWith('/')) {
+                            repository = repository.substr(0, repository.length - 1);
+                        }
+                        // remove .git from end
+                        if (repository.endsWith('.git')) {
+                            repository = repository.substr(0, repository.length - 4);
+                        }
+                        if (!repository) {
+                            throw new Error('Invalid repository');
+                        }
+                        parts = repository.split('/');
+                        folderName = parts[parts.length - 1];
+                        fullModulePath = path.join(this.modulesRootPath, folderName);
+                        if (!this.isDirEmpty(fullModulePath)) {
+                            throw new Error('Destination folder already exists');
+                        }
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git clone ' + repository + ' ' + folderName, this.modulesRootPath)];
                     case 1:
                         result = _a.sent();
-                        if (result.success) {
-                            // // TODO: load Definition
-                            // const newModules = this.moduleLoader.loadAllModules();
-                            // const moduleDefinition = this.getModuleDefinition(moduleName);
-                            // if (moduleDefinition) {
-                            //     moduleDefinition.commandLog.push(result);
-                            // }
+                        if (!result.success) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.moduleLoader.loadModule(folderName)];
+                    case 2:
+                        moduleDefinition = _a.sent();
+                        if (moduleDefinition) {
+                            moduleDefinition.commandLog.push(result);
+                            this.moduleRepository.add(moduleDefinition);
                         }
-                        return [2 /*return*/, result];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, result];
                 }
             });
         });
     };
     ModuleManager.prototype.update = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var moduleFolder, result, moduleDefinition;
+            var modulePath, result, moduleDefinition;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        moduleFolder = this.getModuleFolder(moduleName);
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git pull -n', moduleFolder)];
+                        modulePath = this.getModulePath(moduleName);
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git pull -n', modulePath)];
                     case 1:
                         result = _a.sent();
                         moduleDefinition = this.getModuleDefinition(moduleName);
@@ -110,12 +135,12 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.install = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var moduleFolder, result, moduleDefinition;
+            var modulePath, result, moduleDefinition;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        moduleFolder = this.getModuleFolder(moduleName);
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', moduleFolder)];
+                        modulePath = this.getModulePath(moduleName);
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', modulePath)];
                     case 1:
                         result = _a.sent();
                         moduleDefinition = this.getModuleDefinition(moduleName);
@@ -130,12 +155,12 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.build = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var moduleFolder, result, moduleDefinition;
+            var modulePath, result, moduleDefinition;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        moduleFolder = this.getModuleFolder(moduleName);
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm run build', moduleFolder)];
+                        modulePath = this.getModulePath(moduleName);
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm run build', modulePath)];
                     case 1:
                         result = _a.sent();
                         moduleDefinition = this.getModuleDefinition(moduleName);
@@ -149,16 +174,25 @@ var ModuleManager = /** @class */ (function () {
         });
     };
     ModuleManager.prototype.remove = function (moduleName) {
-        var moduleFolder = this.getModuleFolder(moduleName);
+        var modulePath = this.getModulePath(moduleName);
         this.moduleRepository.remove(moduleName);
-        return SystemCommand_1.SystemCommand.run('rimraf ' + moduleFolder, moduleFolder);
+        return SystemCommand_1.SystemCommand.run('rimraf ' + modulePath, this.modulesRootPath);
     };
-    ModuleManager.prototype.getModuleFolder = function (moduleName) {
+    ModuleManager.prototype.isDirEmpty = function (dirname) {
+        try {
+            var files = fs.readdirSync(dirname);
+            return !files.length;
+        }
+        catch (error) {
+            return true;
+        }
+    };
+    ModuleManager.prototype.getModulePath = function (moduleName) {
         var moduleDefinition = this.getModuleDefinition(moduleName);
         if (!moduleDefinition) {
             throw Error("Module '" + moduleName + "' not found.");
         }
-        return path.join(this.modulesPath, moduleDefinition.folder);
+        return path.join(this.modulesRootPath, moduleDefinition.folder);
     };
     return ModuleManager;
 }());

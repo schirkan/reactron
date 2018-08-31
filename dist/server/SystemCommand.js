@@ -13,11 +13,11 @@ var SystemCommand = /** @class */ (function () {
                 timestampStart: Date.now()
             };
             child_process_1.exec(command, { cwd: cwd }, function (error, stdout, stderr) {
-                result.log = 'stdout: ' + stdout + '\n\nstderr: ' + stderr;
+                result.message = 'stdout: ' + stdout + '\n\nstderr: ' + stderr;
                 result.timestampEnd = Date.now();
                 result.success = !!error;
                 if (result.success) {
-                    result.log += '\n\nerror:' + JSON.stringify(error);
+                    result.message += '\n\nerror:' + JSON.stringify(error);
                     reject(result);
                 }
                 else {

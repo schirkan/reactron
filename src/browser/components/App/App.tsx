@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ExternalModuleExample from '../ExternalModuleExample/ExternalModuleExample';
+import ExternalModule from '../ExternalModule/ExternalModule';
 import './App.css';
 import logo from './logo.svg';
 
@@ -21,7 +21,7 @@ export default class App extends React.Component<any, { error: any }> {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <div className="App-content">
-          <ExternalModuleExample />
+          <ExternalModule componentName="HelloWorld" moduleName="dynamic-electron-react-module-example" />
         </div>
       </section>
     );

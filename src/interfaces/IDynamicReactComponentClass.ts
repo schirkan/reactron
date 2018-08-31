@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { BackendService } from '../server/BackendService';
-// import { IObjectDefinition } from './IObjectDefinition';
 
-export interface IDynamicReactComponentClass extends React.ComponentClass<{ backendService: BackendService, options: any }> {
-    // definition: IObjectDefinition;
+export interface IDynamicReactComponentClassProps{
+    backendService: {
+        getService: (serviceName: string, moduleName: string | undefined)=>Promise<any>
+    };
+    options: any;
+}
+
+export interface IDynamicReactComponentClass extends React.ComponentClass<IDynamicReactComponentClassProps> {
 }

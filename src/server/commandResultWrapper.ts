@@ -8,8 +8,10 @@ export const wrapCall = (callback: (...args: any[]) => Promise<ICommandResult | 
             args: JSON.stringify(args)
         } as ICommandResult;
 
+        console.log('Start Command: ' + result.command + ' ' + result.args);
+
         try {
-            const callbackResult = await callback(...args);
+            const callbackResult = await Promise.resolve(callback(...args)) as any;
             // check if callbackResult is ICommandResult
             if (callbackResult && callbackResult.hasOwnProperty('success') && callbackResult.hasOwnProperty('command')) {
                 result.success = callbackResult.success;
@@ -19,11 +21,14 @@ export const wrapCall = (callback: (...args: any[]) => Promise<ICommandResult | 
                 result.data = callbackResult;
             }
         } catch (error) {
+            console.log('Error in Command: ' + result.command + ' ' + result.args, error);
             result.message = JSON.stringify(error);
             result.success = false;
         }
 
         result.timestampEnd = Date.now();
+
+        console.log('End Command: ' + result.command + ' ' + result.args + ' ' + (result.success ? 'success' : 'error') + (result.message ? ' - ' + result.message : ''));
 
         return result;
     }
