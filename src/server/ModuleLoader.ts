@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
-import { IModuleDefinition } from "../interfaces/IModuleDefinition";
+import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
 
 export class ModuleLoader {
     private modulesPath: string;
@@ -12,9 +12,9 @@ export class ModuleLoader {
         this.modulesPath = path.join(this.config.root, 'modules');
     }
 
-    public async loadAllModules(): Promise<IModuleDefinition[]> {
-        return new Promise<IModuleDefinition[]>(async (resolve, reject) => {
-            const result: IModuleDefinition[] = [];
+    public async loadAllModules(): Promise<IModuleRepositoryItem[]> {
+        return new Promise<IModuleRepositoryItem[]>(async (resolve, reject) => {
+            const result: IModuleRepositoryItem[] = [];
 
             try {
                 const items = fs.readdirSync(this.modulesPath);
@@ -34,7 +34,7 @@ export class ModuleLoader {
         });
     }
 
-    public async loadModule(folderName: string): Promise<IModuleDefinition | null> {
+    public async loadModule(folderName: string): Promise<IModuleRepositoryItem | null> {
         const packageFile = path.join(this.modulesPath, folderName, 'package.json');
         let p: any;
         try {
@@ -53,7 +53,7 @@ export class ModuleLoader {
             author: p.author,
             repository: p.repository && p.repository.url,
             isBuilded: true
-        } as IModuleDefinition;
+        } as IModuleRepositoryItem;
 
         moduleDefinition.commandLog = [];
 

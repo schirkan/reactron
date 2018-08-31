@@ -41,10 +41,9 @@ var commandResultWrapper_1 = require("./commandResultWrapper");
 var ModuleLoader_1 = require("./ModuleLoader");
 var SystemCommand_1 = require("./SystemCommand");
 var ModuleManager = /** @class */ (function () {
-    function ModuleManager(config, moduleRepository, serviceManager) {
+    function ModuleManager(config, moduleRepository) {
         this.config = config;
         this.moduleRepository = moduleRepository;
-        this.serviceManager = serviceManager;
         this.moduleLoader = new ModuleLoader_1.ModuleLoader(this.config);
         this.modulesRootPath = path.join(this.config.root, 'modules');
         this.add = commandResultWrapper_1.wrapCall(this.add);
@@ -67,10 +66,10 @@ var ModuleManager = /** @class */ (function () {
             });
         });
     };
-    ModuleManager.prototype.getModuleDefinitions = function () {
+    ModuleManager.prototype.getAll = function () {
         return this.moduleRepository.getAll();
     };
-    ModuleManager.prototype.getModuleDefinition = function (moduleName) {
+    ModuleManager.prototype.get = function (moduleName) {
         return this.moduleRepository.get(moduleName);
     };
     ModuleManager.prototype.add = function (repository) {
@@ -124,7 +123,7 @@ var ModuleManager = /** @class */ (function () {
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git pull -n', modulePath)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition = this.getModuleDefinition(moduleName);
+                        moduleDefinition = this.get(moduleName);
                         if (moduleDefinition) {
                             moduleDefinition.commandLog.push(result);
                         }
@@ -143,7 +142,7 @@ var ModuleManager = /** @class */ (function () {
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', modulePath)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition = this.getModuleDefinition(moduleName);
+                        moduleDefinition = this.get(moduleName);
                         if (moduleDefinition) {
                             moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
                             moduleDefinition.commandLog.push(result);
@@ -163,7 +162,7 @@ var ModuleManager = /** @class */ (function () {
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm run build', modulePath)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition = this.getModuleDefinition(moduleName);
+                        moduleDefinition = this.get(moduleName);
                         if (moduleDefinition) {
                             moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
                             moduleDefinition.commandLog.push(result);
@@ -188,7 +187,7 @@ var ModuleManager = /** @class */ (function () {
         }
     };
     ModuleManager.prototype.getModulePath = function (moduleName) {
-        var moduleDefinition = this.getModuleDefinition(moduleName);
+        var moduleDefinition = this.get(moduleName);
         if (!moduleDefinition) {
             throw Error("Module '" + moduleName + "' not found.");
         }

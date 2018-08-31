@@ -15,7 +15,7 @@
     "scripts": {
         "debug": "run-p debug:react debug:electron",
         "debug:react": "react-scripts-ts start",
-        "debug:electron": "set NODE_ENV=dev& electron .",
+        "debug:electron": "set NODE_ENV=development& electron .",
         "start": "set NODE_ENV=production& electron .",
         "build": "npm run build:electron && npm run build:react",
         "build:react": "react-scripts-ts build",

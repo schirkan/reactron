@@ -38,54 +38,58 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wrapCall = function (callback, commandName) {
     if (commandName === void 0) { commandName = undefined; }
+    commandName = commandName || callback.prototype.name + '.' + callback.name;
     return function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        return __awaiter(_this, void 0, void 0, function () {
-            var result, callbackResult, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        result = {
-                            command: commandName || callback.prototype.name + '.' + callback.name,
-                            timestampStart: Date.now(),
-                            args: JSON.stringify(args)
-                        };
-                        console.log('Start Command: ' + result.command + ' ' + result.args);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, Promise.resolve(callback.apply(void 0, args))];
-                    case 2:
-                        callbackResult = _a.sent();
-                        // check if callbackResult is ICommandResult
-                        if (callbackResult && callbackResult.hasOwnProperty('success') && callbackResult.hasOwnProperty('command')) {
-                            result.success = callbackResult.success;
-                            result.children = [callbackResult];
-                        }
-                        else {
-                            result.success = true;
-                            result.data = callbackResult;
-                        }
-                        return [3 /*break*/, 4];
-                    case 3:
-                        error_1 = _a.sent();
-                        console.log('Error in Command: ' + result.command + ' ' + result.args, error_1);
-                        result.message = JSON.stringify(error_1);
-                        result.success = false;
-                        return [3 /*break*/, 4];
-                    case 4:
-                        result.timestampEnd = Date.now();
-                        console.log('End Command: ' + result.command + ' ' + result.args + ' ' + (result.success ? 'success' : 'error') + (result.message ? ' - ' + result.message : ''));
-                        return [2 /*return*/, result];
-                }
-            });
-        });
+        return exports.command(commandName, args, function () { return callback.apply(void 0, args); });
     };
 };
-exports.command = function (commandName, args, callback) {
-    return exports.wrapCall(callback, commandName)(args);
-};
+exports.command = function (commandName, args, callback) { return __awaiter(_this, void 0, void 0, function () {
+    var result, callbackResult, innerResult, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                result = {
+                    args: args ? JSON.stringify(args) : '',
+                    children: [],
+                    log: [],
+                    command: commandName || callback.prototype.name + '.' + callback.name,
+                    success: true,
+                    timestampStart: Date.now(),
+                    timestampEnd: 0
+                };
+                console.log('Start Command: ' + result.command + ' ' + result.args);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, Promise.resolve(callback(result))];
+            case 2:
+                callbackResult = _a.sent();
+                // check if callbackResult is ICommandResult
+                if (callbackResult && callbackResult.hasOwnProperty('success') && callbackResult.hasOwnProperty('command')) {
+                    innerResult = callbackResult;
+                    result.success = callbackResult.success;
+                    result.children.push(callbackResult);
+                    result.data = innerResult.data;
+                }
+                else {
+                    result.data = callbackResult;
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                error_1 = _a.sent();
+                console.log('Error in Command: ' + result.command + ' ' + result.args, error_1);
+                result.log.push('Error: ' + JSON.stringify(error_1));
+                result.success = false;
+                return [3 /*break*/, 4];
+            case 4:
+                result.timestampEnd = Date.now();
+                console.log('End Command: ' + result.command + ' ' + result.args + ' ' + (result.success ? 'success' : 'error'));
+                return [2 /*return*/, result];
+        }
+    });
+}); };
 //# sourceMappingURL=commandResultWrapper.js.map

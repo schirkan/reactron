@@ -44,124 +44,180 @@ var ServiceManager = /** @class */ (function () {
     }
     ServiceManager.prototype.get = function (moduleName, serviceName) {
         return __awaiter(this, void 0, void 0, function () {
-            var serviceInstance, result;
+            var serviceRepositoryItem, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
-                        serviceInstance = this.serviceRepository.get(moduleName, serviceName);
-                        if (!!serviceInstance) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.startService(moduleName, serviceName)];
+                        serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
+                        if (!!serviceRepositoryItem) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.loadService(moduleName, serviceName)];
                     case 1:
                         result = _a.sent();
                         if (result.success) {
-                            // retry
-                            serviceInstance = this.serviceRepository.get(moduleName, serviceName);
+                            serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
                         }
                         _a.label = 2;
-                    case 2: return [2 /*return*/, serviceInstance];
+                    case 2: return [2 /*return*/, serviceRepositoryItem && serviceRepositoryItem.instance];
                 }
             });
         });
     };
     ServiceManager.prototype.startAllServices = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, commandResultWrapper_1.command('startAllServices', undefined, function () { return __awaiter(_this, void 0, void 0, function () {
-                            var modules, childResults, i, m, servicesTypes, exportKeys, j, serviceName, result;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        modules = this.moduleRepository.getAll();
-                                        childResults = [];
-                                        console.log('Modules: ' + JSON.stringify(modules.map(function (x) { return x.name; })));
-                                        i = 0;
-                                        _a.label = 1;
-                                    case 1:
-                                        if (!(i < modules.length)) return [3 /*break*/, 6];
-                                        m = modules[i];
-                                        console.log('Loading: ' + m.serverFile);
-                                        servicesTypes = require(m.serverFile);
-                                        exportKeys = Object.keys(servicesTypes);
-                                        console.log('Exports: ' + JSON.stringify(exportKeys));
-                                        j = 0;
-                                        _a.label = 2;
-                                    case 2:
-                                        if (!(j < exportKeys.length)) return [3 /*break*/, 5];
-                                        serviceName = exportKeys[j];
-                                        return [4 /*yield*/, this.startService(m.name, serviceName)];
-                                    case 3:
-                                        result = _a.sent();
-                                        childResults.push(result);
-                                        _a.label = 4;
-                                    case 4:
-                                        j++;
-                                        return [3 /*break*/, 2];
-                                    case 5:
-                                        i++;
-                                        return [3 /*break*/, 1];
-                                    case 6: return [2 /*return*/];
-                                }
-                            });
-                        }); })];
-                    case 1: return [2 /*return*/, _a.sent()];
+        var _this = this;
+        return commandResultWrapper_1.command('startAllServices', undefined, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var modules, i, m, servicesTypes, exportKeys, j, serviceName, _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        modules = this.moduleRepository.getAll();
+                        result.log.push('Modules: ' + JSON.stringify(modules.map(function (x) { return x.name; })));
+                        i = 0;
+                        _c.label = 1;
+                    case 1:
+                        if (!(i < modules.length)) return [3 /*break*/, 6];
+                        m = modules[i];
+                        result.log.push('Loading: ' + m.serverFile);
+                        servicesTypes = require(m.serverFile);
+                        exportKeys = Object.keys(servicesTypes);
+                        result.log.push('Exports: ' + JSON.stringify(exportKeys));
+                        j = 0;
+                        _c.label = 2;
+                    case 2:
+                        if (!(j < exportKeys.length)) return [3 /*break*/, 5];
+                        serviceName = exportKeys[j];
+                        _b = (_a = result.children).push;
+                        return [4 /*yield*/, this.loadService(m.name, serviceName)];
+                    case 3:
+                        _b.apply(_a, [_c.sent()]);
+                        _c.label = 4;
+                    case 4:
+                        j++;
+                        return [3 /*break*/, 2];
+                    case 5:
+                        i++;
+                        return [3 /*break*/, 1];
+                    case 6: return [2 /*return*/];
                 }
             });
-        });
+        }); });
     };
     ServiceManager.prototype.stopAllServices = function () {
         var _this = this;
-        return commandResultWrapper_1.command('stopAllServices', undefined, function () { return __awaiter(_this, void 0, void 0, function () {
-            var services, childResults, _a, _b, _i, key, serviceInstance, loadResult;
+        return commandResultWrapper_1.command('stopAllServices', undefined, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var services, i, serviceRepositoryItem, _a, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         services = this.serviceRepository.getAll();
-                        childResults = [];
-                        _a = [];
-                        for (_b in services)
-                            _a.push(_b);
-                        _i = 0;
+                        i = 0;
                         _c.label = 1;
                     case 1:
-                        if (!(_i < _a.length)) return [3 /*break*/, 4];
-                        key = _a[_i];
-                        if (!services.hasOwnProperty(key)) return [3 /*break*/, 3];
-                        serviceInstance = services[key];
-                        return [4 /*yield*/, this.stopService(serviceInstance, key)];
+                        if (!(i < services.length)) return [3 /*break*/, 4];
+                        serviceRepositoryItem = services[i];
+                        _b = (_a = result.children).push;
+                        return [4 /*yield*/, this.stopService(serviceRepositoryItem)];
                     case 2:
-                        loadResult = _c.sent();
-                        childResults.push(loadResult);
+                        _b.apply(_a, [_c.sent()]);
                         _c.label = 3;
                     case 3:
-                        _i++;
+                        i++;
                         return [3 /*break*/, 1];
                     case 4: return [2 /*return*/];
                 }
             });
         }); });
     };
-    ServiceManager.prototype.stopService = function (serviceInstance, serviceKey) {
+    ServiceManager.prototype.stopService = function (serviceRepositoryItem) {
         var _this = this;
-        return commandResultWrapper_1.command('stopService', serviceKey, function () { return __awaiter(_this, void 0, void 0, function () {
+        var serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
+        return commandResultWrapper_1.command('stopService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, serviceInstance.stop()];
+                    case 0:
+                        if (serviceRepositoryItem.state === "stopped") {
+                            return [2 /*return*/];
+                        }
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        if (!serviceRepositoryItem.instance.start) return [3 /*break*/, 3];
+                        return [4 /*yield*/, serviceRepositoryItem.instance.stop()];
+                    case 2:
                         _a.sent();
-                        return [2 /*return*/];
+                        _a.label = 3;
+                    case 3:
+                        serviceRepositoryItem.state = "stopped";
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_1 = _a.sent();
+                        serviceRepositoryItem.state = "error";
+                        serviceRepositoryItem.log.push(error_1);
+                        result.log.push('Error stopping service: ' + serviceKey);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         }); });
     };
-    ServiceManager.prototype.startService = function (moduleName, serviceName) {
+    ServiceManager.prototype.startService = function (serviceRepositoryItem) {
         var _this = this;
-        return commandResultWrapper_1.command('startService', arguments, function () { return __awaiter(_this, void 0, void 0, function () {
-            var moduleDefinition, serviceTypes, serviceType, serviceInstance;
+        var serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
+        return commandResultWrapper_1.command('startService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
+                    case 0:
+                        if (serviceRepositoryItem.state === "starting" || serviceRepositoryItem.state === "running") {
+                            return [2 /*return*/];
+                        }
+                        serviceRepositoryItem.state = "starting";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        if (!serviceRepositoryItem.instance.start) return [3 /*break*/, 3];
+                        return [4 /*yield*/, serviceRepositoryItem.instance.start(this)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        serviceRepositoryItem.state = "running";
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_2 = _a.sent();
+                        serviceRepositoryItem.state = "error";
+                        serviceRepositoryItem.log.push(error_2);
+                        result.log.push('Error starting service: ' + serviceKey);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        }); });
+    };
+    ServiceManager.prototype.setOptions = function (serviceRepositoryItem, options) {
+        var _this = this;
+        return commandResultWrapper_1.command('setOptions', serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name, function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!serviceRepositoryItem.instance.setOptions) return [3 /*break*/, 2];
+                        return [4 /*yield*/, serviceRepositoryItem.instance.setOptions(options)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        }); });
+    };
+    ServiceManager.prototype.loadService = function (moduleName, serviceName) {
+        var _this = this;
+        var serviceKey = moduleName + '.' + serviceName;
+        return commandResultWrapper_1.command('loadService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var moduleDefinition, serviceTypes, serviceType, serviceInstance, serviceRepositoryItem, _a, _b, _c, _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (this.serviceRepository.get(moduleName, serviceName)) {
                             return [2 /*return*/]; // already running
@@ -171,7 +227,7 @@ var ServiceManager = /** @class */ (function () {
                             throw new Error('Module not found: ' + moduleName);
                         }
                         try {
-                            console.log('Loading: ' + moduleDefinition.serverFile);
+                            result.log.push('Loading: ' + moduleDefinition.serverFile);
                             serviceTypes = require(moduleDefinition.serverFile);
                         }
                         catch (error) {
@@ -182,13 +238,24 @@ var ServiceManager = /** @class */ (function () {
                             throw new Error('Service not found: ' + serviceName);
                         }
                         serviceInstance = new serviceType();
-                        // start service
-                        return [4 /*yield*/, serviceInstance.start(this)];
+                        serviceRepositoryItem = {
+                            name: serviceName,
+                            moduleName: moduleName,
+                            instance: serviceInstance,
+                            log: [],
+                            description: '',
+                            state: 'stopped',
+                            options: {} // TODO
+                        };
+                        this.serviceRepository.add(serviceRepositoryItem);
+                        _b = (_a = result.children).push;
+                        return [4 /*yield*/, this.setOptions(serviceRepositoryItem, serviceRepositoryItem.options)];
                     case 1:
-                        // start service
-                        _a.sent();
-                        console.log('Service started: ' + moduleName + '.' + serviceName, serviceInstance);
-                        this.serviceRepository.add(moduleName, serviceName, serviceInstance);
+                        _b.apply(_a, [_e.sent()]);
+                        _d = (_c = result.children).push;
+                        return [4 /*yield*/, this.startService(serviceRepositoryItem)];
+                    case 2:
+                        _d.apply(_c, [_e.sent()]);
                         return [2 /*return*/];
                 }
             });

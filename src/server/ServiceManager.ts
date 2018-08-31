@@ -1,5 +1,6 @@
 import { ICommandResult } from "../interfaces/ICommandResult";
 import { IExternalService } from "../interfaces/IExternalService";
+import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { command } from "./commandResultWrapper";
 import { ModuleRepository } from "./ModuleRepository";
 import { ServiceRepository } from "./ServiceRepository";
@@ -13,67 +14,101 @@ export class ServiceManager {
 
     public async get(moduleName: string, serviceName: string): Promise<IExternalService | undefined> {
         console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
-        let serviceInstance = this.serviceRepository.get(moduleName, serviceName);
-        if (!serviceInstance) {
-            // load service
-            const result = await this.startService(moduleName, serviceName);
+        let serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
+        if (!serviceRepositoryItem) {
+            const result = await this.loadService(moduleName, serviceName);
             if (result.success) {
-                // retry
-                serviceInstance = this.serviceRepository.get(moduleName, serviceName);
+                serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
             }
         }
-        return serviceInstance;
+        return serviceRepositoryItem && serviceRepositoryItem.instance;
     }
 
-    public async startAllServices(): Promise<ICommandResult> {
-        return await command('startAllServices', undefined, async () => {
+    public startAllServices(): Promise<ICommandResult> {
+        return command('startAllServices', undefined, async (result) => {
             const modules = this.moduleRepository.getAll();
-            const childResults: ICommandResult[] = [];
-
-            console.log('Modules: ' + JSON.stringify(modules.map(x => x.name)));
+            result.log.push('Modules: ' + JSON.stringify(modules.map(x => x.name)));
 
             // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < modules.length; i++) {
                 const m = modules[i];
 
-                console.log('Loading: ' + m.serverFile);
+                result.log.push('Loading: ' + m.serverFile);
                 const servicesTypes = require(m.serverFile);
                 const exportKeys = Object.keys(servicesTypes);
-                console.log('Exports: ' + JSON.stringify(exportKeys));
+                result.log.push('Exports: ' + JSON.stringify(exportKeys));
 
                 // tslint:disable-next-line:prefer-for-of
                 for (let j = 0; j < exportKeys.length; j++) {
                     const serviceName = exportKeys[j];
-                    const result = await this.startService(m.name, serviceName);
-                    childResults.push(result);
+                    result.children.push(await this.loadService(m.name, serviceName));
                 }
             }
         });
     }
 
     public stopAllServices(): Promise<ICommandResult> {
-        return command('stopAllServices', undefined, async () => {
+        return command('stopAllServices', undefined, async (result) => {
             const services = this.serviceRepository.getAll();
-            const childResults: ICommandResult[] = [];
 
-            for (const key in services) {
-                if (services.hasOwnProperty(key)) {
-                    const serviceInstance = services[key];
-                    const loadResult = await this.stopService(serviceInstance, key);
-                    childResults.push(loadResult);
-                }
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < services.length; i++) {
+                const serviceRepositoryItem = services[i];
+                result.children.push(await this.stopService(serviceRepositoryItem));
             }
         });
     }
 
-    private stopService(serviceInstance: IExternalService, serviceKey: string): Promise<ICommandResult> {
-        return command('stopService', serviceKey, async () => {
-            await serviceInstance.stop();
+    private stopService(serviceRepositoryItem: IServiceRepositoryItem): Promise<ICommandResult> {
+        const serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
+        return command('stopService', serviceKey, async (result) => {
+            if (serviceRepositoryItem.state === "stopped") {
+                return;
+            }
+            try {
+                if (serviceRepositoryItem.instance.start) {
+                    await serviceRepositoryItem.instance.stop();
+                }
+                serviceRepositoryItem.state = "stopped";
+            } catch (error) {
+                serviceRepositoryItem.state = "error";
+                serviceRepositoryItem.log.push(error);
+                result.log.push('Error stopping service: ' + serviceKey);
+            }
         });
     }
 
-    private startService(moduleName: string, serviceName: string): Promise<ICommandResult> {
-        return command('startService', arguments, async () => {
+    private startService(serviceRepositoryItem: IServiceRepositoryItem): Promise<ICommandResult> {
+        const serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
+        return command('startService', serviceKey, async (result) => {
+            if (serviceRepositoryItem.state === "starting" || serviceRepositoryItem.state === "running") {
+                return;
+            }
+            serviceRepositoryItem.state = "starting";
+            try {
+                if (serviceRepositoryItem.instance.start) {
+                    await serviceRepositoryItem.instance.start(this);
+                }
+                serviceRepositoryItem.state = "running";
+            } catch (error) {
+                serviceRepositoryItem.state = "error";
+                serviceRepositoryItem.log.push(error);
+                result.log.push('Error starting service: ' + serviceKey);
+            }
+        });
+    }
+
+    private setOptions(serviceRepositoryItem: IServiceRepositoryItem, options: any): Promise<ICommandResult> {
+        return command('setOptions', serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name, async () => {
+            if (serviceRepositoryItem.instance.setOptions) {
+                await serviceRepositoryItem.instance.setOptions(options);
+            }
+        });
+    }
+
+    private loadService(moduleName: string, serviceName: string): Promise<ICommandResult> {
+        const serviceKey = moduleName + '.' + serviceName;
+        return command('loadService', serviceKey, async (result) => {
             if (this.serviceRepository.get(moduleName, serviceName)) {
                 return; // already running
             }
@@ -85,7 +120,7 @@ export class ServiceManager {
 
             let serviceTypes: any;
             try {
-                console.log('Loading: ' + moduleDefinition.serverFile);
+                result.log.push('Loading: ' + moduleDefinition.serverFile);
                 serviceTypes = require(moduleDefinition.serverFile)
             } catch (error) {
                 throw new Error('Error importing Module: ' + moduleDefinition.serverFile);
@@ -95,14 +130,22 @@ export class ServiceManager {
             if (!serviceType) {
                 throw new Error('Service not found: ' + serviceName);
             }
-
             const serviceInstance = new serviceType() as IExternalService;
 
-            // start service
-            await serviceInstance.start(this);
+            const serviceRepositoryItem: IServiceRepositoryItem = {
+                name: serviceName,
+                moduleName,
+                instance: serviceInstance,
+                log: [],
+                description: '',
+                state: 'stopped',
+                options: {} // TODO
+            };
 
-            console.log('Service started: ' + moduleName + '.' + serviceName, serviceInstance);
-            this.serviceRepository.add(moduleName, serviceName, serviceInstance);
+            this.serviceRepository.add(serviceRepositoryItem);
+
+            result.children.push(await this.setOptions(serviceRepositoryItem, serviceRepositoryItem.options));
+            result.children.push(await this.startService(serviceRepositoryItem));
         });
     }
 }

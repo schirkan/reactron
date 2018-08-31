@@ -1,7 +1,7 @@
-import { IModuleDefinition } from "../interfaces/IModuleDefinition";
+import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
 
 export class ModuleRepository {
-    private readonly modules: IModuleDefinition[] = [];
+    private readonly modules: IModuleRepositoryItem[] = [];
 
     constructor(){
         this.add = this.add.bind(this);
@@ -10,7 +10,7 @@ export class ModuleRepository {
         this.getAll = this.getAll.bind(this);
     }
 
-    public add(module: IModuleDefinition): void {
+    public add(module: IModuleRepositoryItem): void {
         if (this.get(module.name)) {
             throw Error('Module allready registered: ' + module.name);
         }
@@ -24,11 +24,11 @@ export class ModuleRepository {
         }
     }
 
-    public get(moduleName: string): IModuleDefinition | undefined {
+    public get(moduleName: string): IModuleRepositoryItem | undefined {
         return this.modules.find(x => x.name === moduleName);
     }
 
-    public getAll(): IModuleDefinition[] {
+    public getAll(): IModuleRepositoryItem[] {
         return this.modules.slice(); // copy
     }
 }

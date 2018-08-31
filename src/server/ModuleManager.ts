@@ -2,11 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { IBackendServiceConfig } from "../interfaces/IBackendServiceConfig";
 import { ICommandResult } from "../interfaces/ICommandResult";
-import { IModuleDefinition } from "../interfaces/IModuleDefinition";
+import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
 import { wrapCall } from './commandResultWrapper';
 import { ModuleLoader } from "./ModuleLoader";
 import { ModuleRepository } from "./ModuleRepository";
-import { ServiceManager } from './ServiceManager';
 import { SystemCommand } from "./SystemCommand";
 
 export class ModuleManager {
@@ -16,7 +15,6 @@ export class ModuleManager {
     constructor(
         private config: IBackendServiceConfig,
         private moduleRepository: ModuleRepository,
-        private serviceManager: ServiceManager
     ) {
         this.modulesRootPath = path.join(this.config.root, 'modules');
 
@@ -32,11 +30,11 @@ export class ModuleManager {
         modules.forEach(this.moduleRepository.add);
     }
 
-    public getModuleDefinitions(): IModuleDefinition[] {
+    public getAll(): IModuleRepositoryItem[] {
         return this.moduleRepository.getAll();
     }
 
-    public getModuleDefinition(moduleName: string): IModuleDefinition | undefined {
+    public get(moduleName: string): IModuleRepositoryItem | undefined {
         return this.moduleRepository.get(moduleName);
     }
 
@@ -81,7 +79,7 @@ export class ModuleManager {
         const modulePath = this.getModulePath(moduleName);
         const result = await SystemCommand.run('git pull -n', modulePath);
 
-        const moduleDefinition = this.getModuleDefinition(moduleName);
+        const moduleDefinition = this.get(moduleName);
         if (moduleDefinition) {
             moduleDefinition.commandLog.push(result);
         }
@@ -93,7 +91,7 @@ export class ModuleManager {
         const modulePath = this.getModulePath(moduleName);
         const result = await SystemCommand.run('npm install', modulePath);
 
-        const moduleDefinition = this.getModuleDefinition(moduleName);
+        const moduleDefinition = this.get(moduleName);
         if (moduleDefinition) {
             moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
             moduleDefinition.commandLog.push(result);
@@ -106,7 +104,7 @@ export class ModuleManager {
         const modulePath = this.getModulePath(moduleName);
         const result = await SystemCommand.run('npm run build', modulePath);
 
-        const moduleDefinition = this.getModuleDefinition(moduleName);
+        const moduleDefinition = this.get(moduleName);
         if (moduleDefinition) {
             moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
             moduleDefinition.commandLog.push(result);
@@ -131,7 +129,7 @@ export class ModuleManager {
     }
 
     private getModulePath(moduleName: string): string {
-        const moduleDefinition = this.getModuleDefinition(moduleName);
+        const moduleDefinition = this.get(moduleName);
         if (!moduleDefinition) {
             throw Error("Module '" + moduleName + "' not found.");
         }

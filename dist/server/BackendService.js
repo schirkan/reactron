@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var electron_1 = require("electron");
 var ElectronApp_1 = require("./ElectronApp");
 var ExpressApp_1 = require("./ExpressApp");
 var ModuleManager_1 = require("./ModuleManager");
@@ -49,7 +50,7 @@ var BackendService = /** @class */ (function () {
         this.electronApp = new ElectronApp_1.ElectronApp(this.config);
         this.expressApp = new ExpressApp_1.ExpressApp(this.config);
         this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository);
-        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository, this.serviceManager);
+        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
     }
     BackendService.start = function (root) {
         return __awaiter(this, void 0, void 0, function () {
@@ -58,7 +59,7 @@ var BackendService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!!BackendService.instance) return [3 /*break*/, 2];
-                        isDev = process.env.NODE_ENV !== 'production';
+                        isDev = process.env.NODE_ENV === 'dev';
                         config = {
                             root: root,
                             isDev: isDev,
@@ -79,6 +80,7 @@ var BackendService = /** @class */ (function () {
     };
     BackendService.prototype.start = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.expressApp.start()];
@@ -93,41 +95,28 @@ var BackendService = /** @class */ (function () {
                         return [4 /*yield*/, this.serviceManager.startAllServices()];
                     case 4:
                         _a.sent();
+                        electron_1.app.on('before-quit', function () { return _this.serviceManager.stopAllServices(); });
                         this.electronApp.mainWindow.loadURL('http://localhost:' + this.config.frontendPort);
                         return [2 /*return*/];
                 }
             });
         });
     };
-    BackendService.prototype.stop = function () {
+    BackendService.prototype.exit = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: 
-                    // stop all services
-                    return [4 /*yield*/, this.serviceManager.stopAllServices()];
-                    case 1:
-                        // stop all services
-                        _a.sent();
-                        // quit electron
-                        this.electronApp.mainWindow.close();
-                        return [2 /*return*/];
-                }
+                this.electronApp.mainWindow.close();
+                electron_1.app.quit();
+                return [2 /*return*/];
             });
         });
     };
     BackendService.prototype.restart = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: 
-                    // stop all services
-                    return [4 /*yield*/, this.stop()];
-                    case 1:
-                        // stop all services
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                electron_1.app.relaunch();
+                electron_1.app.quit();
+                return [2 /*return*/];
             });
         });
     };

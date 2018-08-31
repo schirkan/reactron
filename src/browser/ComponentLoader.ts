@@ -25,7 +25,7 @@ export class ComponentLoader {
 
     public loadComponent(moduleName: string, componentName: string): Promise<IDynamicReactComponentClass | undefined> {
         return new Promise<IDynamicReactComponentClass | undefined>((resolve) => {
-            const moduleDefinition = this.backendService.moduleManager.getModuleDefinition(moduleName);
+            const moduleDefinition = this.backendService.moduleManager.get(moduleName);
             if (moduleDefinition && moduleDefinition.browserFile) {
                 SystemJS.import(moduleDefinition.browserFile).then(components => {
                     const component = components[componentName];

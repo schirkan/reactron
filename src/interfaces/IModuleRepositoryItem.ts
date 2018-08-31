@@ -1,6 +1,6 @@
 import { ICommandResult } from "./ICommandResult";
 
-export interface IModuleDefinition {
+export interface IModuleRepositoryItem {
     folder: string;
     name: string;
     description: string;
