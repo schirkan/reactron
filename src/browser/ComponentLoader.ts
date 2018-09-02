@@ -9,10 +9,6 @@ import { BackendService } from '../server/BackendService';
 const electron = (window as any).require('electron') as Electron.AllElectron;
 const SystemJS = (window as any).SystemJS as SystemJSLoader.System;
 
-// SystemJS.config({
-//     map: { 'plugin-json': 'node_modules/systemjs-plugin-json/json.js' },
-//     meta: { '*.json': { loader: 'plugin-json' } }
-// });
 SystemJS.set('electron', SystemJS.newModule(electron));
 SystemJS.set('react', SystemJS.newModule(React));
 SystemJS.set('react-dom', SystemJS.newModule(ReactDom));

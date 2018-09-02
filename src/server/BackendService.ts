@@ -1,11 +1,14 @@
 import { app } from 'electron';
 import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
+import { ISystemSettings } from '../interfaces/ISystemSettings';
 import { ElectronApp } from './ElectronApp';
 import { ExpressApp } from './ExpressApp';
 import { ModuleManager } from './ModuleManager';
 import { ModuleRepository } from './ModuleRepository';
+import { PubSub } from './PubSub';
 import { ServiceManager } from './ServiceManager';
 import { ServiceRepository } from './ServiceRepository';
+import { SystemSettingsManager } from './SystemSettingsManager';
 
 export class BackendService {
     public static instance: BackendService;
@@ -34,6 +37,8 @@ export class BackendService {
     public readonly expressApp = new ExpressApp(this.config);
     public readonly serviceManager = new ServiceManager(this.serviceRepository, this.moduleRepository);
     public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository);
+    public readonly topics = new PubSub();
+    public readonly settings: ISystemSettings = new SystemSettingsManager();
 
     private constructor(public readonly config: IBackendServiceConfig) { }
 
