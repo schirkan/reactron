@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var commandResultWrapper_1 = require("./commandResultWrapper");
+var ServerModuleHelper_1 = require("./ServerModuleHelper");
 // dependency loader für services
 var ServiceManager = /** @class */ (function () {
     function ServiceManager(serviceRepository, moduleRepository) {
@@ -77,6 +78,7 @@ var ServiceManager = /** @class */ (function () {
                     case 1:
                         if (!(i < modules.length)) return [3 /*break*/, 6];
                         m = modules[i];
+                        if (!m.serverFile) return [3 /*break*/, 5];
                         result.log.push('Loading: ' + m.serverFile);
                         servicesTypes = require(m.serverFile);
                         exportKeys = Object.keys(servicesTypes);
@@ -142,7 +144,7 @@ var ServiceManager = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
-                        if (!serviceRepositoryItem.instance.start) return [3 /*break*/, 3];
+                        if (!serviceRepositoryItem.instance.stop) return [3 /*break*/, 3];
                         return [4 /*yield*/, serviceRepositoryItem.instance.stop()];
                     case 2:
                         _a.sent();
@@ -165,7 +167,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
         return commandResultWrapper_1.command('startService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var error_2;
+            var helper, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -177,7 +179,8 @@ var ServiceManager = /** @class */ (function () {
                     case 1:
                         _a.trys.push([1, 4, , 5]);
                         if (!serviceRepositoryItem.instance.start) return [3 /*break*/, 3];
-                        return [4 /*yield*/, serviceRepositoryItem.instance.start(this)];
+                        helper = ServerModuleHelper_1.ServerModuleHelper.getServerModuleHelpers(serviceRepositoryItem.moduleName);
+                        return [4 /*yield*/, serviceRepositoryItem.instance.start(helper)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -225,6 +228,9 @@ var ServiceManager = /** @class */ (function () {
                         moduleDefinition = this.moduleRepository.get(moduleName);
                         if (!moduleDefinition) {
                             throw new Error('Module not found: ' + moduleName);
+                        }
+                        if (!moduleDefinition.serverFile) {
+                            throw new Error('Module has no server file: ' + moduleName);
                         }
                         try {
                             result.log.push('Loading: ' + moduleDefinition.serverFile);

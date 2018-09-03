@@ -46,11 +46,11 @@ var ModuleManager = /** @class */ (function () {
         this.moduleRepository = moduleRepository;
         this.moduleLoader = new ModuleLoader_1.ModuleLoader(this.config);
         this.modulesRootPath = path.join(this.config.root, 'modules');
-        this.add = commandResultWrapper_1.wrapCall(this.add);
-        this.build = commandResultWrapper_1.wrapCall(this.build);
-        this.update = commandResultWrapper_1.wrapCall(this.update);
-        this.remove = commandResultWrapper_1.wrapCall(this.remove);
-        this.install = commandResultWrapper_1.wrapCall(this.install);
+        this.add = commandResultWrapper_1.wrapCall(this.add.bind(this), 'add');
+        this.build = commandResultWrapper_1.wrapCall(this.build.bind(this), 'build');
+        this.update = commandResultWrapper_1.wrapCall(this.update.bind(this), 'update');
+        this.remove = commandResultWrapper_1.wrapCall(this.remove.bind(this), 'remove');
+        this.install = commandResultWrapper_1.wrapCall(this.install.bind(this), 'install');
     }
     ModuleManager.prototype.loadAllModules = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -115,18 +115,18 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.update = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var modulePath, result, moduleDefinition;
+            var moduleDefinition, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        modulePath = this.getModulePath(moduleName);
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git pull -n', modulePath)];
+                        moduleDefinition = this.get(moduleName);
+                        if (!moduleDefinition || !moduleDefinition.canUpdate) {
+                            throw new Error('Can not update module');
+                        }
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git pull -n', moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition = this.get(moduleName);
-                        if (moduleDefinition) {
-                            moduleDefinition.commandLog.push(result);
-                        }
+                        moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }
             });
@@ -134,19 +134,19 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.install = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var modulePath, result, moduleDefinition;
+            var moduleDefinition, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        modulePath = this.getModulePath(moduleName);
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', modulePath)];
+                        moduleDefinition = this.get(moduleName);
+                        if (!moduleDefinition || !moduleDefinition.canInstall) {
+                            throw new Error('Can not install module');
+                        }
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition = this.get(moduleName);
-                        if (moduleDefinition) {
-                            moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
-                            moduleDefinition.commandLog.push(result);
-                        }
+                        moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
+                        moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }
             });
@@ -154,28 +154,31 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.build = function (moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var modulePath, result, moduleDefinition;
+            var moduleDefinition, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        modulePath = this.getModulePath(moduleName);
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm run build', modulePath)];
+                        moduleDefinition = this.get(moduleName);
+                        if (!moduleDefinition || !moduleDefinition.canBuild) {
+                            throw new Error('Can not build module');
+                        }
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm run build', moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition = this.get(moduleName);
-                        if (moduleDefinition) {
-                            moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
-                            moduleDefinition.commandLog.push(result);
-                        }
+                        moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
+                        moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }
             });
         });
     };
     ModuleManager.prototype.remove = function (moduleName) {
-        var modulePath = this.getModulePath(moduleName);
+        var moduleDefinition = this.get(moduleName);
+        if (!moduleDefinition || !moduleDefinition.canRemove) {
+            throw new Error('Can not remove module');
+        }
         this.moduleRepository.remove(moduleName);
-        return SystemCommand_1.SystemCommand.run('rimraf ' + modulePath, this.modulesRootPath);
+        return SystemCommand_1.SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
     };
     ModuleManager.prototype.isDirEmpty = function (dirname) {
         try {
@@ -185,13 +188,6 @@ var ModuleManager = /** @class */ (function () {
         catch (error) {
             return true;
         }
-    };
-    ModuleManager.prototype.getModulePath = function (moduleName) {
-        var moduleDefinition = this.get(moduleName);
-        if (!moduleDefinition) {
-            throw Error("Module '" + moduleName + "' not found.");
-        }
-        return path.join(this.modulesRootPath, moduleDefinition.folder);
     };
     return ModuleManager;
 }());

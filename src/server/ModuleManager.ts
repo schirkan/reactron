@@ -18,11 +18,11 @@ export class ModuleManager {
     ) {
         this.modulesRootPath = path.join(this.config.root, 'modules');
 
-        this.add = wrapCall(this.add);
-        this.build = wrapCall(this.build);
-        this.update = wrapCall(this.update);
-        this.remove = wrapCall(this.remove);
-        this.install = wrapCall(this.install);
+        this.add = wrapCall(this.add.bind(this), 'add');
+        this.build = wrapCall(this.build.bind(this), 'build');
+        this.update = wrapCall(this.update.bind(this), 'update');
+        this.remove = wrapCall(this.remove.bind(this), 'remove');
+        this.install = wrapCall(this.install.bind(this), 'install');
     }
 
     public async loadAllModules(): Promise<void> {
@@ -76,47 +76,52 @@ export class ModuleManager {
     }
 
     public async update(moduleName: string): Promise<ICommandResult> {
-        const modulePath = this.getModulePath(moduleName);
-        const result = await SystemCommand.run('git pull -n', modulePath);
-
         const moduleDefinition = this.get(moduleName);
-        if (moduleDefinition) {
-            moduleDefinition.commandLog.push(result);
+        
+        if (!moduleDefinition || !moduleDefinition.canUpdate) {
+            throw new Error('Can not update module');
         }
 
+        const result = await SystemCommand.run('git pull -n', moduleDefinition.path);
+        moduleDefinition.commandLog.push(result);
         return result;
     }
 
     public async install(moduleName: string): Promise<ICommandResult> {
-        const modulePath = this.getModulePath(moduleName);
-        const result = await SystemCommand.run('npm install', modulePath);
-
         const moduleDefinition = this.get(moduleName);
-        if (moduleDefinition) {
-            moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
-            moduleDefinition.commandLog.push(result);
+        
+        if (!moduleDefinition || !moduleDefinition.canInstall) {
+            throw new Error('Can not install module');
         }
 
+        const result = await SystemCommand.run('npm install', moduleDefinition.path);
+        moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
+        moduleDefinition.commandLog.push(result);
         return result;
     }
 
     public async build(moduleName: string): Promise<ICommandResult> {
-        const modulePath = this.getModulePath(moduleName);
-        const result = await SystemCommand.run('npm run build', modulePath);
-
         const moduleDefinition = this.get(moduleName);
-        if (moduleDefinition) {
-            moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
-            moduleDefinition.commandLog.push(result);
+        
+        if (!moduleDefinition || !moduleDefinition.canBuild) {
+            throw new Error('Can not build module');
         }
 
+        const result = await SystemCommand.run('npm run build', moduleDefinition.path);
+        moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
+        moduleDefinition.commandLog.push(result);
         return result;
     }
 
     public remove(moduleName: string): Promise<ICommandResult> {
-        const modulePath = this.getModulePath(moduleName);
+        const moduleDefinition = this.get(moduleName);
+        
+        if (!moduleDefinition || !moduleDefinition.canRemove) {
+            throw new Error('Can not remove module');
+        }
+
         this.moduleRepository.remove(moduleName);
-        return SystemCommand.run('rimraf ' + modulePath, this.modulesRootPath);
+        return SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
     }
 
     private isDirEmpty(dirname: string): boolean {
@@ -126,13 +131,5 @@ export class ModuleManager {
         } catch (error) {
             return true;
         }
-    }
-
-    private getModulePath(moduleName: string): string {
-        const moduleDefinition = this.get(moduleName);
-        if (!moduleDefinition) {
-            throw Error("Module '" + moduleName + "' not found.");
-        }
-        return path.join(this.modulesRootPath, moduleDefinition.folder);
     }
 }

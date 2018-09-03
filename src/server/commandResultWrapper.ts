@@ -33,7 +33,7 @@ export const command = async <T = void>(commandName: string | undefined, args: a
         }
     } catch (error) {
         console.log('Error in Command: ' + result.command + ' ' + result.args, error);
-        result.log.push('Error: ' + JSON.stringify(error));
+        result.log.push(error);
         result.success = false;
     }
 

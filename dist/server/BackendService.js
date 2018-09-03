@@ -40,8 +40,10 @@ var ElectronApp_1 = require("./ElectronApp");
 var ExpressApp_1 = require("./ExpressApp");
 var ModuleManager_1 = require("./ModuleManager");
 var ModuleRepository_1 = require("./ModuleRepository");
+var PubSub_1 = require("./PubSub");
 var ServiceManager_1 = require("./ServiceManager");
 var ServiceRepository_1 = require("./ServiceRepository");
+var SystemSettingsManager_1 = require("./SystemSettingsManager");
 var BackendService = /** @class */ (function () {
     function BackendService(config) {
         this.config = config;
@@ -51,6 +53,8 @@ var BackendService = /** @class */ (function () {
         this.expressApp = new ExpressApp_1.ExpressApp(this.config);
         this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository);
         this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
+        this.topics = new PubSub_1.PubSub();
+        this.settings = new SystemSettingsManager_1.SystemSettingsManager();
     }
     BackendService.start = function (root) {
         return __awaiter(this, void 0, void 0, function () {
@@ -59,7 +63,7 @@ var BackendService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!!BackendService.instance) return [3 /*break*/, 2];
-                        isDev = process.env.NODE_ENV === 'dev';
+                        isDev = process.env.NODE_ENV === 'development';
                         config = {
                             root: root,
                             isDev: isDev,
@@ -83,7 +87,24 @@ var BackendService = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.expressApp.start()];
+                    case 0:
+                        // register internal api module
+                        this.moduleRepository.add({
+                            name: 'internal',
+                            folder: 'apiModule',
+                            path: './apiModule',
+                            description: 'Internal Api Module',
+                            author: 'Martin Pietschmann',
+                            canRemove: false,
+                            canBuild: false,
+                            canUpdate: false,
+                            canInstall: false,
+                            isBuilded: true,
+                            isInstalled: true,
+                            commandLog: [],
+                            serverFile: './apiModule/index'
+                        });
+                        return [4 /*yield*/, this.expressApp.start()];
                     case 1:
                         _a.sent();
                         return [4 /*yield*/, this.electronApp.start()];

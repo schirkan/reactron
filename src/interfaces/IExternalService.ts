@@ -1,7 +1,7 @@
-import { ServiceManager } from "../server/ServiceManager";
+import { ServerModuleHelper } from "../server/ServerModuleHelper";
 
 export interface IExternalService {
-    start(serviceLoader: ServiceManager): Promise<void>;
-    stop(): Promise<void>;
-    setOptions(options: any): Promise<void>;
+    start(helper: ServerModuleHelper): Promise<void>;
+    stop?(): Promise<void>;
+    setOptions?(options: any): Promise<void>;
 }

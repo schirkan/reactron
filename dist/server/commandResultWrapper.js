@@ -82,7 +82,7 @@ exports.command = function (commandName, args, callback) { return __awaiter(_thi
             case 3:
                 error_1 = _a.sent();
                 console.log('Error in Command: ' + result.command + ' ' + result.args, error_1);
-                result.log.push('Error: ' + JSON.stringify(error_1));
+                result.log.push(error_1);
                 result.success = false;
                 return [3 /*break*/, 4];
             case 4:

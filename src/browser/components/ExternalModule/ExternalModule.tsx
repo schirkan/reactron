@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ModuleHelper } from '../../../common/moduleHelper';
 import { IDynamicReactComponentClass, IDynamicReactComponentClassProps } from '../../../interfaces/IDynamicReactComponentClass';
+import { BrowserModuleHelper } from '../../BrowserModuleHelper';
 import { instance as componentLoader } from '../../ComponentLoader';
 
 export interface IExternalModuleProps {
@@ -34,7 +34,7 @@ export default class ExternalModule extends React.Component<IExternalModuleProps
     try {
       const componentClass = await componentLoader.loadComponent(this.props.moduleName, this.props.componentName);
       const componentProps = {
-        backendService: new ModuleHelper(this.props.moduleName),
+        backendService: new BrowserModuleHelper(this.props.moduleName),
         options: { initialText: 'Hello World' } // TODO from component options repo
       };
       this.setState({ componentClass, componentProps, componentFound: !!componentClass });

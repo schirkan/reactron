@@ -4,8 +4,8 @@ import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { IDynamicReactComponentClass } from '../interfaces/IDynamicReactComponentClass';
-import { BackendService } from '../server/BackendService';
 
+// TODO: remove electron dependency & use rest api
 const electron = (window as any).require('electron') as Electron.AllElectron;
 const SystemJS = (window as any).SystemJS as SystemJSLoader.System;
 
@@ -17,7 +17,7 @@ SystemJS.set('@fortawesome/free-solid-svg-icons', SystemJS.newModule(SvgIcons));
 SystemJS.set('@fortawesome/react-fontawesome', SystemJS.newModule(FontAwesome));
 
 export class ComponentLoader {
-    public readonly backendService = electron.remote.require('./dist/server/BackendService').BackendService.instance as BackendService;
+    public readonly backendService = electron.remote.require('./dist/server/BackendService').BackendService.instance;
 
     public loadComponent(moduleName: string, componentName: string): Promise<IDynamicReactComponentClass | undefined> {
         return new Promise<IDynamicReactComponentClass | undefined>((resolve) => {

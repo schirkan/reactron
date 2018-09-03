@@ -48,6 +48,7 @@ export class ModuleLoader {
 
         const moduleDefinition = {
             folder: folderName,
+            path: path.join(this.modulesPath, folderName),
             name: p.name,
             description: p.description,
             author: p.author,
@@ -77,7 +78,9 @@ export class ModuleLoader {
         }
 
         moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
-        moduleDefinition.canUpdaten = !!moduleDefinition.repository;
+        moduleDefinition.canUpdate = !!moduleDefinition.repository;
+        moduleDefinition.canInstall = true; // TODO
+        moduleDefinition.canRemove = true; // TODO
         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
 
         console.log('Module loaded: ' + moduleDefinition.name);

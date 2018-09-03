@@ -3,6 +3,7 @@ import { IExternalService } from "../interfaces/IExternalService";
 import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { command } from "./commandResultWrapper";
 import { ModuleRepository } from "./ModuleRepository";
+import { ServerModuleHelper } from "./ServerModuleHelper";
 import { ServiceRepository } from "./ServiceRepository";
 
 // dependency loader für services
@@ -33,15 +34,17 @@ export class ServiceManager {
             for (let i = 0; i < modules.length; i++) {
                 const m = modules[i];
 
-                result.log.push('Loading: ' + m.serverFile);
-                const servicesTypes = require(m.serverFile);
-                const exportKeys = Object.keys(servicesTypes);
-                result.log.push('Exports: ' + JSON.stringify(exportKeys));
+                if (m.serverFile) {
+                    result.log.push('Loading: ' + m.serverFile);
+                    const servicesTypes = require(m.serverFile);
+                    const exportKeys = Object.keys(servicesTypes);
+                    result.log.push('Exports: ' + JSON.stringify(exportKeys));
 
-                // tslint:disable-next-line:prefer-for-of
-                for (let j = 0; j < exportKeys.length; j++) {
-                    const serviceName = exportKeys[j];
-                    result.children.push(await this.loadService(m.name, serviceName));
+                    // tslint:disable-next-line:prefer-for-of
+                    for (let j = 0; j < exportKeys.length; j++) {
+                        const serviceName = exportKeys[j];
+                        result.children.push(await this.loadService(m.name, serviceName));
+                    }
                 }
             }
         });
@@ -66,7 +69,7 @@ export class ServiceManager {
                 return;
             }
             try {
-                if (serviceRepositoryItem.instance.start) {
+                if (serviceRepositoryItem.instance.stop) {
                     await serviceRepositoryItem.instance.stop();
                 }
                 serviceRepositoryItem.state = "stopped";
@@ -87,7 +90,8 @@ export class ServiceManager {
             serviceRepositoryItem.state = "starting";
             try {
                 if (serviceRepositoryItem.instance.start) {
-                    await serviceRepositoryItem.instance.start(this);
+                    const helper = ServerModuleHelper.getServerModuleHelpers(serviceRepositoryItem.moduleName);
+                    await serviceRepositoryItem.instance.start(helper);
                 }
                 serviceRepositoryItem.state = "running";
             } catch (error) {
@@ -116,6 +120,10 @@ export class ServiceManager {
             const moduleDefinition = this.moduleRepository.get(moduleName);
             if (!moduleDefinition) {
                 throw new Error('Module not found: ' + moduleName);
+            }
+
+            if (!moduleDefinition.serverFile) {
+                throw new Error('Module has no server file: ' + moduleName);
             }
 
             let serviceTypes: any;

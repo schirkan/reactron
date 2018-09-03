@@ -1,11 +1,12 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
     "module": "commonjs"
   },
   "include": [
     "src/server/**/*",
+    "src/common/**/*",
+    "src/typings/**/*",
     "src/interfaces/**/*",
   ]
 }

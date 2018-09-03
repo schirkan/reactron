@@ -43,6 +43,23 @@ export class BackendService {
     private constructor(public readonly config: IBackendServiceConfig) { }
 
     private async start(): Promise<void> {
+        // register internal api module
+        this.moduleRepository.add({
+            name: 'internal',
+            folder: 'apiModule',
+            path: './apiModule',
+            description: 'Internal Api Module',
+            author: 'Martin Pietschmann',
+            canRemove: false,
+            canBuild: false,
+            canUpdate: false,
+            canInstall: false,
+            isBuilded: true,
+            isInstalled: true,
+            commandLog: [],
+            serverFile: './apiModule/index'
+        });
+
         await this.expressApp.start();
         await this.electronApp.start();
         await this.moduleManager.loadAllModules();
