@@ -17,7 +17,6 @@ export default class ErrorBoundary extends React.Component<any, { error: any }> 
       return (
         <React.Fragment>
           <h1>Something went wrong.</h1>
-          <div>{this.state.error}</div>
         </React.Fragment>
       );
     }

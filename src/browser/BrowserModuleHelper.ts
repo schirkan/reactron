@@ -8,6 +8,7 @@ export class BrowserModuleHelper implements IModuleHelper {
     public readonly topics: IPubSub;
     public readonly moduleStorage: ElectronStore;
     public readonly moduleApiPath: string;
+    public readonly getService: (serviceName: string, moduleName?: string | undefined) => Promise<IExternalService | undefined>;
 
     constructor(public moduleName: string) {
         if ((window as any).require) {
@@ -19,10 +20,14 @@ export class BrowserModuleHelper implements IModuleHelper {
         }
 
         this.moduleApiPath = '/api/modules/' + moduleName;
-    }
 
-    public getService(serviceName: string, moduleName?: string): Promise<IExternalService | undefined> {
-        return this.backendService.serviceManager.get(moduleName || this.moduleName, serviceName);
+        // tslint:disable-next-line:no-shadowed-variable
+        this.getService = (serviceName: string, moduleName?: string): Promise<IExternalService | undefined> => {
+            if(!this.backendService){
+                return Promise.reject('Method getService is not supported in browser environment.');
+            }
+            return this.backendService.serviceManager.get(moduleName || this.moduleName, serviceName);
+        }
     }
 }
 
