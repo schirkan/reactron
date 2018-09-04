@@ -44,46 +44,31 @@ var ModuleLoader = /** @class */ (function () {
     }
     ModuleLoader.prototype.loadAllModules = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var result, items, _i, items_1, item, moduleFolderFull, newModule;
             return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var result, items, _i, items_1, item, moduleFolderFull, newModule, error_1;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    result = [];
-                                    _a.label = 1;
-                                case 1:
-                                    _a.trys.push([1, 6, , 7]);
-                                    items = fs.readdirSync(this.modulesPath);
-                                    _i = 0, items_1 = items;
-                                    _a.label = 2;
-                                case 2:
-                                    if (!(_i < items_1.length)) return [3 /*break*/, 5];
-                                    item = items_1[_i];
-                                    moduleFolderFull = path.join(this.modulesPath, item);
-                                    if (!fs.statSync(moduleFolderFull).isDirectory()) return [3 /*break*/, 4];
-                                    return [4 /*yield*/, this.loadModule(item)];
-                                case 3:
-                                    newModule = _a.sent();
-                                    if (newModule) {
-                                        result.push(newModule);
-                                    }
-                                    _a.label = 4;
-                                case 4:
-                                    _i++;
-                                    return [3 /*break*/, 2];
-                                case 5:
-                                    resolve(result);
-                                    return [3 /*break*/, 7];
-                                case 6:
-                                    error_1 = _a.sent();
-                                    reject(error_1);
-                                    return [3 /*break*/, 7];
-                                case 7: return [2 /*return*/];
-                            }
-                        });
-                    }); })];
+                switch (_a.label) {
+                    case 0:
+                        result = [];
+                        items = fs.readdirSync(this.modulesPath);
+                        _i = 0, items_1 = items;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < items_1.length)) return [3 /*break*/, 4];
+                        item = items_1[_i];
+                        moduleFolderFull = path.join(this.modulesPath, item);
+                        if (!fs.statSync(moduleFolderFull).isDirectory()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.loadModule(item)];
+                    case 2:
+                        newModule = _a.sent();
+                        if (newModule) {
+                            result.push(newModule);
+                        }
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/, result];
+                }
             });
         });
     };
@@ -129,8 +114,8 @@ var ModuleLoader = /** @class */ (function () {
                 }
                 moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
                 moduleDefinition.canUpdate = !!moduleDefinition.repository;
-                moduleDefinition.canInstall = true; // TODO
-                moduleDefinition.canRemove = true; // TODO
+                moduleDefinition.canInstall = !!(p.dependencies || p.devDependencies);
+                moduleDefinition.canRemove = true;
                 moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
                 console.log('Module loaded: ' + moduleDefinition.name);
                 return [2 /*return*/, moduleDefinition];

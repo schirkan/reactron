@@ -35,48 +35,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var electron_1 = require("electron");
-var ElectronApp_1 = require("./ElectronApp");
-var ExpressApp_1 = require("./ExpressApp");
-var ModuleManager_1 = require("./ModuleManager");
-var ModuleRepository_1 = require("./ModuleRepository");
-var OptionsRepository_1 = require("./OptionsRepository");
-var PubSub_1 = require("./PubSub");
-var ServiceManager_1 = require("./ServiceManager");
-var ServiceRepository_1 = require("./ServiceRepository");
-var SystemSettingsManager_1 = require("./SystemSettingsManager");
-var BackendService = /** @class */ (function () {
-    function BackendService(config) {
-        this.config = config;
-        this.moduleRepository = new ModuleRepository_1.ModuleRepository();
-        this.serviceRepository = new ServiceRepository_1.ServiceRepository();
-        this.optionsRepository = new OptionsRepository_1.OptionsRepository();
-        this.electronApp = new ElectronApp_1.ElectronApp(this.config);
-        this.expressApp = new ExpressApp_1.ExpressApp(this.config);
-        this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository, this.optionsRepository);
-        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
-        this.topics = new PubSub_1.PubSub();
-        this.settings = new SystemSettingsManager_1.SystemSettingsManager();
+var express_1 = require("express");
+var OptionsController = /** @class */ (function () {
+    function OptionsController() {
     }
-    BackendService.prototype.exit = function () {
+    OptionsController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
+            var router;
+            var _this = this;
             return __generator(this, function (_a) {
-                this.electronApp.mainWindow.close();
-                electron_1.app.quit();
+                console.log('OptionsController.start');
+                router = express_1.Router();
+                helper.moduleApiRouter.use('/options', router);
+                router.get('/:moduleName/service/:serviceName', function (req, res) {
+                    console.log('OptionsController.getServiceOptions');
+                    var result = helper.backendService.optionsRepository.getServiceOptions(req.params.moduleName, req.params.serviceName);
+                    res.json(result);
+                });
+                router.post('/:moduleName/service/:serviceName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        console.log('OptionsController.setServiceOptions');
+                        helper.backendService.optionsRepository.setServiceOptions(req.params.moduleName, req.params.serviceName, req.body);
+                        helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
+                        res.send();
+                        return [2 /*return*/];
+                    });
+                }); });
+                router.get('/:moduleName/component/:componentName', function (req, res) {
+                    console.log('OptionsController.getComponentOptions');
+                    var result = helper.backendService.optionsRepository.getComponentOptions(req.params.moduleName, req.params.componentName);
+                    res.json(result);
+                });
+                router.post('/:moduleName/component/:componentName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        console.log('OptionsController.setComponentOptions');
+                        helper.backendService.optionsRepository.setComponentOptions(req.params.moduleName, req.params.componentName, req.body);
+                        res.send();
+                        return [2 /*return*/];
+                    });
+                }); });
                 return [2 /*return*/];
             });
         });
     };
-    BackendService.prototype.restart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                electron_1.app.relaunch();
-                electron_1.app.quit();
-                return [2 /*return*/];
-            });
-        });
-    };
-    return BackendService;
+    return OptionsController;
 }());
-exports.BackendService = BackendService;
-//# sourceMappingURL=BackendService.js.map
+exports.OptionsController = OptionsController;
+//# sourceMappingURL=OptionsController.js.map

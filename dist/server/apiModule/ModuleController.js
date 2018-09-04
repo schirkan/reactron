@@ -36,28 +36,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var ModuleManagerApi = /** @class */ (function () {
-    function ModuleManagerApi() {
+var ModuleController = /** @class */ (function () {
+    function ModuleController() {
     }
-    ModuleManagerApi.prototype.start = function (helper) {
+    ModuleController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
             var router;
             var _this = this;
             return __generator(this, function (_a) {
-                console.log('moduleManagerApi.start');
+                console.log('ModuleController.start');
                 router = express_1.Router();
-                helper.moduleApiRouter.use('/moduleManager', router);
-                router.get('/modules', function (req, res) {
-                    console.log('moduleManagerApi.get');
+                helper.moduleApiRouter.use('/modules', router);
+                router.get('/', function (req, res) {
+                    console.log('ModuleController.getAll');
                     var modules = helper.backendService.moduleManager.getAll();
                     res.json(modules);
                 });
-                router.get('/add/:repository', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                router.post('/:repository', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('moduleManagerApi.add');
+                                console.log('ModuleController.add');
                                 return [4 /*yield*/, helper.backendService.moduleManager.add(req.params.repository)];
                             case 1:
                                 result = _a.sent();
@@ -66,12 +66,17 @@ var ModuleManagerApi = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.get('/remove/:moduleName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                router.get('/:moduleName', function (req, res) {
+                    console.log('ModuleController.get');
+                    var module = helper.backendService.moduleManager.get(req.params.moduleName);
+                    res.json(module);
+                });
+                router.delete('/:moduleName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('moduleManagerApi.remove');
+                                console.log('ModuleController.remove');
                                 return [4 /*yield*/, helper.backendService.moduleManager.remove(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
@@ -80,12 +85,12 @@ var ModuleManagerApi = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.get('/build/:moduleName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                router.post('/:moduleName/build', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('moduleManagerApi.build');
+                                console.log('ModuleController.build');
                                 return [4 /*yield*/, helper.backendService.moduleManager.build(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
@@ -94,12 +99,12 @@ var ModuleManagerApi = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.get('/install/:moduleName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                router.post('/:moduleName/install', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('moduleManagerApi.install');
+                                console.log('ModuleController.install');
                                 return [4 /*yield*/, helper.backendService.moduleManager.install(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
@@ -108,12 +113,12 @@ var ModuleManagerApi = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.get('/update/:moduleName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                router.post('/:moduleName/update', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('moduleManagerApi.update');
+                                console.log('ModuleController.update');
                                 return [4 /*yield*/, helper.backendService.moduleManager.update(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
@@ -126,7 +131,7 @@ var ModuleManagerApi = /** @class */ (function () {
             });
         });
     };
-    return ModuleManagerApi;
+    return ModuleController;
 }());
-exports.ModuleManagerApi = ModuleManagerApi;
-//# sourceMappingURL=ModuleManagerApi.js.map
+exports.ModuleController = ModuleController;
+//# sourceMappingURL=ModuleController.js.map

@@ -3,6 +3,7 @@ import { IExternalService } from "../interfaces/IExternalService";
 import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { command } from "./commandResultWrapper";
 import { ModuleRepository } from "./ModuleRepository";
+import { OptionsRepository } from "./OptionsRepository";
 import { ServerModuleHelper } from "./ServerModuleHelper";
 import { ServiceRepository } from "./ServiceRepository";
 
@@ -10,7 +11,8 @@ import { ServiceRepository } from "./ServiceRepository";
 export class ServiceManager {
     constructor(
         private serviceRepository: ServiceRepository,
-        private moduleRepository: ModuleRepository
+        private moduleRepository: ModuleRepository,
+        private optionsRepository: OptionsRepository
     ) { }
 
     public async get(moduleName: string, serviceName: string): Promise<IExternalService | undefined> {
@@ -23,6 +25,13 @@ export class ServiceManager {
             }
         }
         return serviceRepositoryItem && serviceRepositoryItem.instance;
+    }
+
+    public async setOptions(moduleName: string, serviceName: string, options: any): Promise<void> {
+        const serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
+        if (serviceRepositoryItem) {
+            await this.setOptionsInternal(serviceRepositoryItem, options);
+        }
     }
 
     public startAllServices(): Promise<ICommandResult> {
@@ -102,7 +111,7 @@ export class ServiceManager {
         });
     }
 
-    private setOptions(serviceRepositoryItem: IServiceRepositoryItem, options: any): Promise<ICommandResult> {
+    private setOptionsInternal(serviceRepositoryItem: IServiceRepositoryItem, options: any): Promise<ICommandResult> {
         return command('setOptions', serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name, async () => {
             if (serviceRepositoryItem.instance.setOptions) {
                 await serviceRepositoryItem.instance.setOptions(options);
@@ -139,6 +148,7 @@ export class ServiceManager {
                 throw new Error('Service not found: ' + serviceName);
             }
             const serviceInstance = new serviceType() as IExternalService;
+            const serviceOptions = this.optionsRepository.getServiceOptions(moduleName, serviceName);
 
             const serviceRepositoryItem: IServiceRepositoryItem = {
                 name: serviceName,
@@ -147,12 +157,11 @@ export class ServiceManager {
                 log: [],
                 description: '',
                 state: 'stopped',
-                options: {} // TODO
             };
 
             this.serviceRepository.add(serviceRepositoryItem);
 
-            result.children.push(await this.setOptions(serviceRepositoryItem, serviceRepositoryItem.options));
+            result.children.push(await this.setOptionsInternal(serviceRepositoryItem, serviceOptions));
             result.children.push(await this.startService(serviceRepositoryItem));
         });
     }

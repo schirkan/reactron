@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as http from 'http';
+import * as path from 'path';
 import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
 
 export class ExpressApp {
@@ -13,6 +14,12 @@ export class ExpressApp {
         console.log('ExpressApp is starting');
         return new Promise<void>((resolve, reject) => {
             this.express = express();
+
+            // parse application/x-www-form-urlencoded
+            this.express.use(express.urlencoded({ extended: false }));
+            // parse application/json
+            this.express.use(express.json());
+
             this.apiRouter = express.Router();
             this.express.use('/api', this.apiRouter);
             this.express.use('/modules', express.static(this.config.root + '/modules'));
@@ -22,6 +29,15 @@ export class ExpressApp {
                 console.log('ExpressApp is listening on Port ' + this.config.backendPort);
                 resolve();
             });
+
+            // for react router
+            this.express.get('/*', (req: express.Request, res: express.Response) => {
+                res.sendFile(path.join(this.config.root + '/build/index.html'), (err: any) => {
+                    if (err) {
+                        res.status(500).send(err)
+                    }
+                })
+            })
         });
     }
 }

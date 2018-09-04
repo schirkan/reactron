@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IDynamicReactComponentClass, IDynamicReactComponentClassProps } from '../../../interfaces/IDynamicReactComponentClass';
-import { BrowserModuleHelper } from '../../BrowserModuleHelper';
 import { instance as componentLoader } from '../../ComponentLoader';
+import { ExpernalComponentProps } from '../../ExpernalComponentProps';
 
 export interface IExternalModuleProps {
   moduleName: string;
@@ -33,10 +33,7 @@ export default class ExternalModule extends React.Component<IExternalModuleProps
   private async loadComponent() {
     try {
       const componentClass = await componentLoader.loadComponent(this.props.moduleName, this.props.componentName);
-      const componentProps = {
-        backendService: new BrowserModuleHelper(this.props.moduleName),
-        options: { initialText: 'Hello World' } // TODO from component options repo
-      };
+      const componentProps = new ExpernalComponentProps(this.props.moduleName, this.props.componentName);
       this.setState({ componentClass, componentProps, componentFound: !!componentClass });
     } catch (error) {
       this.setState({ componentFound: false });
@@ -45,6 +42,7 @@ export default class ExternalModule extends React.Component<IExternalModuleProps
   }
 
   public render() {
+    // TODO: remove
     if (this.state.componentFound === false) {
       return (
         <div>
@@ -65,7 +63,7 @@ export default class ExternalModule extends React.Component<IExternalModuleProps
       const Component = this.state.componentClass;
 
       return (
-        <section className="ExternalModules">
+        <section className="ExternalModule">
           <Component {...this.state.componentProps} />
         </section>
       );

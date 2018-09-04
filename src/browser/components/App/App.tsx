@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ExternalModule from '../ExternalModule/ExternalModule';
 import './App.css';
 import logo from './logo.svg';
@@ -16,7 +17,9 @@ export default class App extends React.Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <div className="App-content">
-          <ExternalModule componentName="HelloWorld" moduleName="dynamic-electron-react-module-example" />
+          <ErrorBoundary>
+            <ExternalModule componentName="HelloWorld" moduleName="dynamic-electron-react-module-example" />
+          </ErrorBoundary>
         </div>
       </section>
     );

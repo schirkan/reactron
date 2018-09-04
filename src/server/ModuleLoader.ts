@@ -13,25 +13,18 @@ export class ModuleLoader {
     }
 
     public async loadAllModules(): Promise<IModuleRepositoryItem[]> {
-        return new Promise<IModuleRepositoryItem[]>(async (resolve, reject) => {
-            const result: IModuleRepositoryItem[] = [];
-
-            try {
-                const items = fs.readdirSync(this.modulesPath);
-                for (const item of items) {
-                    const moduleFolderFull = path.join(this.modulesPath, item);
-                    if (fs.statSync(moduleFolderFull).isDirectory()) {
-                        const newModule = await this.loadModule(item);
-                        if (newModule) {
-                            result.push(newModule);
-                        }
-                    }
+        const result: IModuleRepositoryItem[] = [];
+        const items = fs.readdirSync(this.modulesPath);
+        for (const item of items) {
+            const moduleFolderFull = path.join(this.modulesPath, item);
+            if (fs.statSync(moduleFolderFull).isDirectory()) {
+                const newModule = await this.loadModule(item);
+                if (newModule) {
+                    result.push(newModule);
                 }
-                resolve(result);
-            } catch (error) {
-                reject(error);
             }
-        });
+        }
+        return result;
     }
 
     public async loadModule(folderName: string): Promise<IModuleRepositoryItem | null> {
@@ -79,8 +72,8 @@ export class ModuleLoader {
 
         moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
         moduleDefinition.canUpdate = !!moduleDefinition.repository;
-        moduleDefinition.canInstall = true; // TODO
-        moduleDefinition.canRemove = true; // TODO
+        moduleDefinition.canInstall = !!(p.dependencies || p.devDependencies);
+        moduleDefinition.canRemove = true;
         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
 
         console.log('Module loaded: ' + moduleDefinition.name);

@@ -7,5 +7,4 @@ export interface IServiceRepositoryItem {
     description: string;
     state: 'starting' | 'running' | 'stopped' | 'error';
     log: string[];
-    options: any;
 }

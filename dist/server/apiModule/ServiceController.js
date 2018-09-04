@@ -35,48 +35,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var electron_1 = require("electron");
-var ElectronApp_1 = require("./ElectronApp");
-var ExpressApp_1 = require("./ExpressApp");
-var ModuleManager_1 = require("./ModuleManager");
-var ModuleRepository_1 = require("./ModuleRepository");
-var OptionsRepository_1 = require("./OptionsRepository");
-var PubSub_1 = require("./PubSub");
-var ServiceManager_1 = require("./ServiceManager");
-var ServiceRepository_1 = require("./ServiceRepository");
-var SystemSettingsManager_1 = require("./SystemSettingsManager");
-var BackendService = /** @class */ (function () {
-    function BackendService(config) {
-        this.config = config;
-        this.moduleRepository = new ModuleRepository_1.ModuleRepository();
-        this.serviceRepository = new ServiceRepository_1.ServiceRepository();
-        this.optionsRepository = new OptionsRepository_1.OptionsRepository();
-        this.electronApp = new ElectronApp_1.ElectronApp(this.config);
-        this.expressApp = new ExpressApp_1.ExpressApp(this.config);
-        this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository, this.optionsRepository);
-        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
-        this.topics = new PubSub_1.PubSub();
-        this.settings = new SystemSettingsManager_1.SystemSettingsManager();
+var express_1 = require("express");
+var ServiceController = /** @class */ (function () {
+    function ServiceController() {
     }
-    BackendService.prototype.exit = function () {
+    ServiceController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
+            var router;
+            var _this = this;
             return __generator(this, function (_a) {
-                this.electronApp.mainWindow.close();
-                electron_1.app.quit();
+                console.log('ServiceController.start');
+                router = express_1.Router();
+                helper.moduleApiRouter.use('/service', router);
+                router.get('/:moduleName/:serviceName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var result;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                console.log('ServiceController.get');
+                                return [4 /*yield*/, helper.backendService.serviceManager.get(req.params.moduleName, req.params.serviceName)];
+                            case 1:
+                                result = _a.sent();
+                                res.json(result);
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                router.post('/:moduleName/:serviceName/start', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        console.log('ServiceController.start');
+                        // TODO
+                        res.send();
+                        return [2 /*return*/];
+                    });
+                }); });
+                router.post('/:moduleName/:serviceName/stop', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        console.log('ServiceController.stop');
+                        // TODO
+                        res.send();
+                        return [2 /*return*/];
+                    });
+                }); });
                 return [2 /*return*/];
             });
         });
     };
-    BackendService.prototype.restart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                electron_1.app.relaunch();
-                electron_1.app.quit();
-                return [2 /*return*/];
-            });
-        });
-    };
-    return BackendService;
+    return ServiceController;
 }());
-exports.BackendService = BackendService;
-//# sourceMappingURL=BackendService.js.map
+exports.ServiceController = ServiceController;
+//# sourceMappingURL=ServiceController.js.map

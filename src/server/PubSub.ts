@@ -1,12 +1,7 @@
 import * as Emitter from 'events';
+import { IPubSub, IPubSubEvgent } from '../interfaces/IPubSub';
 
-export interface IPubSubEvgent {
-    name: string;
-    resolve: (data: any) => void;
-    reject: (reason: any) => void;
-}
-
-export class PubSub {
+export class PubSub implements IPubSub {
     private __EMITTER__ = new Emitter();
 
     public subscribe(eventName: string, listener: (event: IPubSubEvgent, ...args: any[]) => void) {
@@ -21,7 +16,7 @@ export class PubSub {
         this.__EMITTER__.removeListener(eventName, listener);
     }
 
-    public publish(eventName: string, ...args: any[]) {
+    public publish(eventName: string, ...args: any[]): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             const event = {
                 name: eventName,

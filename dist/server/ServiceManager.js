@@ -39,9 +39,10 @@ var commandResultWrapper_1 = require("./commandResultWrapper");
 var ServerModuleHelper_1 = require("./ServerModuleHelper");
 // dependency loader für services
 var ServiceManager = /** @class */ (function () {
-    function ServiceManager(serviceRepository, moduleRepository) {
+    function ServiceManager(serviceRepository, moduleRepository, optionsRepository) {
         this.serviceRepository = serviceRepository;
         this.moduleRepository = moduleRepository;
+        this.optionsRepository = optionsRepository;
     }
     ServiceManager.prototype.get = function (moduleName, serviceName) {
         return __awaiter(this, void 0, void 0, function () {
@@ -60,6 +61,23 @@ var ServiceManager = /** @class */ (function () {
                         }
                         _a.label = 2;
                     case 2: return [2 /*return*/, serviceRepositoryItem && serviceRepositoryItem.instance];
+                }
+            });
+        });
+    };
+    ServiceManager.prototype.setOptions = function (moduleName, serviceName, options) {
+        return __awaiter(this, void 0, void 0, function () {
+            var serviceRepositoryItem;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
+                        if (!serviceRepositoryItem) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.setOptionsInternal(serviceRepositoryItem, options)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
                 }
             });
         });
@@ -198,7 +216,7 @@ var ServiceManager = /** @class */ (function () {
             });
         }); });
     };
-    ServiceManager.prototype.setOptions = function (serviceRepositoryItem, options) {
+    ServiceManager.prototype.setOptionsInternal = function (serviceRepositoryItem, options) {
         var _this = this;
         return commandResultWrapper_1.command('setOptions', serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name, function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -218,7 +236,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = moduleName + '.' + serviceName;
         return commandResultWrapper_1.command('loadService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var moduleDefinition, serviceTypes, serviceType, serviceInstance, serviceRepositoryItem, _a, _b, _c, _d;
+            var moduleDefinition, serviceTypes, serviceType, serviceInstance, serviceOptions, serviceRepositoryItem, _a, _b, _c, _d;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -244,6 +262,7 @@ var ServiceManager = /** @class */ (function () {
                             throw new Error('Service not found: ' + serviceName);
                         }
                         serviceInstance = new serviceType();
+                        serviceOptions = this.optionsRepository.getServiceOptions(moduleName, serviceName);
                         serviceRepositoryItem = {
                             name: serviceName,
                             moduleName: moduleName,
@@ -251,11 +270,10 @@ var ServiceManager = /** @class */ (function () {
                             log: [],
                             description: '',
                             state: 'stopped',
-                            options: {} // TODO
                         };
                         this.serviceRepository.add(serviceRepositoryItem);
                         _b = (_a = result.children).push;
-                        return [4 /*yield*/, this.setOptions(serviceRepositoryItem, serviceRepositoryItem.options)];
+                        return [4 /*yield*/, this.setOptionsInternal(serviceRepositoryItem, serviceOptions)];
                     case 1:
                         _b.apply(_a, [_e.sent()]);
                         _d = (_c = result.children).push;
