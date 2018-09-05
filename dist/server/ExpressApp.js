@@ -16,14 +16,15 @@ var ExpressApp = /** @class */ (function () {
             // parse application/json
             _this.express.use(express.json());
             _this.apiRouter = express.Router();
+            // log calls
+            _this.apiRouter.use(function (req, res, next) {
+                console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
+                next();
+            });
             _this.express.use('/api', _this.apiRouter);
             _this.express.use('/modules', express.static(_this.config.root + '/modules'));
             _this.express.use('/node_modules', express.static(_this.config.root + '/node_modules'));
             _this.express.use('/', express.static(_this.config.root + '/build'));
-            _this.server = _this.express.listen(_this.config.backendPort, function () {
-                console.log('ExpressApp is listening on Port ' + _this.config.backendPort);
-                resolve();
-            });
             // for react router
             _this.express.get('/*', function (req, res) {
                 res.sendFile(path.join(_this.config.root + '/build/index.html'), function (err) {
@@ -31,6 +32,11 @@ var ExpressApp = /** @class */ (function () {
                         res.status(500).send(err);
                     }
                 });
+            });
+            // start listening
+            _this.server = _this.express.listen(_this.config.backendPort, function () {
+                console.log('ExpressApp is listening on Port ' + _this.config.backendPort);
+                resolve();
             });
         });
     };

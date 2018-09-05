@@ -145,7 +145,7 @@ var ModuleManager = /** @class */ (function () {
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
+                        moduleDefinition.isInstalled = moduleDefinition.isInstalled || result.success;
                         moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }
@@ -165,7 +165,7 @@ var ModuleManager = /** @class */ (function () {
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm run build', moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
+                        moduleDefinition.isBuilded = moduleDefinition.isBuilded || result.success;
                         moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }

@@ -34,6 +34,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var ServiceController = /** @class */ (function () {
@@ -47,32 +56,44 @@ var ServiceController = /** @class */ (function () {
                 console.log('ServiceController.start');
                 router = express_1.Router();
                 helper.moduleApiRouter.use('/service', router);
-                router.get('/:moduleName/:serviceName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
+                router.get('/', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var result, serviceInfos;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('ServiceController.get');
-                                return [4 /*yield*/, helper.backendService.serviceManager.get(req.params.moduleName, req.params.serviceName)];
+                                console.log('ServiceController.getAll');
+                                return [4 /*yield*/, helper.backendService.serviceRepository.getAll()];
                             case 1:
                                 result = _a.sent();
-                                res.json(result);
+                                serviceInfos = result.map(function (item) {
+                                    var instance = item.instance, serviceInfo = __rest(item, ["instance"]);
+                                    return serviceInfo;
+                                });
+                                res.json(serviceInfos);
                                 return [2 /*return*/];
                         }
                     });
                 }); });
-                router.post('/:moduleName/:serviceName/start', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                // router.get('/:moduleName/:serviceName', async (req: Request, res: Response) => {
+                //     console.log('ServiceController.get');
+                //     const result = await helper.backendService.serviceRepository.get(req.params.moduleName, req.params.serviceName);
+                //     if (result) {
+                //         const { instance, ...serviceInfo } = result;
+                //         res.json(serviceInfo);
+                //     } else {
+                //         res.sendStatus(404);
+                //     }
+                // });
+                router.get('/:moduleName/:serviceName', function (req, res) {
+                    console.log('ServiceController.getServiceOptions');
+                    var result = helper.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
+                    res.json(result);
+                });
+                router.post('/:moduleName/:serviceName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        console.log('ServiceController.start');
-                        // TODO
-                        res.send();
-                        return [2 /*return*/];
-                    });
-                }); });
-                router.post('/:moduleName/:serviceName/stop', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('ServiceController.stop');
-                        // TODO
+                        console.log('ServiceController.setServiceOptions');
+                        helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
+                        helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
                         res.send();
                         return [2 /*return*/];
                     });

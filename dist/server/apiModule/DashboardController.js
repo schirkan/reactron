@@ -36,49 +36,41 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var OptionsController = /** @class */ (function () {
-    function OptionsController() {
+var DashboardController = /** @class */ (function () {
+    function DashboardController() {
     }
-    OptionsController.prototype.start = function (helper) {
+    DashboardController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
             var router;
-            var _this = this;
             return __generator(this, function (_a) {
-                console.log('OptionsController.start');
+                console.log('DashboardController.start');
                 router = express_1.Router();
-                helper.moduleApiRouter.use('/options', router);
-                router.get('/:moduleName/service/:serviceName', function (req, res) {
-                    console.log('OptionsController.getServiceOptions');
-                    var result = helper.backendService.optionsRepository.getServiceOptions(req.params.moduleName, req.params.serviceName);
+                helper.moduleApiRouter.use('/dashboard', router);
+                router.get('/', function (req, res) {
+                    console.log('DashboardController.getOptions');
+                    var result = helper.backendService.dashboardManager.getOptions();
                     res.json(result);
                 });
-                router.post('/:moduleName/service/:serviceName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('OptionsController.setServiceOptions');
-                        helper.backendService.optionsRepository.setServiceOptions(req.params.moduleName, req.params.serviceName, req.body);
-                        helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
-                        res.send();
-                        return [2 /*return*/];
-                    });
-                }); });
-                router.get('/:moduleName/component/:componentName', function (req, res) {
-                    console.log('OptionsController.getComponentOptions');
-                    var result = helper.backendService.optionsRepository.getComponentOptions(req.params.moduleName, req.params.componentName);
-                    res.json(result);
+                router.post('/layout', function (req, res) {
+                    console.log('DashboardController.getServiceOptions');
+                    helper.backendService.dashboardManager.setLayout(req.body);
+                    res.sendStatus(201);
                 });
-                router.post('/:moduleName/component/:componentName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('OptionsController.setComponentOptions');
-                        helper.backendService.optionsRepository.setComponentOptions(req.params.moduleName, req.params.componentName, req.body);
-                        res.send();
-                        return [2 /*return*/];
-                    });
-                }); });
+                router.post('/tiles', function (req, res) {
+                    console.log('DashboardController.setTile');
+                    helper.backendService.dashboardManager.setTile(req.body);
+                    res.sendStatus(201);
+                });
+                router.delete('/tiles/:tileId', function (req, res) {
+                    console.log('DashboardController.removeTile');
+                    helper.backendService.dashboardManager.removeTile(req.params.tileId);
+                    res.sendStatus(201);
+                });
                 return [2 /*return*/];
             });
         });
     };
-    return OptionsController;
+    return DashboardController;
 }());
-exports.OptionsController = OptionsController;
-//# sourceMappingURL=OptionsController.js.map
+exports.DashboardController = DashboardController;
+//# sourceMappingURL=DashboardController.js.map

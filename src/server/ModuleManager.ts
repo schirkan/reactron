@@ -95,7 +95,7 @@ export class ModuleManager {
         }
 
         const result = await SystemCommand.run('npm install', moduleDefinition.path);
-        moduleDefinition.isInstalled = moduleDefinition.isInstalled && result.success;
+        moduleDefinition.isInstalled = moduleDefinition.isInstalled || result.success;
         moduleDefinition.commandLog.push(result);
         return result;
     }
@@ -108,7 +108,7 @@ export class ModuleManager {
         }
 
         const result = await SystemCommand.run('npm run build', moduleDefinition.path);
-        moduleDefinition.isBuilded = moduleDefinition.isBuilded && result.success;
+        moduleDefinition.isBuilded = moduleDefinition.isBuilded || result.success;
         moduleDefinition.commandLog.push(result);
         return result;
     }

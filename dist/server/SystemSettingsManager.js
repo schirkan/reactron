@@ -3,57 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
 var SystemSettingsManager = /** @class */ (function () {
-    function SystemSettingsManager() {
-        this.store = new Store({
+    function SystemSettingsManager(topics, defaultSettings) {
+        this.topics = topics;
+        this.repository = new Store({
             name: 'SystemSettings',
-            defaults: SystemSettingsManager.defaultSettings
+            defaults: defaultSettings
         });
     }
-    Object.defineProperty(SystemSettingsManager.prototype, "lang", {
-        get: function () {
-            return this.store.get('lang');
-        },
-        set: function (value) {
-            this.store.set('lang', value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SystemSettingsManager.prototype, "location", {
-        get: function () {
-            return this.store.get('location');
-        },
-        set: function (value) {
-            this.store.set('location', value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SystemSettingsManager.prototype, "timezone", {
-        get: function () {
-            return this.store.get('timezone');
-        },
-        set: function (value) {
-            this.store.set('timezone', value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SystemSettingsManager.prototype, "theme", {
-        get: function () {
-            return this.store.get('theme');
-        },
-        set: function (value) {
-            this.store.set('theme', value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    SystemSettingsManager.defaultSettings = {
-        lang: 'de',
-        location: '',
-        theme: 'default',
-        timezone: 'Europe/Berlin'
+    SystemSettingsManager.prototype.get = function () {
+        return this.repository.store;
+    };
+    SystemSettingsManager.prototype.set = function (settings) {
+        this.repository.store = settings;
+        this.topics.publish('system-settings-updated', settings);
     };
     return SystemSettingsManager;
 }());

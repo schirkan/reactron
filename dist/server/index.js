@@ -51,7 +51,30 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                     root: root,
                     isDev: isDev,
                     frontendPort: 3000,
-                    backendPort: isDev ? 5000 : 3000
+                    backendPort: isDev ? 5000 : 3000,
+                    defaultSystemSettings: {
+                        lang: 'de',
+                        location: '',
+                        theme: 'default',
+                        timezone: 'Europe/Berlin'
+                    },
+                    defaultDashboardOptions: {
+                        layout: { gridCols: 3, gridRows: 3 },
+                        tiles: [{
+                                id: "1",
+                                components: [{
+                                        componentName: 'HelloWorld',
+                                        moduleName: 'dynamic-electron-react-module-example',
+                                        options: { initialText: 'Hello World' }
+                                    }],
+                                layout: {
+                                    col: 1,
+                                    row: 1,
+                                    colspan: 1,
+                                    rowspan: 1
+                                }
+                            }]
+                    }
                 };
                 console.log('BackendService is starting', config);
                 BackendService_1.BackendService.instance = new BackendService_1.BackendService(config);

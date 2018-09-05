@@ -262,7 +262,7 @@ var ServiceManager = /** @class */ (function () {
                             throw new Error('Service not found: ' + serviceName);
                         }
                         serviceInstance = new serviceType();
-                        serviceOptions = this.optionsRepository.getServiceOptions(moduleName, serviceName);
+                        serviceOptions = this.optionsRepository.get(moduleName, serviceName);
                         serviceRepositoryItem = {
                             name: serviceName,
                             moduleName: moduleName,

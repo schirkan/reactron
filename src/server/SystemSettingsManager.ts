@@ -1,46 +1,24 @@
-import { ISystemSettings } from "../interfaces/ISystemSettings";
+import { IPubSub } from "../interfaces/IPubSub";
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
 
-export class SystemSettingsManager implements ISystemSettings {
-    private store: ElectronStore<ISystemSettings> = new Store({
-        name: 'SystemSettings',
-        defaults: SystemSettingsManager.defaultSettings
-    });
+export class SystemSettingsManager<TSettings> {
+    private repository: ElectronStore<TSettings>
 
-    public static readonly defaultSettings: ISystemSettings = {
-        lang: 'de',
-        location: '',
-        theme: 'default',
-        timezone: 'Europe/Berlin'
-    };
-
-    get lang(): string {
-        return this.store.get('lang');
-    }
-    set lang(value: string) {
-        this.store.set('lang', value);
+    constructor(private topics: IPubSub, defaultSettings: TSettings) {
+        this.repository = new Store({
+            name: 'SystemSettings',
+            defaults: defaultSettings
+        });
     }
 
-    get location(): string {
-        return this.store.get('location');
-    }
-    set location(value: string) {
-        this.store.set('location', value);
+    public get(): TSettings {
+        return this.repository.store;
     }
 
-    get timezone(): string {
-        return this.store.get('timezone');
-    }
-    set timezone(value: string) {
-        this.store.set('timezone', value);
-    }
-
-    get theme(): string {
-        return this.store.get('theme');
-    }
-    set theme(value: string) {
-        this.store.set('theme', value);
+    public set(settings: TSettings) {
+        this.repository.store = settings;
+        this.topics.publish('system-settings-updated', settings);
     }
 }

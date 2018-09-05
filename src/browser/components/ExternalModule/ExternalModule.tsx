@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { IDynamicReactComponentClass, IDynamicReactComponentClassProps } from '../../../interfaces/IDynamicReactComponentClass';
+import { IDynamicReactComponentClass, IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
 import { instance as componentLoader } from '../../ComponentLoader';
-import { ExpernalComponentProps } from '../../ExpernalComponentProps';
+import { DynamicReactComponentProps } from '../../DynamicReactComponentProps';
 
 export interface IExternalModuleProps {
   moduleName: string;
   componentName: string;
+  options: any;
 }
 
 export interface IExternalModuleState {
   componentFound?: boolean;
   componentClass?: IDynamicReactComponentClass;
-  componentProps?: IDynamicReactComponentClassProps;
+  componentProps?: IDynamicReactComponentProps;
 }
 
 export default class ExternalModule extends React.Component<IExternalModuleProps, IExternalModuleState> {
@@ -33,7 +34,7 @@ export default class ExternalModule extends React.Component<IExternalModuleProps
   private async loadComponent() {
     try {
       const componentClass = await componentLoader.loadComponent(this.props.moduleName, this.props.componentName);
-      const componentProps = new ExpernalComponentProps(this.props.moduleName, this.props.componentName);
+      const componentProps = new DynamicReactComponentProps(this.props.moduleName, this.props.componentName, this.props.options);
       this.setState({ componentClass, componentProps, componentFound: !!componentClass });
     } catch (error) {
       this.setState({ componentFound: false });

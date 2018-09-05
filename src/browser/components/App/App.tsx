@@ -10,6 +10,8 @@ export default class App extends React.Component {
   }
 
   public render() {
+    const options = { initialText: 'Hello World' } // TODO from component options repo
+
     return (
       <section className="App">
         <header className="App-header">
@@ -18,7 +20,7 @@ export default class App extends React.Component {
         </header>
         <div className="App-content">
           <ErrorBoundary>
-            <ExternalModule componentName="HelloWorld" moduleName="dynamic-electron-react-module-example" />
+            <ExternalModule componentName="HelloWorld" moduleName="dynamic-electron-react-module-example" options={options} />
           </ErrorBoundary>
         </div>
       </section>

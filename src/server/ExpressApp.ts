@@ -21,14 +21,15 @@ export class ExpressApp {
             this.express.use(express.json());
 
             this.apiRouter = express.Router();
+            // log calls
+            this.apiRouter.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+                console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
+                next();
+            });
             this.express.use('/api', this.apiRouter);
             this.express.use('/modules', express.static(this.config.root + '/modules'));
             this.express.use('/node_modules', express.static(this.config.root + '/node_modules'));
             this.express.use('/', express.static(this.config.root + '/build'));
-            this.server = this.express.listen(this.config.backendPort, () => {
-                console.log('ExpressApp is listening on Port ' + this.config.backendPort);
-                resolve();
-            });
 
             // for react router
             this.express.get('/*', (req: express.Request, res: express.Response) => {
@@ -38,6 +39,12 @@ export class ExpressApp {
                     }
                 })
             })
+
+            // start listening
+            this.server = this.express.listen(this.config.backendPort, () => {
+                console.log('ExpressApp is listening on Port ' + this.config.backendPort);
+                resolve();
+            });
         });
     }
 }

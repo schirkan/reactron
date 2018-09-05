@@ -36,27 +36,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
+var DashboardManager_1 = require("./DashboardManager");
 var ElectronApp_1 = require("./ElectronApp");
 var ExpressApp_1 = require("./ExpressApp");
 var ModuleManager_1 = require("./ModuleManager");
 var ModuleRepository_1 = require("./ModuleRepository");
-var OptionsRepository_1 = require("./OptionsRepository");
 var PubSub_1 = require("./PubSub");
 var ServiceManager_1 = require("./ServiceManager");
+var ServiceOptionsRepository_1 = require("./ServiceOptionsRepository");
 var ServiceRepository_1 = require("./ServiceRepository");
 var SystemSettingsManager_1 = require("./SystemSettingsManager");
 var BackendService = /** @class */ (function () {
     function BackendService(config) {
         this.config = config;
+        this.topics = new PubSub_1.PubSub();
         this.moduleRepository = new ModuleRepository_1.ModuleRepository();
         this.serviceRepository = new ServiceRepository_1.ServiceRepository();
-        this.optionsRepository = new OptionsRepository_1.OptionsRepository();
+        this.serviceOptionsRepository = new ServiceOptionsRepository_1.ServiceOptionsRepository();
         this.electronApp = new ElectronApp_1.ElectronApp(this.config);
         this.expressApp = new ExpressApp_1.ExpressApp(this.config);
-        this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository, this.optionsRepository);
+        this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository, this.serviceOptionsRepository);
         this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
-        this.topics = new PubSub_1.PubSub();
-        this.settings = new SystemSettingsManager_1.SystemSettingsManager();
+        this.dashboardManager = new DashboardManager_1.DashboardManager(this.topics, this.config.defaultDashboardOptions);
+        this.settings = new SystemSettingsManager_1.SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
     }
     BackendService.prototype.exit = function () {
         return __awaiter(this, void 0, void 0, function () {

@@ -5,5 +5,5 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./ModuleController"));
 __export(require("./ServiceController"));
-__export(require("./OptionsController"));
+__export(require("./DashboardController"));
 //# sourceMappingURL=index.js.map

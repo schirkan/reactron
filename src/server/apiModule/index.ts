@@ -1,3 +1,3 @@
 export * from "./ModuleController";
 export * from "./ServiceController";
-export * from "./OptionsController";
+export * from "./DashboardController";

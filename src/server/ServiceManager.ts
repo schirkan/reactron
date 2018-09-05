@@ -3,8 +3,8 @@ import { IExternalService } from "../interfaces/IExternalService";
 import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { command } from "./commandResultWrapper";
 import { ModuleRepository } from "./ModuleRepository";
-import { OptionsRepository } from "./OptionsRepository";
 import { ServerModuleHelper } from "./ServerModuleHelper";
+import { ServiceOptionsRepository } from "./ServiceOptionsRepository";
 import { ServiceRepository } from "./ServiceRepository";
 
 // dependency loader für services
@@ -12,7 +12,7 @@ export class ServiceManager {
     constructor(
         private serviceRepository: ServiceRepository,
         private moduleRepository: ModuleRepository,
-        private optionsRepository: OptionsRepository
+        private optionsRepository: ServiceOptionsRepository
     ) { }
 
     public async get(moduleName: string, serviceName: string): Promise<IExternalService | undefined> {
@@ -148,7 +148,7 @@ export class ServiceManager {
                 throw new Error('Service not found: ' + serviceName);
             }
             const serviceInstance = new serviceType() as IExternalService;
-            const serviceOptions = this.optionsRepository.getServiceOptions(moduleName, serviceName);
+            const serviceOptions = this.optionsRepository.get(moduleName, serviceName);
 
             const serviceRepositoryItem: IServiceRepositoryItem = {
                 name: serviceName,
