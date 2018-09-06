@@ -33,7 +33,7 @@ export default class ExternalModule extends React.Component<IExternalModuleProps
 
   private async loadComponent() {
     try {
-      const componentClass = await componentLoader.loadComponent(this.props.moduleName, this.props.componentName);
+      const componentClass = await componentLoader.loadComponent("2"); // TODO
       const componentProps = new DynamicReactComponentProps(this.props.moduleName, this.props.componentName, this.props.options);
       this.setState({ componentClass, componentProps, componentFound: !!componentClass });
     } catch (error) {

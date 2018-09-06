@@ -35,52 +35,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var electron_1 = require("electron");
-var ElectronApp_1 = require("./ElectronApp");
-var ExpressApp_1 = require("./ExpressApp");
-var ModuleManager_1 = require("./ModuleManager");
-var ModuleRepository_1 = require("./ModuleRepository");
-var PubSub_1 = require("./PubSub");
-var ServiceManager_1 = require("./ServiceManager");
-var ServiceOptionsRepository_1 = require("./ServiceOptionsRepository");
-var ServiceRepository_1 = require("./ServiceRepository");
-var SystemSettingsManager_1 = require("./SystemSettingsManager");
-var WebComponentsManager_1 = require("./WebComponentsManager");
-var WebPageManager_1 = require("./WebPageManager");
-var BackendService = /** @class */ (function () {
-    function BackendService(config) {
-        this.config = config;
-        this.topics = new PubSub_1.PubSub();
-        this.moduleRepository = new ModuleRepository_1.ModuleRepository();
-        this.serviceRepository = new ServiceRepository_1.ServiceRepository();
-        this.serviceOptionsRepository = new ServiceOptionsRepository_1.ServiceOptionsRepository();
-        this.electronApp = new ElectronApp_1.ElectronApp(this.config);
-        this.expressApp = new ExpressApp_1.ExpressApp(this.config);
-        this.serviceManager = new ServiceManager_1.ServiceManager(this.serviceRepository, this.moduleRepository, this.serviceOptionsRepository);
-        this.moduleManager = new ModuleManager_1.ModuleManager(this.config, this.moduleRepository);
-        this.webPageManager = new WebPageManager_1.WebPageManager(this.topics, this.config.defaultWebPageOptions);
-        this.webComponentsManager = new WebComponentsManager_1.WebComponentsManager(this.topics, this.config.defaultWebComponentOptions);
-        this.settings = new SystemSettingsManager_1.SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
+var express_1 = require("express");
+var WebPageController = /** @class */ (function () {
+    function WebPageController() {
     }
-    BackendService.prototype.exit = function () {
+    WebPageController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
+            var router;
             return __generator(this, function (_a) {
-                this.electronApp.mainWindow.close();
-                electron_1.app.quit();
+                console.log('WebPageController.start');
+                router = express_1.Router();
+                helper.moduleApiRouter.use('/pages', router);
+                router.get('/', function (req, res) {
+                    console.log('WebPageController.getAll');
+                    var result = helper.backendService.webPageManager.getAll();
+                    res.json(result);
+                });
+                router.post('/', function (req, res) {
+                    console.log('WebPageController.createOrUpdate');
+                    helper.backendService.webPageManager.createOrUpdate(req.body);
+                    res.sendStatus(201);
+                });
+                router.delete('/:path', function (req, res) {
+                    console.log('WebPageController.remove');
+                    helper.backendService.webPageManager.remove(req.params.path);
+                    res.sendStatus(201);
+                });
                 return [2 /*return*/];
             });
         });
     };
-    BackendService.prototype.restart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                electron_1.app.relaunch();
-                electron_1.app.quit();
-                return [2 /*return*/];
-            });
-        });
-    };
-    return BackendService;
+    return WebPageController;
 }());
-exports.BackendService = BackendService;
-//# sourceMappingURL=BackendService.js.map
+exports.WebPageController = WebPageController;
+//# sourceMappingURL=WebPageController.js.map

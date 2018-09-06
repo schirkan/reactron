@@ -19,23 +19,36 @@ export const start = async (root: string): Promise<void> => {
             theme: 'default',
             timezone: 'Europe/Berlin'
         },
-        defaultDashboardOptions: {
-            layout: { gridCols: 3, gridRows: 3 },
-            tiles: [{
-                id: "1",
-                components: [{
-                    componentName: 'HelloWorld',
-                    moduleName: 'dynamic-electron-react-module-example',
-                    options: { initialText: 'Hello World' }
-                }],
-                layout: {
-                    col: 1,
-                    row: 1,
-                    colspan: 1,
-                    rowspan: 1
-                }
-            }]
-        } as IDashboardOptions
+        defaultWebComponentOptions: [{
+            id: '1',
+            componentName: 'GridLayout',
+            moduleName: 'dynamic-electron-react-grid-layout',
+            options: {
+                layout: { gridCols: 3, gridRows: 3 },
+                tiles: [{
+                    content: "2",
+                    layout: { col: 1, row: 1, colspan: 1, rowspan: 1 }
+                }, {
+                    content: "3",
+                    layout: { col: 3, row: 1, colspan: 1, rowspan: 1 }
+                }]
+            }
+        }, {
+            id: '2',
+            componentName: 'HelloWorld',
+            moduleName: 'dynamic-electron-react-module-example',
+            options: { initialText: 'Hello World' }
+        }, {
+            id: '3',
+            componentName: 'HelloWorld',
+            moduleName: 'dynamic-electron-react-module-example',
+            options: { initialText: 'Hello Mars' }
+        }],
+        defaultWebPageOptions: [{
+            title: 'My Index Page',
+            path: '',
+            content: '2'
+        }]
     };
 
     console.log('BackendService is starting', config);

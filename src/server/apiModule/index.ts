@@ -1,3 +1,4 @@
 export * from "./ModuleController";
 export * from "./ServiceController";
-export * from "./DashboardController";
+export * from "./WebPageController";
+export * from "./WebComponentController";

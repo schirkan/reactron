@@ -1,7 +1,6 @@
 import { app } from 'electron';
 import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
 import { ISystemSettings } from '../interfaces/ISystemSettings';
-import { DashboardManager } from './DashboardManager';
 import { ElectronApp } from './ElectronApp';
 import { ExpressApp } from './ExpressApp';
 import { ModuleManager } from './ModuleManager';
@@ -11,6 +10,8 @@ import { ServiceManager } from './ServiceManager';
 import { ServiceOptionsRepository } from './ServiceOptionsRepository';
 import { ServiceRepository } from './ServiceRepository';
 import { SystemSettingsManager } from './SystemSettingsManager';
+import { WebComponentsManager } from './WebComponentsManager';
+import { WebPageManager } from './WebPageManager';
 
 export class BackendService {
     public static instance: BackendService;
@@ -23,7 +24,8 @@ export class BackendService {
     public readonly expressApp = new ExpressApp(this.config);
     public readonly serviceManager = new ServiceManager(this.serviceRepository, this.moduleRepository, this.serviceOptionsRepository);
     public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository);
-    public readonly dashboardManager = new DashboardManager(this.topics, this.config.defaultDashboardOptions);
+    public readonly webPageManager = new WebPageManager(this.topics, this.config.defaultWebPageOptions);
+    public readonly webComponentsManager= new WebComponentsManager(this.topics, this.config.defaultWebComponentOptions);
     public readonly settings = new SystemSettingsManager<ISystemSettings>(this.topics, this.config.defaultSystemSettings);
 
     public constructor(public readonly config: IBackendServiceConfig) { }

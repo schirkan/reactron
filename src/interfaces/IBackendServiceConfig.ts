@@ -1,5 +1,6 @@
-import { IDashboardOptions } from "./IDashboardOptions";
 import { ISystemSettings } from "./ISystemSettings";
+import { IWebComponentOptions } from "./IWebComponentOptions";
+import { IWebPageOptions } from "./IWebPageOptions";
 
 export interface IBackendServiceConfig {
     root: string;
@@ -7,5 +8,6 @@ export interface IBackendServiceConfig {
     frontendPort: number;
     backendPort: number;
     defaultSystemSettings: ISystemSettings;
-    defaultDashboardOptions: IDashboardOptions;
+    defaultWebPageOptions: IWebPageOptions[];
+    defaultWebComponentOptions: IWebComponentOptions[];
 }

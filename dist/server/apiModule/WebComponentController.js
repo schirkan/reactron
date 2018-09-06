@@ -36,41 +36,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var DashboardController = /** @class */ (function () {
-    function DashboardController() {
+var WebComponentController = /** @class */ (function () {
+    function WebComponentController() {
     }
-    DashboardController.prototype.start = function (helper) {
+    WebComponentController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
             var router;
             return __generator(this, function (_a) {
-                console.log('DashboardController.start');
+                console.log('WebComponentController.start');
                 router = express_1.Router();
-                helper.moduleApiRouter.use('/dashboard', router);
+                helper.moduleApiRouter.use('/components', router);
                 router.get('/', function (req, res) {
-                    console.log('DashboardController.getOptions');
-                    var result = helper.backendService.dashboardManager.getOptions();
+                    console.log('WebComponentController.getAll');
+                    var result = helper.backendService.webComponentsManager.getAll();
                     res.json(result);
                 });
-                router.post('/layout', function (req, res) {
-                    console.log('DashboardController.getServiceOptions');
-                    helper.backendService.dashboardManager.setLayout(req.body);
+                router.post('/', function (req, res) {
+                    console.log('WebComponentController.createOrUpdate');
+                    helper.backendService.webComponentsManager.createOrUpdate(req.body);
                     res.sendStatus(201);
                 });
-                router.post('/tiles', function (req, res) {
-                    console.log('DashboardController.setTile');
-                    helper.backendService.dashboardManager.setTile(req.body);
-                    res.sendStatus(201);
-                });
-                router.delete('/tiles/:tileId', function (req, res) {
-                    console.log('DashboardController.removeTile');
-                    helper.backendService.dashboardManager.removeTile(req.params.tileId);
+                router.delete('/:id', function (req, res) {
+                    console.log('WebComponentController.remove');
+                    helper.backendService.webComponentsManager.remove(req.params.id);
                     res.sendStatus(201);
                 });
                 return [2 /*return*/];
             });
         });
     };
-    return DashboardController;
+    return WebComponentController;
 }());
-exports.DashboardController = DashboardController;
-//# sourceMappingURL=DashboardController.js.map
+exports.WebComponentController = WebComponentController;
+//# sourceMappingURL=WebComponentController.js.map
