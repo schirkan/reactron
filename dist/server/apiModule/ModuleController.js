@@ -50,7 +50,7 @@ var ModuleController = /** @class */ (function () {
                 router.get('/', function (req, res) {
                     console.log('ModuleController.getAll');
                     var modules = helper.backendService.moduleManager.getAll();
-                    res.json(modules);
+                    res.send(modules);
                 });
                 router.post('/:repository', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
@@ -61,7 +61,7 @@ var ModuleController = /** @class */ (function () {
                                 return [4 /*yield*/, helper.backendService.moduleManager.add(req.params.repository)];
                             case 1:
                                 result = _a.sent();
-                                res.json(result);
+                                res.send(result);
                                 return [2 /*return*/];
                         }
                     });
@@ -69,7 +69,7 @@ var ModuleController = /** @class */ (function () {
                 router.get('/:moduleName', function (req, res) {
                     console.log('ModuleController.get');
                     var module = helper.backendService.moduleManager.get(req.params.moduleName);
-                    res.json(module);
+                    res.send(module);
                 });
                 router.delete('/:moduleName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
@@ -80,7 +80,7 @@ var ModuleController = /** @class */ (function () {
                                 return [4 /*yield*/, helper.backendService.moduleManager.remove(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
-                                res.json(result);
+                                res.send(result);
                                 return [2 /*return*/];
                         }
                     });
@@ -94,7 +94,7 @@ var ModuleController = /** @class */ (function () {
                                 return [4 /*yield*/, helper.backendService.moduleManager.build(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
-                                res.json(result);
+                                res.send(result);
                                 return [2 /*return*/];
                         }
                     });
@@ -108,7 +108,7 @@ var ModuleController = /** @class */ (function () {
                                 return [4 /*yield*/, helper.backendService.moduleManager.install(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
-                                res.json(result);
+                                res.send(result);
                                 return [2 /*return*/];
                         }
                     });
@@ -122,7 +122,7 @@ var ModuleController = /** @class */ (function () {
                                 return [4 /*yield*/, helper.backendService.moduleManager.update(req.params.moduleName)];
                             case 1:
                                 result = _a.sent();
-                                res.json(result);
+                                res.send(result);
                                 return [2 /*return*/];
                         }
                     });

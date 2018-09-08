@@ -49,7 +49,7 @@ var WebPageController = /** @class */ (function () {
                 router.get('/', function (req, res) {
                     console.log('WebPageController.getAll');
                     var result = helper.backendService.webPageManager.getAll();
-                    res.json(result);
+                    res.send(result);
                 });
                 router.post('/', function (req, res) {
                     console.log('WebPageController.createOrUpdate');

@@ -69,33 +69,28 @@ var ServiceController = /** @class */ (function () {
                                     var instance = item.instance, serviceInfo = __rest(item, ["instance"]);
                                     return serviceInfo;
                                 });
-                                res.json(serviceInfos);
+                                res.send(serviceInfos);
                                 return [2 /*return*/];
                         }
                     });
                 }); });
-                // router.get('/:moduleName/:serviceName', async (req: Request, res: Response) => {
-                //     console.log('ServiceController.get');
-                //     const result = await helper.backendService.serviceRepository.get(req.params.moduleName, req.params.serviceName);
-                //     if (result) {
-                //         const { instance, ...serviceInfo } = result;
-                //         res.json(serviceInfo);
-                //     } else {
-                //         res.sendStatus(404);
-                //     }
-                // });
                 router.get('/:moduleName/:serviceName', function (req, res) {
                     console.log('ServiceController.getServiceOptions');
                     var result = helper.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
-                    res.json(result);
+                    res.send(result);
                 });
                 router.post('/:moduleName/:serviceName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        console.log('ServiceController.setServiceOptions');
-                        helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
-                        helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
-                        res.send();
-                        return [2 /*return*/];
+                        switch (_a.label) {
+                            case 0:
+                                console.log('ServiceController.setServiceOptions');
+                                helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
+                                return [4 /*yield*/, helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
+                            case 1:
+                                _a.sent();
+                                res.send();
+                                return [2 /*return*/];
+                        }
                     });
                 }); });
                 return [2 /*return*/];

@@ -1,29 +1,48 @@
 import * as React from 'react';
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
-import ExternalModule from '../ExternalModule/ExternalModule';
-import './App.css';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { IWebPageOptions } from '../../../interfaces/IWebPageOptions';
+import { instance as clientRepository } from '../../ClientRepository';
+import Admin from '../Admin/Admin';
+import NotFound from '../NotFound/NotFound';
+import WebComponent from '../WebComponent/WebComponent';
 
-export default class App extends React.Component {
+interface IAppState {
+  pages?: IWebPageOptions[];
+}
+
+export default class App extends React.Component<{}, IAppState> {
   constructor(props: any) {
     super(props);
+    this.state = {};
+  }
+
+  public componentDidMount() {
+    clientRepository.getWebPages().then(pages => this.setState({ pages }));
+
+    // TODO: register page/component change event
+  }
+
+  public getWebCmponent(id: string) {
+    return () => <WebComponent id={id} />;
   }
 
   public render() {
-    const options = { initialText: 'Hello World' } // TODO from component options repo
+    let content = <div>Loading Reactron...</div>;
 
-    return (
-      <section className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <div className="App-content">
-          <ErrorBoundary>
-            <ExternalModule componentName="HelloWorld" moduleName="dynamic-electron-react-module-example" options={options} />
-          </ErrorBoundary>
-        </div>
-      </section>
-    );
+    if (this.state.pages) {
+      content = (
+        <Router>
+          <Switch>
+            <Route path="/admin" component={Admin} />
+            {this.state.pages.map(item =>
+              (<Route key={item.path} path={item.path} exact={true} component={this.getWebCmponent(item.webComponentId)} />)
+            )}
+            <Route component={NotFound} />
+          </Switch>
+        </Router>
+      );
+    }
+
+    return <section className="App">{content}</section>;
   }
 }

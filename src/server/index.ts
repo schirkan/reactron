@@ -1,6 +1,5 @@
 import { app } from 'electron';
 import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
-import { IDashboardOptions } from '../interfaces/IDashboardOptions';
 import { BackendService } from "./BackendService";
 
 export const start = async (root: string): Promise<void> => {
@@ -17,12 +16,41 @@ export const start = async (root: string): Promise<void> => {
             lang: 'de',
             location: '',
             theme: 'default',
-            timezone: 'Europe/Berlin'
+            timezone: 'Europe/Berlin',
+            startupPath: '/'
         },
+        defaultWebPageOptions: [{
+            title: 'Home',
+            path: '/',
+            webComponentId: '1-list'
+        }],
         defaultWebComponentOptions: [{
-            id: '1',
+            id: '1-list',
+            componentName: 'ListLayout',
+            moduleName: 'internal',
+            options: {
+                items: [{
+                    content: "2"
+                }, {
+                    content: "3",
+                    style: {
+                        background: '#D9EEFC',
+                        padding: '20px',
+                        minHeight: '100px'
+                    }
+                }, {
+                    content: "4",
+                    style: {
+                        background: '#aaffc3',
+                        padding: '20px',
+                        minHeight: '100px'
+                    }
+                }]
+            }
+        }, {
+            id: '1-grid',
             componentName: 'GridLayout',
-            moduleName: 'dynamic-electron-react-grid-layout',
+            moduleName: 'internal',
             options: {
                 layout: { gridCols: 3, gridRows: 3 },
                 tiles: [{
@@ -35,19 +63,18 @@ export const start = async (root: string): Promise<void> => {
             }
         }, {
             id: '2',
-            componentName: 'HelloWorld',
-            moduleName: 'dynamic-electron-react-module-example',
-            options: { initialText: 'Hello World' }
+            componentName: 'Welcome',
+            moduleName: 'internal'
         }, {
             id: '3',
             componentName: 'HelloWorld',
             moduleName: 'dynamic-electron-react-module-example',
+            options: { initialText: 'Hello World' }
+        }, {
+            id: '4',
+            componentName: 'HelloWorld',
+            moduleName: 'dynamic-electron-react-module-example',
             options: { initialText: 'Hello Mars' }
-        }],
-        defaultWebPageOptions: [{
-            title: 'My Index Page',
-            path: '',
-            content: '2'
         }]
     };
 
@@ -79,7 +106,7 @@ export const start = async (root: string): Promise<void> => {
 
     app.on('before-quit', () => BackendService.instance.serviceManager.stopAllServices());
     BackendService.instance.electronApp.mainWindow.loadURL(
-        'http://localhost:' + BackendService.instance.config.frontendPort);
+        'http://localhost:' + BackendService.instance.config.frontendPort + BackendService.instance.settings.get().startupPath);
 
     console.log('BackendService is running');
 }

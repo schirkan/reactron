@@ -1,4 +1,4 @@
-type IOptionDefinitionValueType = 'number' | 'boolean' | 'string';
+type IOptionDefinitionValueType = 'array' | 'number' | 'boolean' | 'string' | 'style' | 'webComponent';
 
 export interface IOptionDefinitionValue {
     value: any;
@@ -15,6 +15,7 @@ export interface IOptionDefinition {
     maxValue?: number;
     stepSize?: number;
     values?: IOptionDefinitionValue[];
+    itemDefinition?: IOptionDefinition[];
 }
 
 export interface IObjectDefinition {

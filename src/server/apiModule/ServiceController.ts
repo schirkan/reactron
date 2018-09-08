@@ -16,31 +16,21 @@ export class ServiceController implements IExternalService {
                 return serviceInfo;
             });
 
-            res.json(serviceInfos);
+            res.send(serviceInfos);
         });
-
-        // router.get('/:moduleName/:serviceName', async (req: Request, res: Response) => {
-        //     console.log('ServiceController.get');
-        //     const result = await helper.backendService.serviceRepository.get(req.params.moduleName, req.params.serviceName);
-        //     if (result) {
-        //         const { instance, ...serviceInfo } = result;
-        //         res.json(serviceInfo);
-        //     } else {
-        //         res.sendStatus(404);
-        //     }
-        // });
         
         router.get('/:moduleName/:serviceName', (req: Request, res: Response) => {
             console.log('ServiceController.getServiceOptions');
             const result = helper.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
-            res.json(result);
+            res.send(result);
         });
         
         router.post('/:moduleName/:serviceName', async (req: Request, res: Response) => {
             console.log('ServiceController.setServiceOptions');
             helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
-            helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
+            await helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
             res.send();
+            // TODO: ex handling
         });
     }
 }

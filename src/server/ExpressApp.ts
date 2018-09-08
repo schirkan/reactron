@@ -12,7 +12,7 @@ export class ExpressApp {
 
     public start() {
         console.log('ExpressApp is starting');
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             this.express = express();
 
             // parse application/x-www-form-urlencoded

@@ -5,42 +5,42 @@ import { IWebComponentOptions } from "../interfaces/IWebComponentOptions";
 const Store = require('electron-store');
 
 export class WebComponentsManager {
-    private repository: ElectronStore<IWebComponentOptions[]>
+    private repository: ElectronStore<{ list: IWebComponentOptions[] }>
 
     constructor(private topics: IPubSub, defaultOptions: IWebComponentOptions[]) {
         this.repository = new Store({
             name: 'WebComponentsRepository',
-            defaults: defaultOptions
+            defaults: { list: defaultOptions || [] }
         });
     }
 
-    public getAll(){
-        return this.repository.store;
+    public getAll(): IWebComponentOptions[] {
+        return this.repository.store.list;
     }
 
     public createOrUpdate(page: IWebComponentOptions): void {
-        const pages = this.repository.store;
-        const index = pages.findIndex(x => x.id === page.id);
+        const items = this.repository.store.list;
+        const index = items.findIndex(x => x.id === page.id);
 
         if (index >= 0) {
-            pages[index] = page;
+            items[index] = page;
         } else {
-            pages.push(page);
+            items.push(page);
         }
 
-        this.repository.store = pages;
+        this.repository.store =  { list: items };
         this.topics.publish('components-updated', this.repository.store);
     }
 
     public remove(id: string): void {
-        const pages = this.repository.store;
-        const index = pages.findIndex(x => x.id === id);
+        const items = this.repository.store.list;
+        const index = items.findIndex(x => x.id === id);
 
         if (index >= 0) {
-            pages.splice(index);
+            items.splice(index);
         }
 
-        this.repository.store = pages;
+        this.repository.store = { list: items };
         this.topics.publish('components-updated', this.repository.store);
     }
 }

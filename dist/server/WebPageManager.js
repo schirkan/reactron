@@ -7,31 +7,31 @@ var WebPageManager = /** @class */ (function () {
         this.topics = topics;
         this.repository = new Store({
             name: 'WebPageRepository',
-            defaults: defaultOptions
+            defaults: { list: defaultOptions || [] }
         });
     }
     WebPageManager.prototype.getAll = function () {
-        return this.repository.store;
+        return this.repository.store.list;
     };
     WebPageManager.prototype.createOrUpdate = function (page) {
-        var pages = this.repository.store;
-        var id = pages.findIndex(function (x) { return x.path === page.path; });
+        var items = this.repository.store.list;
+        var id = items.findIndex(function (x) { return x.path === page.path; });
         if (id >= 0) {
-            pages[id] = page;
+            items[id] = page;
         }
         else {
-            pages.push(page);
+            items.push(page);
         }
-        this.repository.store = pages;
+        this.repository.store = { list: items };
         this.topics.publish('pages-updated', this.repository.store);
     };
     WebPageManager.prototype.remove = function (path) {
-        var pages = this.repository.store;
-        var id = pages.findIndex(function (x) { return x.path === path; });
+        var items = this.repository.store.list;
+        var id = items.findIndex(function (x) { return x.path === path; });
         if (id >= 0) {
-            pages.splice(id);
+            items.splice(id);
         }
-        this.repository.store = pages;
+        this.repository.store = { list: items };
         this.topics.publish('pages-updated', this.repository.store);
     };
     return WebPageManager;

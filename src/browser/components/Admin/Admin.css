@@ -1,8 +1,9 @@
-section.admin{
+section.admin {
+    padding: 20px;
     background-color: dimgray;
-    
 }
-section.admin.header{
+
+section.admin.header {
     background-color: darkgray;
 }
 
@@ -10,6 +11,4 @@ section.admin.header.title {
     color: white;
 }
 
-section.admin.content {
-    
-}
+section.admin.content {}

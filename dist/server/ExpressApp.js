@@ -9,7 +9,7 @@ var ExpressApp = /** @class */ (function () {
     ExpressApp.prototype.start = function () {
         var _this = this;
         console.log('ExpressApp is starting');
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             _this.express = express();
             // parse application/x-www-form-urlencoded
             _this.express.use(express.urlencoded({ extended: false }));

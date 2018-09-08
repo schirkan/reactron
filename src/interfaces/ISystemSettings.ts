@@ -3,4 +3,5 @@ export interface ISystemSettings {
     location: string;
     timezone: string;
     theme: string;
+    startupPath: string;
 }

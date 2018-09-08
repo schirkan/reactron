@@ -7,31 +7,31 @@ var WebComponentsManager = /** @class */ (function () {
         this.topics = topics;
         this.repository = new Store({
             name: 'WebComponentsRepository',
-            defaults: defaultOptions
+            defaults: { list: defaultOptions || [] }
         });
     }
     WebComponentsManager.prototype.getAll = function () {
-        return this.repository.store;
+        return this.repository.store.list;
     };
     WebComponentsManager.prototype.createOrUpdate = function (page) {
-        var pages = this.repository.store;
-        var index = pages.findIndex(function (x) { return x.id === page.id; });
+        var items = this.repository.store.list;
+        var index = items.findIndex(function (x) { return x.id === page.id; });
         if (index >= 0) {
-            pages[index] = page;
+            items[index] = page;
         }
         else {
-            pages.push(page);
+            items.push(page);
         }
-        this.repository.store = pages;
+        this.repository.store = { list: items };
         this.topics.publish('components-updated', this.repository.store);
     };
     WebComponentsManager.prototype.remove = function (id) {
-        var pages = this.repository.store;
-        var index = pages.findIndex(function (x) { return x.id === id; });
+        var items = this.repository.store.list;
+        var index = items.findIndex(function (x) { return x.id === id; });
         if (index >= 0) {
-            pages.splice(index);
+            items.splice(index);
         }
-        this.repository.store = pages;
+        this.repository.store = { list: items };
         this.topics.publish('components-updated', this.repository.store);
     };
     return WebComponentsManager;

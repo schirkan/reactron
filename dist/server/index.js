@@ -56,12 +56,41 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                         lang: 'de',
                         location: '',
                         theme: 'default',
-                        timezone: 'Europe/Berlin'
+                        timezone: 'Europe/Berlin',
+                        startupPath: '/'
                     },
+                    defaultWebPageOptions: [{
+                            title: 'Home',
+                            path: '/',
+                            webComponentId: '1-list'
+                        }],
                     defaultWebComponentOptions: [{
-                            id: '1',
+                            id: '1-list',
+                            componentName: 'ListLayout',
+                            moduleName: 'internal',
+                            options: {
+                                items: [{
+                                        content: "2"
+                                    }, {
+                                        content: "3",
+                                        style: {
+                                            background: '#006400',
+                                            padding: '20px',
+                                            minHeight: '100px'
+                                        }
+                                    }, {
+                                        content: "4",
+                                        style: {
+                                            background: '#2F4F4F',
+                                            padding: '20px',
+                                            minHeight: '100px'
+                                        }
+                                    }]
+                            }
+                        }, {
+                            id: '1-grid',
                             componentName: 'GridLayout',
-                            moduleName: 'dynamic-electron-react-grid-layout',
+                            moduleName: 'internal',
                             options: {
                                 layout: { gridCols: 3, gridRows: 3 },
                                 tiles: [{
@@ -74,19 +103,18 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                             }
                         }, {
                             id: '2',
-                            componentName: 'HelloWorld',
-                            moduleName: 'dynamic-electron-react-module-example',
-                            options: { initialText: 'Hello World' }
+                            componentName: 'Welcome',
+                            moduleName: 'internal'
                         }, {
                             id: '3',
                             componentName: 'HelloWorld',
                             moduleName: 'dynamic-electron-react-module-example',
+                            options: { initialText: 'Hello World' }
+                        }, {
+                            id: '4',
+                            componentName: 'HelloWorld',
+                            moduleName: 'dynamic-electron-react-module-example',
                             options: { initialText: 'Hello Mars' }
-                        }],
-                    defaultWebPageOptions: [{
-                            title: 'My Index Page',
-                            path: '',
-                            content: '2'
                         }]
                 };
                 console.log('BackendService is starting', config);
@@ -120,7 +148,7 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
             case 4:
                 _a.sent();
                 electron_1.app.on('before-quit', function () { return BackendService_1.BackendService.instance.serviceManager.stopAllServices(); });
-                BackendService_1.BackendService.instance.electronApp.mainWindow.loadURL('http://localhost:' + BackendService_1.BackendService.instance.config.frontendPort);
+                BackendService_1.BackendService.instance.electronApp.mainWindow.loadURL('http://localhost:' + BackendService_1.BackendService.instance.config.frontendPort + BackendService_1.BackendService.instance.settings.get().startupPath);
                 console.log('BackendService is running');
                 return [2 /*return*/];
         }

@@ -11,7 +11,7 @@ export class WebPageController implements IExternalService {
         router.get('/', (req: Request, res: Response) => {
             console.log('WebPageController.getAll');
             const result = helper.backendService.webPageManager.getAll();
-            res.json(result);
+            res.send(result);
         });
         
         router.post('/', (req: Request, res: Response) => {

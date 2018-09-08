@@ -49,7 +49,7 @@ var WebComponentController = /** @class */ (function () {
                 router.get('/', function (req, res) {
                     console.log('WebComponentController.getAll');
                     var result = helper.backendService.webComponentsManager.getAll();
-                    res.json(result);
+                    res.send(result);
                 });
                 router.post('/', function (req, res) {
                     console.log('WebComponentController.createOrUpdate');

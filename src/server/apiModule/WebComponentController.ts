@@ -11,7 +11,7 @@ export class WebComponentController implements IExternalService {
         router.get('/', (req: Request, res: Response) => {
             console.log('WebComponentController.getAll');
             const result = helper.backendService.webComponentsManager.getAll();
-            res.json(result);
+            res.send(result);
         });
         
         router.post('/', (req: Request, res: Response) => {
