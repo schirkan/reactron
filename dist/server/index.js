@@ -74,14 +74,14 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                                     }, {
                                         content: "3",
                                         style: {
-                                            background: '#006400',
+                                            background: '#D9EEFC',
                                             padding: '20px',
                                             minHeight: '100px'
                                         }
                                     }, {
                                         content: "4",
                                         style: {
-                                            background: '#2F4F4F',
+                                            background: '#aaffc3',
                                             padding: '20px',
                                             minHeight: '100px'
                                         }
@@ -119,12 +119,12 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                 };
                 console.log('BackendService is starting', config);
                 BackendService_1.BackendService.instance = new BackendService_1.BackendService(config);
-                // register internal api module
+                // register internal module
                 BackendService_1.BackendService.instance.moduleRepository.add({
                     name: 'internal',
-                    folder: 'apiModule',
-                    path: './apiModule',
-                    description: 'Internal Api Module',
+                    folder: 'internalModule',
+                    path: './internalModule',
+                    description: 'Internal Module',
                     author: 'Martin Pietschmann',
                     canRemove: false,
                     canBuild: false,
@@ -133,7 +133,7 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                     isBuilded: true,
                     isInstalled: true,
                     commandLog: [],
-                    serverFile: './apiModule/index'
+                    serverFile: './internalModule/index'
                 });
                 return [4 /*yield*/, BackendService_1.BackendService.instance.expressApp.start()];
             case 1:

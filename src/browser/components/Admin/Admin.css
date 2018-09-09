@@ -1,14 +1,15 @@
-section.admin {
+section.Admin {
+    background-color: #222;
     padding: 20px;
-    background-color: dimgray;
-}
-
-section.admin.header {
-    background-color: darkgray;
-}
-
-section.admin.header.title {
     color: white;
 }
 
-section.admin.content {}
+section.Admin .title {
+    font-size: 1.5em;
+    margin: 1.5em;
+    text-align: center;
+}
+
+section.Admin .navigation {}
+
+section.Admin .content {}

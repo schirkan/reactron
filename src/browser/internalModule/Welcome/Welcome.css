@@ -23,15 +23,3 @@ section.Welcome .logo {
         transform: rotate(360deg);
     }
 }
-
-section.Welcome .link {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    color: white;
-    border: 3px solid white;
-    border-radius: 18px;
-    padding: 8px;
-    text-decoration: none;
-    font-weight: bold;
-}

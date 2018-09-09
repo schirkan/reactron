@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Loading from '../Loading/Loading';
 import RoundButton from '../RoundButton/RoundButton';
 import './Admin.css';
 
@@ -9,13 +10,15 @@ export default class Admin extends React.Component {
 
   public render() {
     return (
-      <section className="admin">
+      <section className="Admin">
         <RoundButton to="/">Home</RoundButton>
-        <header className="header">
-          <h1 className="title">Reactron Admin</h1>
-        </header>
+        <div className="title">Reactron Admin</div>
+
+        <div className="navigation">
+          Hier kommt die Navigation
+        </div>
         <div className="content">
-          Hier kommt der Content...
+          <Loading text="Hier kommt der Content..." />
         </div>
       </section>
     );

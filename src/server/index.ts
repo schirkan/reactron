@@ -82,12 +82,12 @@ export const start = async (root: string): Promise<void> => {
 
     BackendService.instance = new BackendService(config);
 
-    // register internal api module
+    // register internal module
     BackendService.instance.moduleRepository.add({
         name: 'internal',
-        folder: 'apiModule',
-        path: './apiModule',
-        description: 'Internal Api Module',
+        folder: 'internalModule',
+        path: './internalModule',
+        description: 'Internal Module',
         author: 'Martin Pietschmann',
         canRemove: false,
         canBuild: false,
@@ -96,7 +96,7 @@ export const start = async (root: string): Promise<void> => {
         isBuilded: true,
         isInstalled: true,
         commandLog: [],
-        serverFile: './apiModule/index'
+        serverFile: './internalModule/index'
     });
 
     await BackendService.instance.expressApp.start();

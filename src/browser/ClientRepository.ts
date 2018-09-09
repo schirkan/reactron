@@ -8,7 +8,7 @@ import { IModuleRepositoryItem } from '../interfaces/IModuleRepositoryItem';
 import { IWebComponentOptions } from '../interfaces/IWebComponentOptions';
 import { IWebPageOptions } from '../interfaces/IWebPageOptions';
 import { BrowserModuleHelper } from './BrowserModuleHelper';
-import { components as internalComponents } from "./components/index";
+import { components as internalComponents } from "./internalModule";
 
 const inernalApiModuleHelper = new BrowserModuleHelper('internal');
 

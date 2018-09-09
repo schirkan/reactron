@@ -1,5 +1,5 @@
 import * as React from 'react';
-import RoundButton from '../RoundButton/RoundButton';
+import RoundButton from '../../components/RoundButton/RoundButton';
 import logo from './logo.svg';
 import './Welcome.css';
 

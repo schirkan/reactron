@@ -4,6 +4,7 @@ import { IDynamicReactComponentClass, IDynamicReactComponentProps } from '../../
 import { instance as clientRepository } from '../../ClientRepository';
 import { DynamicReactComponentProps } from '../../DynamicReactComponentProps';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import Loading from '../Loading/Loading';
 
 export interface IWebComponentProps {
     id: string;
@@ -66,7 +67,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     }
 
     public render() {
-        let content = <div>Loading Component...</div>;
+        let content = <Loading />;
 
         if (this.state.componentFound === false) {
             content = <div>Component not found</div>;

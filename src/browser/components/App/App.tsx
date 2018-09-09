@@ -3,8 +3,11 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { IWebPageOptions } from '../../../interfaces/IWebPageOptions';
 import { instance as clientRepository } from '../../ClientRepository';
 import Admin from '../Admin/Admin';
+import Loading from '../Loading/Loading';
 import NotFound from '../NotFound/NotFound';
 import WebComponent from '../WebComponent/WebComponent';
+
+import './App.css';
 
 interface IAppState {
   pages?: IWebPageOptions[];
@@ -27,7 +30,7 @@ export default class App extends React.Component<{}, IAppState> {
   }
 
   public render() {
-    let content = <div>Loading Reactron...</div>;
+    let content = <Loading text="Loading Reactron..." />;
 
     if (this.state.pages) {
       content = (
