@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { IWebPageOptions } from '../../../interfaces/IWebPageOptions';
-import { instance as clientRepository } from '../../ClientRepository';
+import { instance as clientRepository } from '../../ApiClient';
 import Admin from '../Admin/Admin';
 import Loading from '../Loading/Loading';
 import NotFound from '../NotFound/NotFound';

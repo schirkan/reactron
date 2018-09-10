@@ -44,6 +44,13 @@ export const start = async (root: string): Promise<void> => {
                         background: '#aaffc3',
                         padding: '20px',
                         minHeight: '100px'
+                    }                
+                }, {
+                    content: "iframe-weather",
+                    style: {
+                        background: '#ffaac3',
+                        padding: '20px',
+                        minHeight: '100px'
                     }
                 }]
             }
@@ -75,6 +82,11 @@ export const start = async (root: string): Promise<void> => {
             componentName: 'HelloWorld',
             moduleName: 'dynamic-electron-react-module-example',
             options: { initialText: 'Hello Mars' }
+        }, {
+            id: 'iframe-weather',
+            componentName: 'WebPage',
+            moduleName: 'internal',
+            options: { url: 'https://wetter.tagesschau.de/deutschland/aussichten.html#aussichten' }
         }]
     };
 

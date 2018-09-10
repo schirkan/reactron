@@ -4,10 +4,6 @@ import RoundButton from '../RoundButton/RoundButton';
 import './Admin.css';
 
 export default class Admin extends React.Component {
-  constructor(props: any) {
-    super(props);
-  }
-
   public render() {
     return (
       <section className="Admin">

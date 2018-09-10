@@ -1,4 +1,4 @@
-type IOptionDefinitionValueType = 'array' | 'number' | 'boolean' | 'string' | 'style' | 'webComponent';
+type IOptionDefinitionValueType = 'array' | 'object' | 'number' | 'boolean' | 'string' | 'style' | 'webComponent';
 
 export interface IOptionDefinitionValue {
     value: any;

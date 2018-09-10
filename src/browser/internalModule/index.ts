@@ -2,6 +2,7 @@ import { IComponentDefinition } from "../../interfaces/IComponentDefinition";
 import CarouselLayout from "./CarouselLayout/CarouselLayout";
 import GridLayout from "./GridLayout/GridLayout";
 import ListLayout from "./ListLayout/ListLayout";
+import WebPage from "./WebPage/WebPage";
 import Welcome from "./Welcome/Welcome";
 
 export const components: IComponentDefinition[] = [{
@@ -41,4 +42,14 @@ export const components: IComponentDefinition[] = [{
     displayName: 'Welcome',
     name: 'Welcome',
     options: []
+}, {
+    component: WebPage,
+    description: 'WebPage Component',
+    displayName: 'WebPage',
+    name: 'WebPage',
+    options: [{
+        displayName: 'URL',
+        name: 'url',
+        valueType: 'string'
+    }]
 }];

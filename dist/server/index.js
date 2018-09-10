@@ -85,6 +85,13 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                                             padding: '20px',
                                             minHeight: '100px'
                                         }
+                                    }, {
+                                        content: "iframe-weather",
+                                        style: {
+                                            background: '#ffaac3',
+                                            padding: '20px',
+                                            minHeight: '100px'
+                                        }
                                     }]
                             }
                         }, {
@@ -115,6 +122,11 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                             componentName: 'HelloWorld',
                             moduleName: 'dynamic-electron-react-module-example',
                             options: { initialText: 'Hello Mars' }
+                        }, {
+                            id: 'iframe-weather',
+                            componentName: 'WebPage',
+                            moduleName: 'internal',
+                            options: { url: 'https://wetter.tagesschau.de/deutschland/aussichten.html#aussichten' }
                         }]
                 };
                 console.log('BackendService is starting', config);
