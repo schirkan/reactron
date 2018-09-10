@@ -10,11 +10,12 @@ export const components: IComponentDefinition[] = [{
     description: 'List Layout',
     displayName: 'List Layout',
     name: 'ListLayout',
-    options: [{
+    fields: [{
         displayName: 'List items',
         name: 'items',
-        valueType: 'array',
-        itemDefinition: [{
+        valueType: 'object',
+        isArray: true,
+        fields: [{
             displayName: 'Content',
             name: 'content',
             valueType: 'webComponent'
@@ -29,25 +30,25 @@ export const components: IComponentDefinition[] = [{
     description: 'Grid Layout',
     displayName: 'Grid Layout',
     name: 'GridLayout',
-    options: []
+    fields: []
 }, {
     component: CarouselLayout,
     description: 'Carousel Layout',
     displayName: 'Carousel Layout',
     name: 'CarouselLayout',
-    options: []
+    fields: []
 }, {
     component: Welcome,
     description: 'Welcome Component',
     displayName: 'Welcome',
     name: 'Welcome',
-    options: []
+    fields: []
 }, {
     component: WebPage,
     description: 'WebPage Component',
     displayName: 'WebPage',
     name: 'WebPage',
-    options: [{
+    fields: [{
         displayName: 'URL',
         name: 'url',
         valueType: 'string'

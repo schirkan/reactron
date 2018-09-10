@@ -1,11 +1,11 @@
-type IOptionDefinitionValueType = 'array' | 'object' | 'number' | 'boolean' | 'string' | 'style' | 'webComponent';
+type IOptionDefinitionValueType = 'object' | 'number' | 'boolean' | 'string' | 'style' | 'webComponent';
 
 export interface IOptionDefinitionValue {
     value: any;
     text: string;
 }
 
-export interface IOptionDefinition {
+export interface IFieldDefinition {
     name: string;
     displayName: string;
     description?: string;
@@ -15,12 +15,13 @@ export interface IOptionDefinition {
     maxValue?: number;
     stepSize?: number;
     values?: IOptionDefinitionValue[];
-    itemDefinition?: IOptionDefinition[];
+    fields?: IFieldDefinition[];
+    isArray?: boolean;
 }
 
 export interface IObjectDefinition {
     name: string;
     displayName: string;
     description?: string;
-    options: IOptionDefinition[];
+    fields: IFieldDefinition[];
 }

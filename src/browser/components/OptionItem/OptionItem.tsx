@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { IOptionDefinition } from '../../../interfaces/IObjectDefinition';
+import { IFieldDefinition } from '../../../interfaces/IObjectDefinition';
 import OptionList from '../OptionList/OptionList';
 import './OptionItem.css';
 
 interface IOptionItemProps {
-  definition: IOptionDefinition,
+  definition: IFieldDefinition,
   options: any,
   value: any,
 }
@@ -22,9 +22,6 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   }
 
   private renderArray() {
-    if (!this.props.definition.itemDefinition) {
-      return <span>Not itemDefinition</span>;
-    }
     const array = this.props.value as any[];
 
     return (
@@ -38,13 +35,13 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   }
 
   private renderObject() {
-    if (!this.props.definition.itemDefinition) {
+    if (!this.props.definition.fields) {
       return <span>Not itemDefinition</span>;
     }
     return (
       <React.Fragment>
         <div>Object {this.props.definition.displayName}</div>
-        <OptionList options={this.props.options} definitions={this.props.definition.itemDefinition} value={this.props.value} />;
+        <OptionList options={this.props.options} definitions={this.props.definition.fields} value={this.props.value} />;
       </React.Fragment>
     );
   }
@@ -63,7 +60,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
 
   private renderBooleanInput() {
     return (
-      <input type="text" />
+      <input type="checkbox" />
     );
   }
 
@@ -80,9 +77,10 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   }
 
   public renderInput() {
+    if (this.props.definition.isArray) {
+      return this.renderArray();
+    }
     switch (this.props.definition.valueType) {
-      case 'array':
-        return this.renderArray();
       case 'object':
         return this.renderObject();
       case 'number':
