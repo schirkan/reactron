@@ -1,18 +1,10 @@
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
 Object.defineProperty(exports, "__esModule", { value: true });
 var ModuleController_1 = require("./ModuleController");
 var ServiceController_1 = require("./ServiceController");
 var SettingsController_1 = require("./SettingsController");
 var WebComponentController_1 = require("./WebComponentController");
 var WebPageController_1 = require("./WebPageController");
-__export(require("./ModuleController"));
-__export(require("./ServiceController"));
-__export(require("./WebPageController"));
-__export(require("./WebComponentController"));
-__export(require("./SettingsController"));
 exports.services = [{
         name: 'ModuleController',
         displayName: 'Modules API',

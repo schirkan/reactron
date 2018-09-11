@@ -21,6 +21,7 @@ var ExpressApp = /** @class */ (function () {
                 console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
                 next();
             });
+            // TODO: default api error/notfound handler
             _this.express.use('/api', _this.apiRouter);
             _this.express.use('/modules', express.static(_this.config.root + '/modules'));
             _this.express.use('/node_modules', express.static(_this.config.root + '/node_modules'));

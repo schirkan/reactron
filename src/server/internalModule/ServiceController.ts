@@ -12,7 +12,7 @@ export class ServiceController implements IExternalService {
             console.log('ServiceController.getAll');
             const result = await helper.backendService.serviceRepository.getAll();
             const serviceInfos = result.map(item => {
-                const { instance, ...serviceInfo } = item;
+                const { instance, service, ...serviceInfo } = item;
                 return serviceInfo as IServiceRepositoryItem;
             });
             res.send(serviceInfos);
@@ -28,7 +28,7 @@ export class ServiceController implements IExternalService {
             console.log('ServiceController.setServiceOptions');
             helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
             await helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
-            res.send();
+            res.sendStatus(201);
             // TODO: ex handling
         });
     }

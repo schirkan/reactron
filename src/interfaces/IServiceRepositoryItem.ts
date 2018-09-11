@@ -1,10 +1,9 @@
 import { IExternalService } from "./IExternalService";
+import { IServiceDefinition } from "./IServiceDefinition";
 
-export interface IServiceRepositoryItem {
+export interface IServiceRepositoryItem extends IServiceDefinition {
     moduleName: string;
-    name: string;
     instance: IExternalService;
-    description: string;
     state: 'starting' | 'running' | 'stopped' | 'error';
     log: string[];
 }

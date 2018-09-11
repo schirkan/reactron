@@ -35,24 +35,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
+var apiRoutes_1 = require("../../common/apiRoutes");
+var registerRoute_1 = require("./registerRoute");
 var ModuleController = /** @class */ (function () {
     function ModuleController() {
     }
     ModuleController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
-            var router;
             var _this = this;
             return __generator(this, function (_a) {
                 console.log('ModuleController.start');
-                router = express_1.Router();
-                helper.moduleApiRouter.use('/modules', router);
-                router.get('/', function (req, res) {
-                    console.log('ModuleController.getAll');
-                    var modules = helper.backendService.moduleManager.getAll();
-                    res.send(modules);
-                });
-                router.post('/:repository', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getModules, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var modules;
+                    return __generator(this, function (_a) {
+                        console.log('ModuleController.getAll');
+                        modules = helper.backendService.moduleManager.getAll();
+                        res.send(modules);
+                        return [2 /*return*/];
+                    });
+                }); });
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -66,12 +68,16 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.get('/:moduleName', function (req, res) {
-                    console.log('ModuleController.get');
-                    var module = helper.backendService.moduleManager.get(req.params.moduleName);
-                    res.send(module);
-                });
-                router.delete('/:moduleName', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var module;
+                    return __generator(this, function (_a) {
+                        console.log('ModuleController.get');
+                        module = helper.backendService.moduleManager.get(req.params.moduleName);
+                        res.send(module);
+                        return [2 /*return*/];
+                    });
+                }); });
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.deleteModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -85,7 +91,7 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.post('/:moduleName/build', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.buildModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -99,7 +105,7 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.post('/:moduleName/install', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.installModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -113,7 +119,7 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.post('/:moduleName/update', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.updateModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {

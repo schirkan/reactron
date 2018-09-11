@@ -5,12 +5,6 @@ import { SettingsController } from "./SettingsController";
 import { WebComponentController } from "./WebComponentController";
 import { WebPageController } from "./WebPageController";
 
-export * from "./ModuleController";
-export * from "./ServiceController";
-export * from "./WebPageController";
-export * from "./WebComponentController";
-export * from "./SettingsController";
-
 export const services: IServiceDefinition[] = [{
     name: 'ModuleController',
     displayName: 'Modules API',

@@ -26,6 +26,8 @@ export class ExpressApp {
                 console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
                 next();
             });
+            // TODO: default api error/notfound handler
+
             this.express.use('/api', this.apiRouter);
             this.express.use('/modules', express.static(this.config.root + '/modules'));
             this.express.use('/node_modules', express.static(this.config.root + '/node_modules'));

@@ -1,5 +1,6 @@
 import { ICommandResult } from "../interfaces/ICommandResult";
 import { IExternalService } from "../interfaces/IExternalService";
+import { IServiceDefinition } from "../interfaces/IServiceDefinition";
 import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { command } from "./commandResultWrapper";
 import { ModuleRepository } from "./ModuleRepository";
@@ -45,14 +46,18 @@ export class ServiceManager {
 
                 if (m.serverFile) {
                     result.log.push('Loading: ' + m.serverFile);
-                    const servicesTypes = require(m.serverFile);
-                    const exportKeys = Object.keys(servicesTypes);
-                    result.log.push('Exports: ' + JSON.stringify(exportKeys));
-
-                    // tslint:disable-next-line:prefer-for-of
-                    for (let j = 0; j < exportKeys.length; j++) {
-                        const serviceName = exportKeys[j];
-                        result.children.push(await this.loadService(m.name, serviceName));
+                    try {
+                        const serviceDefinitions = require(m.serverFile).services as IServiceDefinition[];
+                        // TODO: ex handling
+                        if (serviceDefinitions && serviceDefinitions.length) {
+                            // tslint:disable-next-line:prefer-for-of
+                            for (let j = 0; j < serviceDefinitions.length; j++) {
+                                const serviceName = serviceDefinitions[j].name;
+                                result.children.push(await this.loadService(m.name, serviceName));
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error);
                     }
                 }
             }
@@ -135,27 +140,26 @@ export class ServiceManager {
                 throw new Error('Module has no server file: ' + moduleName);
             }
 
-            let serviceTypes: any;
+            let services: IServiceDefinition[];
             try {
                 result.log.push('Loading: ' + moduleDefinition.serverFile);
-                serviceTypes = require(moduleDefinition.serverFile)
+                services = require(moduleDefinition.serverFile).services;
             } catch (error) {
-                throw new Error('Error importing Module: ' + moduleDefinition.serverFile);
+                throw new Error('Error loading Module: ' + moduleDefinition.serverFile);
             }
 
-            const serviceType = serviceTypes[serviceName];
-            if (!serviceType) {
+            const serviceDefinition = services.find(x => x.name === serviceName);
+            if (!serviceDefinition) {
                 throw new Error('Service not found: ' + serviceName);
             }
-            const serviceInstance = new serviceType() as IExternalService;
+            const serviceInstance = new serviceDefinition.service() as IExternalService;
             const serviceOptions = this.optionsRepository.get(moduleName, serviceName);
 
             const serviceRepositoryItem: IServiceRepositoryItem = {
-                name: serviceName,
+                ...serviceDefinition,
                 moduleName,
                 instance: serviceInstance,
                 log: [],
-                description: '',
                 state: 'stopped',
             };
 

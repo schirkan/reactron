@@ -64,7 +64,7 @@ var ServiceController = /** @class */ (function () {
                             case 1:
                                 result = _a.sent();
                                 serviceInfos = result.map(function (item) {
-                                    var instance = item.instance, serviceInfo = __rest(item, ["instance"]);
+                                    var instance = item.instance, service = item.service, serviceInfo = __rest(item, ["instance", "service"]);
                                     return serviceInfo;
                                 });
                                 res.send(serviceInfos);
@@ -90,7 +90,7 @@ var ServiceController = /** @class */ (function () {
                                 return [4 /*yield*/, helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
                             case 1:
                                 _a.sent();
-                                res.send();
+                                res.sendStatus(201);
                                 return [2 /*return*/];
                         }
                     });

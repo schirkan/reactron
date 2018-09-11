@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -85,7 +96,7 @@ var ServiceManager = /** @class */ (function () {
     ServiceManager.prototype.startAllServices = function () {
         var _this = this;
         return commandResultWrapper_1.command('startAllServices', undefined, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var modules, i, m, servicesTypes, exportKeys, j, serviceName, _a, _b;
+            var modules, i, m, serviceDefinitions, j, serviceName, _a, _b, error_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -94,30 +105,37 @@ var ServiceManager = /** @class */ (function () {
                         i = 0;
                         _c.label = 1;
                     case 1:
-                        if (!(i < modules.length)) return [3 /*break*/, 6];
+                        if (!(i < modules.length)) return [3 /*break*/, 9];
                         m = modules[i];
-                        if (!m.serverFile) return [3 /*break*/, 5];
+                        if (!m.serverFile) return [3 /*break*/, 8];
                         result.log.push('Loading: ' + m.serverFile);
-                        servicesTypes = require(m.serverFile);
-                        exportKeys = Object.keys(servicesTypes);
-                        result.log.push('Exports: ' + JSON.stringify(exportKeys));
-                        j = 0;
                         _c.label = 2;
                     case 2:
-                        if (!(j < exportKeys.length)) return [3 /*break*/, 5];
-                        serviceName = exportKeys[j];
+                        _c.trys.push([2, 7, , 8]);
+                        serviceDefinitions = require(m.serverFile).services;
+                        if (!(serviceDefinitions && serviceDefinitions.length)) return [3 /*break*/, 6];
+                        j = 0;
+                        _c.label = 3;
+                    case 3:
+                        if (!(j < serviceDefinitions.length)) return [3 /*break*/, 6];
+                        serviceName = serviceDefinitions[j].name;
                         _b = (_a = result.children).push;
                         return [4 /*yield*/, this.loadService(m.name, serviceName)];
-                    case 3:
-                        _b.apply(_a, [_c.sent()]);
-                        _c.label = 4;
                     case 4:
-                        j++;
-                        return [3 /*break*/, 2];
+                        _b.apply(_a, [_c.sent()]);
+                        _c.label = 5;
                     case 5:
+                        j++;
+                        return [3 /*break*/, 3];
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
+                        error_1 = _c.sent();
+                        console.log(error_1);
+                        return [3 /*break*/, 8];
+                    case 8:
                         i++;
                         return [3 /*break*/, 1];
-                    case 6: return [2 /*return*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         }); });
@@ -152,7 +170,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
         return commandResultWrapper_1.command('stopService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var error_1;
+            var error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -171,9 +189,9 @@ var ServiceManager = /** @class */ (function () {
                         serviceRepositoryItem.state = "stopped";
                         return [3 /*break*/, 5];
                     case 4:
-                        error_1 = _a.sent();
+                        error_2 = _a.sent();
                         serviceRepositoryItem.state = "error";
-                        serviceRepositoryItem.log.push(error_1);
+                        serviceRepositoryItem.log.push(error_2);
                         result.log.push('Error stopping service: ' + serviceKey);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
@@ -185,7 +203,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
         return commandResultWrapper_1.command('startService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var helper, error_2;
+            var helper, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -206,9 +224,9 @@ var ServiceManager = /** @class */ (function () {
                         serviceRepositoryItem.state = "running";
                         return [3 /*break*/, 5];
                     case 4:
-                        error_2 = _a.sent();
+                        error_3 = _a.sent();
                         serviceRepositoryItem.state = "error";
-                        serviceRepositoryItem.log.push(error_2);
+                        serviceRepositoryItem.log.push(error_3);
                         result.log.push('Error starting service: ' + serviceKey);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
@@ -236,7 +254,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = moduleName + '.' + serviceName;
         return commandResultWrapper_1.command('loadService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var moduleDefinition, serviceTypes, serviceType, serviceInstance, serviceOptions, serviceRepositoryItem, _a, _b, _c, _d;
+            var moduleDefinition, services, serviceDefinition, serviceInstance, serviceOptions, serviceRepositoryItem, _a, _b, _c, _d;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -252,25 +270,18 @@ var ServiceManager = /** @class */ (function () {
                         }
                         try {
                             result.log.push('Loading: ' + moduleDefinition.serverFile);
-                            serviceTypes = require(moduleDefinition.serverFile);
+                            services = require(moduleDefinition.serverFile).services;
                         }
                         catch (error) {
-                            throw new Error('Error importing Module: ' + moduleDefinition.serverFile);
+                            throw new Error('Error loading Module: ' + moduleDefinition.serverFile);
                         }
-                        serviceType = serviceTypes[serviceName];
-                        if (!serviceType) {
+                        serviceDefinition = services.find(function (x) { return x.name === serviceName; });
+                        if (!serviceDefinition) {
                             throw new Error('Service not found: ' + serviceName);
                         }
-                        serviceInstance = new serviceType();
+                        serviceInstance = new serviceDefinition.service();
                         serviceOptions = this.optionsRepository.get(moduleName, serviceName);
-                        serviceRepositoryItem = {
-                            name: serviceName,
-                            moduleName: moduleName,
-                            instance: serviceInstance,
-                            log: [],
-                            description: '',
-                            state: 'stopped',
-                        };
+                        serviceRepositoryItem = __assign({}, serviceDefinition, { moduleName: moduleName, instance: serviceInstance, log: [], state: 'stopped' });
                         this.serviceRepository.add(serviceRepositoryItem);
                         _b = (_a = result.children).push;
                         return [4 /*yield*/, this.setOptionsInternal(serviceRepositoryItem, serviceOptions)];

@@ -1,3 +1,5 @@
+import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
+import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IComponentDefinition } from '../../../interfaces/IComponentDefinition';
 import { IDynamicReactComponentClass, IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
@@ -71,7 +73,12 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     let content = <Loading />;
 
     if (this.state.componentFound === false) {
-      content = <div>Component not found</div>;
+      content = (
+        <React.Fragment>
+          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationTriangle} size="4x" spin={true} />
+          <div>Component not found</div>;
+        </React.Fragment>
+      );
     }
 
     if (this.state.componentClass && this.state.componentProps) {

@@ -35,19 +35,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
+var apiRoutes_1 = require("../../common/apiRoutes");
+var registerRoute_1 = require("./registerRoute");
 var SettingsController = /** @class */ (function () {
     function SettingsController() {
     }
     SettingsController.prototype.start = function (helper) {
         return __awaiter(this, void 0, void 0, function () {
-            var router;
             var _this = this;
             return __generator(this, function (_a) {
                 console.log('SettingsController.start');
-                router = express_1.Router();
-                helper.moduleApiRouter.use('/service', router);
-                router.get('/', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getSettings, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -61,11 +59,11 @@ var SettingsController = /** @class */ (function () {
                         }
                     });
                 }); });
-                router.post('/', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.setSettings, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('SettingsController.set');
                         helper.backendService.settings.set(req.body);
-                        res.send();
+                        res.sendStatus(201);
                         return [2 /*return*/];
                     });
                 }); });

@@ -1,26 +1,25 @@
-import { Request, Response, Router } from 'express';
+import { routes } from '../../common/apiRoutes';
 import { IExternalService } from '../../interfaces/IExternalService';
 import { ServerModuleHelper } from '../ServerModuleHelper';
+import { registerRoute } from './registerRoute';
 
 export class WebPageController implements IExternalService {
     public async start(helper: ServerModuleHelper): Promise<void> {
         console.log('WebPageController.start');
-        const router = Router();
-        helper.moduleApiRouter.use('/pages', router);
 
-        router.get('/', (req: Request, res: Response) => {
+        registerRoute(helper.moduleApiRouter, routes.getWebPages, async (req, res) => {
             console.log('WebPageController.getAll');
             const result = helper.backendService.webPageManager.getAll();
             res.send(result);
         });
         
-        router.post('/', (req: Request, res: Response) => {
+        registerRoute(helper.moduleApiRouter, routes.setWebPage, async (req, res) => {
             console.log('WebPageController.createOrUpdate');
             helper.backendService.webPageManager.createOrUpdate(req.body);
             res.sendStatus(201);
         });
         
-        router.delete('/:path', (req: Request, res: Response) => {
+        registerRoute(helper.moduleApiRouter, routes.deleteWebPage, async (req, res) => {
             console.log('WebPageController.remove');
             helper.backendService.webPageManager.remove(req.params.path);
             res.sendStatus(201);
