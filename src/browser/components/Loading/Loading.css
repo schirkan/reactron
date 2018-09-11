@@ -1,3 +1,7 @@
 section.Loading {
     text-align: center;
 }
+
+section.Loading .text {
+    margin-top: 10px;
+}

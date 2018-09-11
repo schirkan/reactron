@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IComponentDefinition } from '../../../interfaces/IComponentDefinition';
 import { IDynamicReactComponentClass, IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
-import { instance as apiClient } from '../../ApiClient';
+import { apiClient } from '../../ApiClient';
 import { instance as componentLoader } from '../../ComponentLoader';
 import { DynamicReactComponentProps } from '../../DynamicReactComponentProps';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';

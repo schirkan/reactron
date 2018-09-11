@@ -5,3 +5,8 @@ section.App {
     top: 0;
     left: 0;
 }
+
+section.WebPage {
+    width: 100%;
+    height: 100%;
+}

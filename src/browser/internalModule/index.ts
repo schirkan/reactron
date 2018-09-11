@@ -10,47 +10,63 @@ export const components: IComponentDefinition[] = [{
     description: 'List Layout',
     displayName: 'List Layout',
     name: 'ListLayout',
-    fields: [{
-        displayName: 'List items',
-        name: 'items',
-        valueType: 'object',
-        isArray: true,
-        fields: [{
-            displayName: 'Content',
-            name: 'content',
-            valueType: 'webComponent'
-        }, {
-            displayName: 'Style',
-            name: 'style',
-            valueType: 'style'
-        }]
-    }]
+    options: [
+        { displayName: 'List Style', name: 'listStyle', valueType: 'style' },
+        { displayName: 'Item Style', name: 'itemStyle', valueType: 'style' },
+        {
+            displayName: 'List items',
+            name: 'items',
+            valueType: 'object',
+            isArray: true,
+            fields: [
+                { displayName: 'Content', name: 'content', valueType: 'webComponent' },
+                { displayName: 'Style', name: 'style', valueType: 'style' }
+            ]
+        }
+    ]
 }, {
     component: GridLayout,
     description: 'Grid Layout',
     displayName: 'Grid Layout',
     name: 'GridLayout',
-    fields: []
+    options: [
+        { displayName: 'Rows', name: 'rows', valueType: 'number' },
+        { displayName: 'Columns', name: 'cols', valueType: 'number' },
+        { displayName: 'Grid Style', name: 'gridStyle', valueType: 'style' },
+        { displayName: 'Tile Style', name: 'tileStyle', valueType: 'style' },
+        {
+            displayName: 'Grid tiles',
+            name: 'tiles',
+            valueType: 'object',
+            isArray: true,
+            fields: [
+                { displayName: 'Row', name: 'row', valueType: 'number' },
+                { displayName: 'Column', name: 'col', valueType: 'number' },
+                { displayName: 'Row span', name: 'rowspan', valueType: 'number' },
+                { displayName: 'Column span', name: 'colspan', valueType: 'number' },
+                { displayName: 'Content', name: 'content', valueType: 'webComponent' },
+                { displayName: 'Style', name: 'style', valueType: 'style' }
+            ]
+        }
+    ]
 }, {
     component: CarouselLayout,
     description: 'Carousel Layout',
     displayName: 'Carousel Layout',
     name: 'CarouselLayout',
-    fields: []
+    options: []
 }, {
     component: Welcome,
     description: 'Welcome Component',
     displayName: 'Welcome',
     name: 'Welcome',
-    fields: []
+    options: []
 }, {
     component: WebPage,
     description: 'WebPage Component',
     displayName: 'WebPage',
     name: 'WebPage',
-    fields: [{
-        displayName: 'URL',
-        name: 'url',
-        valueType: 'string'
-    }]
+    options: [
+        { displayName: 'URL', name: 'url', valueType: 'string' }
+    ]
 }];

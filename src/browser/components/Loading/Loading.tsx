@@ -8,8 +8,8 @@ export default class Loading extends React.Component<{ text?: string }> {
   public render() {
     return (
       <section className="Loading">
-        <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSpinner} spin={true} />
-        <div>{this.props.text}</div>
+        <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSpinner} size="4x" spin={true} />
+        <div className="text">{this.props.text}</div>
       </section>
     );
   }

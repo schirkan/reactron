@@ -1,70 +1,70 @@
-import { IModuleRepositoryItem } from '../interfaces/IModuleRepositoryItem';
-import { IWebComponentOptions } from '../interfaces/IWebComponentOptions';
-import { IWebPageOptions } from '../interfaces/IWebPageOptions';
+import { ApiRoute, routes } from '../common/apiRoutes';
 import { BrowserModuleHelper } from './BrowserModuleHelper';
 
 const inernalModuleHelper = new BrowserModuleHelper('internal');
 
 export class ApiClient {
-    private modules: IModuleRepositoryItem[];
-    private webPages: IWebPageOptions[];
-    private webComponents: IWebComponentOptions[];
+    public getModules = apiCall(routes.getModules, true);
+    public getWebPages = apiCall(routes.getWebPages, true);
+    public setWebPage = apiCall(routes.setWebPage);
+    public deleteWebPage = apiCall(routes.deleteWebPage);
+    public getWebComponentOptions = apiCall(routes.getWebComponentOptions, true);
+    public setWebComponentOptions = apiCall(routes.setWebComponentOptions);
+    public deleteWebComponentOptions = apiCall(routes.deleteWebComponentOptions);
+    public getAllServices = apiCall(routes.getServices, true);
+    public getServiceOptions = apiCall(routes.getServiceOptions);
+    public setServiceOptions = apiCall(routes.setServiceOptions);
 
-    public clearCache(){
-        delete (this.modules);
-        delete (this.webPages);
-        delete (this.webComponents);
-    }
-
-    public async getModules(): Promise<IModuleRepositoryItem[]> {
-        if (!this.modules) {
-            const response = await fetch(inernalModuleHelper.moduleApiPath + '/modules');
-            this.modules = await response.json();
-        }
-        return this.modules;
-    }
-
-    public async getWebPages(): Promise<IWebPageOptions[]> {
-        if (!this.webPages) {
-            const response = await fetch(inernalModuleHelper.moduleApiPath + '/pages');
-            this.webPages = await response.json();
-        }
-        return this.webPages;
-    }
-
-    public async setWebPage(options: IWebPageOptions): Promise<void> {
-        await fetch(inernalModuleHelper.moduleApiPath + '/pages', {
-            method: 'post',
-            body: JSON.stringify(options)
-        });
-    }
-
-    public async deleteWebPage(path: string): Promise<void> {
-        await fetch(inernalModuleHelper.moduleApiPath + '/' + path, {
-            method: 'delete'
-        });
-    }
-
-    public async getWebComponentOptions(): Promise<IWebComponentOptions[]> {
-        if (!this.webComponents) {
-            const response = await fetch(inernalModuleHelper.moduleApiPath + '/components');
-            this.webComponents = await response.json();
-        }
-        return this.webComponents;
-    }
-
-    public async setWebComponentOptions(options: IWebComponentOptions): Promise<void> {
-        await fetch(inernalModuleHelper.moduleApiPath + '/components', {
-            method: 'post',
-            body: JSON.stringify(options)
-        });
-    }
-
-    public async deleteWebComponentOptions(id: string): Promise<void> {
-        await fetch(inernalModuleHelper.moduleApiPath + '/' + id, {
-            method: 'delete'
+    public clearCache() {
+        Object.keys(this).forEach(key => {
+            if (this[key] && this[key].clearCache) {
+                this[key].clearCache();
+            }
         });
     }
 }
 
-export const instance = new ApiClient();
+interface IApiCall<TParams, TBody, TResponse> {
+    (params?: TParams, body?: TBody): Promise<TResponse>;
+    clearCache: () => void;
+}
+
+const apiCall = <TParams, TBody, TResponse>(
+    route: ApiRoute<TParams, TBody, TResponse>,
+    cacheResponse: boolean = false) => {
+    let cache: any;
+    const method = route.method.toLocaleLowerCase();
+
+    const call: any = (params: TParams, body: TBody): Promise<TResponse> => {
+        if (cacheResponse && cache) {
+            return Promise.resolve(cache);
+        }
+
+        let path = route.path;
+        // replace params in path
+        if (params) {
+            Object.keys(params).forEach(key => {
+                path = path.replace(':' + key, params[key]);
+            });
+        }
+        return fetch(inernalModuleHelper.moduleApiPath + path, {
+            method,
+            body: body && JSON.stringify(body)
+        })
+            .then(response => response.json())
+            .then(response => {
+                if (cacheResponse) {
+                    cache = response;
+                }
+                return response;
+            });
+    };
+
+    call.clearCache = () => {
+        cache = undefined;
+    };
+
+    return call as IApiCall<TParams, TBody, TResponse>;
+};
+
+export const apiClient = new ApiClient();

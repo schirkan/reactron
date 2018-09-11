@@ -4,7 +4,7 @@ import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { IComponentDefinition } from '../interfaces/IComponentDefinition';
-import { instance as apiClient } from './ApiClient';
+import { apiClient } from './ApiClient';
 import { BrowserModuleHelper } from './BrowserModuleHelper';
 import { components as internalComponents } from "./internalModule";
 

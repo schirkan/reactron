@@ -62,63 +62,55 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                     defaultWebPageOptions: [{
                             title: 'Home',
                             path: '/',
-                            webComponentId: '1-list'
+                            webComponentId: 'mylist',
+                            style: {
+                                'background-color': '#444',
+                                'color': '#fff'
+                            }
                         }],
                     defaultWebComponentOptions: [{
-                            id: '1-list',
+                            id: 'mylist',
                             componentName: 'ListLayout',
                             moduleName: 'internal',
                             options: {
-                                items: [{
-                                        content: "2"
-                                    }, {
-                                        content: "3",
-                                        style: {
-                                            background: '#D9EEFC',
-                                            padding: '20px',
-                                            minHeight: '100px'
-                                        }
-                                    }, {
-                                        content: "4",
-                                        style: {
-                                            background: '#aaffc3',
-                                            padding: '20px',
-                                            minHeight: '100px'
-                                        }
-                                    }, {
-                                        content: "iframe-weather",
-                                        style: {
-                                            background: '#ffaac3',
-                                            padding: '20px',
-                                            minHeight: '100px'
-                                        }
-                                    }]
+                                items: [
+                                    { content: "welcome" },
+                                    { content: "mygrid", style: { 'padding': '10px' } },
+                                    { content: "notfound" }
+                                ]
                             }
                         }, {
-                            id: '1-grid',
+                            id: 'mygrid',
                             componentName: 'GridLayout',
                             moduleName: 'internal',
                             options: {
-                                layout: { gridCols: 3, gridRows: 3 },
-                                tiles: [{
-                                        content: "2",
-                                        layout: { col: 1, row: 1, colspan: 1, rowspan: 1 }
-                                    }, {
-                                        content: "3",
-                                        layout: { col: 3, row: 1, colspan: 1, rowspan: 1 }
-                                    }]
+                                cols: 2,
+                                rows: 2,
+                                gridStyle: {
+                                    'grid-gap': '10px',
+                                },
+                                tileStyle: {
+                                    'border-radius': '5px',
+                                    'border': '3px solid white',
+                                    'padding': '10px'
+                                },
+                                tiles: [
+                                    { content: "hello1", col: 1, row: 1, colspan: 1, rowspan: 1 },
+                                    { content: "hello2", col: 1, row: 2, colspan: 1, rowspan: 1 },
+                                    { content: "iframe-weather", col: 2, row: 1, colspan: 1, rowspan: 2 }
+                                ]
                             }
                         }, {
-                            id: '2',
+                            id: 'welcome',
                             componentName: 'Welcome',
                             moduleName: 'internal'
                         }, {
-                            id: '3',
+                            id: 'hello1',
                             componentName: 'HelloWorld',
                             moduleName: 'dynamic-electron-react-module-example',
                             options: { initialText: 'Hello World' }
                         }, {
-                            id: '4',
+                            id: 'hello2',
                             componentName: 'HelloWorld',
                             moduleName: 'dynamic-electron-react-module-example',
                             options: { initialText: 'Hello Mars' }

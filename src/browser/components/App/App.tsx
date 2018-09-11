@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { IWebPageOptions } from '../../../interfaces/IWebPageOptions';
-import { instance as clientRepository } from '../../ApiClient';
+import { apiClient } from '../../ApiClient';
 import Admin from '../Admin/Admin';
 import Loading from '../Loading/Loading';
 import NotFound from '../NotFound/NotFound';
@@ -20,13 +20,17 @@ export default class App extends React.Component<{}, IAppState> {
   }
 
   public componentDidMount() {
-    clientRepository.getWebPages().then(pages => this.setState({ pages }));
+    apiClient.getWebPages().then(pages => this.setState({ pages }));
 
     // TODO: register page/component change event
   }
 
-  public getWebCmponent(id: string) {
-    return () => <WebComponent id={id} />;
+  public renderPage(id: string, style: any) {
+    return () => (
+      <section className="WebPage" style={style}>
+        <WebComponent id={id} />
+      </section>
+    );
   }
 
   public render() {
@@ -38,7 +42,7 @@ export default class App extends React.Component<{}, IAppState> {
           <Switch>
             <Route path="/admin" component={Admin} />
             {this.state.pages.map(item =>
-              (<Route key={item.path} path={item.path} exact={true} component={this.getWebCmponent(item.webComponentId)} />)
+              (<Route key={item.path} path={item.path} exact={true} component={this.renderPage(item.webComponentId, item.style)} />)
             )}
             <Route component={NotFound} />
           </Switch>

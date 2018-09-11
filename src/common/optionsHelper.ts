@@ -13,8 +13,8 @@ export const createOptions = (options: { [key: string]: any }, objectDefinition:
                 if (i === parts.length - 1) {
                     let value = options[key];
                     // fix value Type
-                    if (objectDefinition) {
-                        const optionDefinition = objectDefinition.fields.find(x => x.name === key);
+                    if (objectDefinition && objectDefinition.options) {
+                        const optionDefinition = objectDefinition.options.find(x => x.name === key);
                         if (optionDefinition && optionDefinition.valueType === 'number') {
                             value = Number.parseFloat(value);
                         }
