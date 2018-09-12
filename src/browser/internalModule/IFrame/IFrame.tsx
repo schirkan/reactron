@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
-import './WebPage.css';
+import './IFrame.css';
 
-interface IWebPageOptions{
+interface IIFrameOptions{
   url: string
 }
 
-export default class WebPage extends React.Component<IDynamicReactComponentProps<IWebPageOptions>> {
+export default class IFrame extends React.Component<IDynamicReactComponentProps<IIFrameOptions>> {
   public render() {
     return (
-      <section className="WebPage">
+      <section className="IFrame">
         <iframe src={this.props.options.url} />
       </section>
     );
