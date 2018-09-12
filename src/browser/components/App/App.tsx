@@ -4,7 +4,7 @@ import { IWebPageOptions } from '../../../interfaces/IWebPageOptions';
 import { apiClient } from '../../ApiClient';
 import Admin from '../Admin/Admin';
 import Loading from '../Loading/Loading';
-import NotFound from '../NotFound/NotFound';
+import PageNotFound from '../PageNotFound/PageNotFound';
 import WebComponent from '../WebComponent/WebComponent';
 
 import './App.css';
@@ -44,7 +44,7 @@ export default class App extends React.Component<{}, IAppState> {
             {this.state.pages.map(item =>
               (<Route key={item.path} path={item.path} exact={true} component={this.renderPage(item.webComponentId, item.style)} />)
             )}
-            <Route component={NotFound} />
+            <Route component={PageNotFound} />
           </Switch>
         </Router>
       );

@@ -1,11 +1,11 @@
-import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
-import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IComponentDefinition } from '../../../interfaces/IComponentDefinition';
 import { IDynamicReactComponentClass, IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
+import { IWebComponentOptions } from '../../../interfaces/IWebComponentOptions';
 import { apiClient } from '../../ApiClient';
 import { instance as componentLoader } from '../../ComponentLoader';
 import { DynamicReactComponentProps } from '../../DynamicReactComponentProps';
+import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
 
@@ -18,6 +18,7 @@ export interface IWebComponentState {
   componentClass?: IDynamicReactComponentClass;
   componentProps?: IDynamicReactComponentProps;
   componentDefinition?: IComponentDefinition;
+  componentOptions?: IWebComponentOptions
 }
 
 export default class WebComponent extends React.Component<IWebComponentProps, IWebComponentState> {
@@ -58,6 +59,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       }
 
       this.setState({
+        componentOptions: webComponentOptions,
         componentClass: componentDefinition.component,
         componentProps: new DynamicReactComponentProps(webComponentOptions.moduleName, webComponentOptions.componentName, webComponentOptions.options),
         componentDefinition,
@@ -73,12 +75,9 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     let content = <Loading />;
 
     if (this.state.componentFound === false) {
-      content = (
-        <React.Fragment>
-          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationTriangle} size="4x" spin={true} />
-          <div>Component not found</div>;
-        </React.Fragment>
-      );
+      content = <ComponentNotFound
+        moduleName={this.state.componentOptions && this.state.componentOptions.moduleName}
+        componentName={this.state.componentOptions && this.state.componentOptions.componentName} />;
     }
 
     if (this.state.componentClass && this.state.componentProps) {

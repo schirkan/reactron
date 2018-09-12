@@ -67,16 +67,16 @@ export const start = async (root: string): Promise<void> => {
         }, {
             id: 'hello1',
             componentName: 'HelloWorld',
-            moduleName: 'dynamic-electron-react-module-example',
+            moduleName: 'reactron-hello-world',
             options: { initialText: 'Hello World' }
         }, {
             id: 'hello2',
             componentName: 'HelloWorld',
-            moduleName: 'dynamic-electron-react-module-example',
+            moduleName: 'reactron-hello-world',
             options: { initialText: 'Hello Mars' }
         }, {
             id: 'iframe-weather',
-            componentName: 'WebPage',
+            componentName: 'IFrame',
             moduleName: 'internal',
             options: { url: 'https://wetter.tagesschau.de/deutschland/aussichten.html#aussichten' }
         }]
