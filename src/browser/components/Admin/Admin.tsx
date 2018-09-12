@@ -2,6 +2,7 @@ import * as React from 'react';
 import Loading from '../Loading/Loading';
 import RoundButton from '../RoundButton/RoundButton';
 import './Admin.css';
+import Navigation from './Navigation/Navigation';
 
 export default class Admin extends React.Component {
   public render() {
@@ -10,9 +11,8 @@ export default class Admin extends React.Component {
         <RoundButton to="/">Home</RoundButton>
         <div className="title">Reactron Admin</div>
 
-        <div className="navigation">
-          Hier kommt die Navigation
-        </div>
+        <Navigation/>
+        
         <div className="content">
           <Loading text="Hier kommt der Content..." />
         </div>

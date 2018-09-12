@@ -9,6 +9,8 @@ import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
 
+import './WebComponent.css';
+
 export interface IWebComponentProps {
   id: string;
 }
