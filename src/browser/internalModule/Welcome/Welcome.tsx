@@ -1,13 +1,10 @@
 import * as React from 'react';
 import RoundButton from '../../components/RoundButton/RoundButton';
 import logo from './logo.svg';
+
 import './Welcome.css';
 
 export default class Welcome extends React.Component {
-  constructor(props: any) {
-    super(props);
-  }
-
   public render() {
     return (
       <section className="Welcome">

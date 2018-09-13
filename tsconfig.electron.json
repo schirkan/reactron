@@ -8,5 +8,8 @@
     "src/common/**/*",
     "src/typings/**/*",
     "src/interfaces/**/*",
+  ],
+  "exclude": [
+    "src/browser/**/*",
   ]
 }

@@ -29,18 +29,18 @@ export default class GridLayout extends React.Component<IDynamicReactComponentPr
 
   private renderTile(tile: IGridLayoutTileOptions, index: number) {
     const style = { ...this.props.options.tileStyle, ...tile.style };
-        style['grid-column'] = tile.col.toString();
-        if (tile.colspan > 1) {
-          style['grid-column'] += ' / span ' + tile.colspan;
-        }
-    
-        style['grid-row'] = tile.row.toString();
-        if (tile.rowspan > 1) {
-          style['grid-row'] += ' / span ' + tile.rowspan;
-        }
+    style['grid-column'] = tile.col.toString();
+    if (tile.colspan > 1) {
+      style['grid-column'] += ' / span ' + tile.colspan;
+    }
+
+    style['grid-row'] = tile.row.toString();
+    if (tile.rowspan > 1) {
+      style['grid-row'] += ' / span ' + tile.rowspan;
+    }
     return (
       <div className="GridTile" key={index} style={style}>
-        {this.props.renderWebComponent(tile.content)}
+        {this.props.renderComponent({ id: tile.content })}
       </div>
     );
   }

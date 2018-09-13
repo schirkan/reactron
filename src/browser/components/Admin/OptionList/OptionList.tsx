@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { IFieldDefinition } from '../../../interfaces/IObjectDefinition';
+import { IFieldDefinition } from '../../../../interfaces/IObjectDefinition';
 import OptionItem from '../OptionItem/OptionItem';
+
 import './OptionList.css';
 
 interface IOptionListProps {

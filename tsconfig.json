@@ -23,6 +23,7 @@
     "build",
     "dist",
     "public",
-    "**/*.js"
+    "**/*.js",
+    "src/modules/**/*",
   ]
 }

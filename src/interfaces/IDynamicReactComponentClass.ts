@@ -1,5 +1,6 @@
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import * as React from 'react';
+import { IWebComponentProps } from '../browser/components/WebComponent/IWebComponentProps';
 import { IPubSub } from './IPubSub';
 
 export interface IDynamicReactComponentProps<TOptions = any> {
@@ -12,7 +13,7 @@ export interface IDynamicReactComponentProps<TOptions = any> {
     moduleName: string;
     componentName: string;
     getService: (serviceName: string, moduleName: string | undefined) => Promise<any>;
-    renderWebComponent: (id: string) => any;
+    renderComponent: (props: IWebComponentProps) => any;
     renderLoading: (text?: string, iconSize?: SizeProp) => any;
 }
 

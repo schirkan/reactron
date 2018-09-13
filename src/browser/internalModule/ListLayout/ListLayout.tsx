@@ -26,7 +26,7 @@ export default class ListLayout extends React.Component<IDynamicReactComponentPr
 
     return (
       <div className="ListItem" key={index} style={style}>
-        {this.props.renderWebComponent(item.content)}
+        {this.props.renderComponent({ id: item.content })}
       </div>
     );
   }

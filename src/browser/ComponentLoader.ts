@@ -58,4 +58,4 @@ export class ComponentLoader {
     }
 }
 
-export const instance = new ComponentLoader();
+export const componentLoader = new ComponentLoader();
