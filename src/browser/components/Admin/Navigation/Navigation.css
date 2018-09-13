@@ -1,1 +1,17 @@
-section.Navigation {}
+section.Navigation {
+    background: rgb(80, 80, 80);
+}
+
+section.Navigation a {
+    display: inline-block;
+    padding: 8px;
+    padding-top: 11px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+}
+
+section.Navigation a.active {
+    background: rgb(74, 133, 153);
+    border-bottom: 3px solid rgb(66, 225, 247);
+}

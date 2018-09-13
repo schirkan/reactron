@@ -2,10 +2,6 @@ import * as React from 'react';
 import RoundButton from '../RoundButton/RoundButton';
 
 export default class PageNotFound extends React.Component<{ location: any }> {
-  constructor(props: any) {
-    super(props);
-  }
-
   public render() {
     const location = this.props.location.pathname;
     return (

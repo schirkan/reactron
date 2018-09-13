@@ -4,16 +4,28 @@ import { BrowserModuleHelper } from './BrowserModuleHelper';
 const inernalModuleHelper = new BrowserModuleHelper('internal');
 
 export class ApiClient {
-    public getModules = apiCall(routes.getModules, true);
-    public getWebPages = apiCall(routes.getWebPages, true);
-    public setWebPage = apiCall(routes.setWebPage);
-    public deleteWebPage = apiCall(routes.deleteWebPage);
-    public getWebComponentOptions = apiCall(routes.getWebComponentOptions, true);
-    public setWebComponentOptions = apiCall(routes.setWebComponentOptions);
-    public deleteWebComponentOptions = apiCall(routes.deleteWebComponentOptions);
     public getAllServices = apiCall(routes.getServices, true);
     public getServiceOptions = apiCall(routes.getServiceOptions);
     public setServiceOptions = apiCall(routes.setServiceOptions);
+
+    public getModules = apiCall(routes.getModules, true);
+    public addModule = apiCall(routes.addModule, true);
+    public getModule = apiCall(routes.getModule, true);
+    public deleteModule = apiCall(routes.deleteModule, true);
+    public buildModule = apiCall(routes.buildModule, true);
+    public installModule = apiCall(routes.installModule, true);
+    public updateModule = apiCall(routes.updateModule, true);
+
+    public getWebPages = apiCall(routes.getWebPages, true);
+    public setWebPage = apiCall(routes.setWebPage);
+    public deleteWebPage = apiCall(routes.deleteWebPage);
+
+    public getSettings = apiCall(routes.getSettings, true);
+    public setSettings = apiCall(routes.setSettings);
+
+    public getWebComponentOptions = apiCall(routes.getWebComponentOptions, true);
+    public setWebComponentOptions = apiCall(routes.setWebComponentOptions);
+    public deleteWebComponentOptions = apiCall(routes.deleteWebComponentOptions);
 
     public clearCache() {
         Object.keys(this).forEach(key => {

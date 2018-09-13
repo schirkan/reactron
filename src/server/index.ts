@@ -24,8 +24,8 @@ export const start = async (root: string): Promise<void> => {
             path: '/',
             webComponentId: 'mylist',
             style: {
-                'background-color': '#444',
-                'color': '#fff'
+                backgroundColor: '#444',
+                color: '#fff'
             }
         }],
         defaultWebComponentOptions: [{
@@ -47,12 +47,12 @@ export const start = async (root: string): Promise<void> => {
                 cols: 2,
                 rows: 2,
                 gridStyle: {
-                    'grid-gap': '10px',
+                    gridGap: '10px',
                 },
                 tileStyle: {
-                    'border-radius': '5px',
-                    'border': '3px solid white',
-                    'padding': '10px'
+                    borderRadius: '5px',
+                    border: '3px solid white',
+                    padding: '10px'
                 },
                 tiles: [
                     { content: "hello1", col: 1, row: 1, colspan: 1, rowspan: 1 },

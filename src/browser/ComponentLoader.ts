@@ -11,6 +11,7 @@ import { components as internalComponents } from "./internalModule";
 const inernalModuleHelper = new BrowserModuleHelper('internal');
 
 const SystemJS = (window as any).SystemJS as SystemJSLoader.System;
+SystemJS.config({ baseURL: '/' });
 if (inernalModuleHelper.electron) {
     SystemJS.set('electron', SystemJS.newModule(inernalModuleHelper.electron));
 }

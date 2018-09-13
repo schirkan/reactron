@@ -1,9 +1,17 @@
 import * as React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import './Navigation.css';
 
 export default class Navigation extends React.Component {
   public render() {
-    return <section className="Navigation">Navigation</section>;
+    return (
+      <section className="Navigation">
+        <NavLink activeClassName="active" to="/admin/ModuleManager" role="button" >ModuleManager</NavLink>
+        <NavLink activeClassName="active" to="/admin/ServiceManager" role="button">ServiceManager</NavLink>
+        <NavLink activeClassName="active" to="/admin/Pages" role="button">Pages</NavLink>
+        <NavLink activeClassName="active" to="/admin/Settings" role="button">Settings</NavLink>
+      </section>
+    );
   }
 }
