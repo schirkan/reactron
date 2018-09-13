@@ -5,3 +5,7 @@ section.ComponentNotFound {
 section.ComponentNotFound .text {
     margin-top: 10px;
 }
+
+section.ComponentNotFound .text span~span {
+    margin-left: 6px;
+}

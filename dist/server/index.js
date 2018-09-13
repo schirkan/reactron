@@ -97,7 +97,7 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                                 tiles: [
                                     { content: "hello1", col: 1, row: 1, colspan: 1, rowspan: 1 },
                                     { content: "hello2", col: 1, row: 2, colspan: 1, rowspan: 1 },
-                                    { content: "iframe-weather", col: 2, row: 1, colspan: 1, rowspan: 2 }
+                                    { content: "iframe-weather", col: 2, row: 1, colspan: 1, rowspan: 2, style: { height: "200px" } }
                                 ]
                             }
                         }, {

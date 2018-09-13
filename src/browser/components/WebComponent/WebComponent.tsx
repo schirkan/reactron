@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { IComponentDefinition } from '../../../interfaces/IComponentDefinition';
-import { IDynamicReactComponentClass, IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
 import { IWebComponentOptions } from '../../../interfaces/IWebComponentOptions';
 import { apiClient } from '../../ApiClient';
-import { instance as componentLoader } from '../../ComponentLoader';
-import { DynamicReactComponentProps } from '../../DynamicReactComponentProps';
 import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
+import DynamicReactComponent from '../DynamicReactComponent/DynamicReactComponent';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
 
@@ -17,10 +14,7 @@ export interface IWebComponentProps {
 
 export interface IWebComponentState {
   componentFound?: boolean;
-  componentClass?: IDynamicReactComponentClass;
-  componentProps?: IDynamicReactComponentProps;
-  componentDefinition?: IComponentDefinition;
-  componentOptions?: IWebComponentOptions
+  componentOptions?: IWebComponentOptions;
 }
 
 export default class WebComponent extends React.Component<IWebComponentProps, IWebComponentState> {
@@ -48,23 +42,8 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
         return;
       }
 
-      const moduleComponents = await componentLoader.getModuleComponents(webComponentOptions.moduleName);
-      if (!moduleComponents) {
-        this.setState({ componentFound: false });
-        return;
-      }
-
-      const componentDefinition = moduleComponents.find(x => x.name === webComponentOptions.componentName);
-      if (!componentDefinition || !componentDefinition.component) {
-        this.setState({ componentFound: false });
-        return;
-      }
-
       this.setState({
         componentOptions: webComponentOptions,
-        componentClass: componentDefinition.component,
-        componentProps: new DynamicReactComponentProps(webComponentOptions.moduleName, webComponentOptions.componentName, webComponentOptions.options),
-        componentDefinition,
         componentFound: true
       });
     } catch (error) {
@@ -77,14 +56,11 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     let content = <Loading />;
 
     if (this.state.componentFound === false) {
-      content = <ComponentNotFound
-        moduleName={this.state.componentOptions && this.state.componentOptions.moduleName}
-        componentName={this.state.componentOptions && this.state.componentOptions.componentName} />;
+      content = <ComponentNotFound id={this.props.id} />;
     }
 
-    if (this.state.componentClass && this.state.componentProps) {
-      const Component = this.state.componentClass;
-      content = <Component {...this.state.componentProps} />;
+    if (this.state.componentOptions) {
+      content = <DynamicReactComponent {...this.state.componentOptions} />;
     }
 
     return (

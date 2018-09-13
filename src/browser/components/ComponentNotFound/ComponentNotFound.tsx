@@ -6,6 +6,7 @@ import * as React from 'react';
 import './ComponentNotFound.css';
 
 interface IComponentNotFoundProps {
+  id?: string;
   componentName?: string;
   moduleName?: string
   iconSize?: SizeProp;
@@ -17,10 +18,21 @@ export default class ComponentNotFound extends React.Component<IComponentNotFoun
   };
 
   public render() {
+    const text = [];
+    if (this.props.id) {
+      text.push (<span>Id: {this.props.id}</span>);
+    }
+    if (this.props.componentName) {
+      text.push (<span>Component: {this.props.componentName}</span>);
+    }
+    if (this.props.moduleName) {
+      text.push (<span>Module: {this.props.moduleName}</span>);
+    }
+
     return (
       <section className="ComponentNotFound">
         <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationTriangle} size={this.props.iconSize} />
-        <div className="text">Component not found: {this.props.moduleName}/{this.props.componentName}</div>
+        <div className="text">Component not found: {text}</div>
       </section>
     );
   }
