@@ -9,23 +9,23 @@ export class ApiClient {
     public setServiceOptions = apiCall(routes.setServiceOptions);
 
     public getModules = apiCall(routes.getModules, true);
-    public addModule = apiCall(routes.addModule, true);
-    public getModule = apiCall(routes.getModule, true);
-    public deleteModule = apiCall(routes.deleteModule, true);
-    public buildModule = apiCall(routes.buildModule, true);
-    public installModule = apiCall(routes.installModule, true);
-    public updateModule = apiCall(routes.updateModule, true);
+    public addModule = apiCall(routes.addModule);
+    public getModule = apiCall(routes.getModule);
+    public deleteModule = apiCall(routes.deleteModule);
+    public buildModule = apiCall(routes.buildModule);
+    public installModule = apiCall(routes.installModule);
+    public updateModule = apiCall(routes.updateModule);
 
     public getWebPages = apiCall(routes.getWebPages, true);
     public setWebPage = apiCall(routes.setWebPage);
     public deleteWebPage = apiCall(routes.deleteWebPage);
 
-    public getServerInfo = apiCall(routes.getServerInfo, true);
-    public exitApplication = apiCall(routes.exitApplication, true);
-    public restartApplication = apiCall(routes.restartApplication, true);
-    public shutdownSystem = apiCall(routes.shutdownSystem, true);
-    public restartSystem = apiCall(routes.restartSystem, true);
-    public resetApplication = apiCall(routes.resetApplication, true);
+    public getServerInfo = apiCall(routes.getServerInfo);
+    public exitApplication = apiCall(routes.exitApplication);
+    public restartApplication = apiCall(routes.restartApplication);
+    public shutdownSystem = apiCall(routes.shutdownSystem);
+    public restartSystem = apiCall(routes.restartSystem);
+    public resetApplication = apiCall(routes.resetApplication);
 
     public getSettings = apiCall(routes.getSettings, true);
     public setSettings = apiCall(routes.setSettings);

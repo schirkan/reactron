@@ -76,6 +76,10 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
             <span className="label">IP</span>
             <span className="value">{this.state.info.ip}</span>
           </li>
+          <li>
+            <span className="label">Hostname</span>
+            <span className="value">{this.state.info.hostname}</span>
+          </li>
         </ul>
       </fieldset>
     );

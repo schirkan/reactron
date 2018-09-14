@@ -9,15 +9,24 @@ import { registerRoute } from './registerRoute';
 const osCommand = require('electron-shutdown-command');
 
 const getIPAddress = () => {
+    const list: string[] = [];
     const interfaces = os.networkInterfaces();
     const devices = Object.keys(interfaces);
     for (const devName of devices) {
         const iface = interfaces[devName];
         for (const alias of iface) {
             if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-                return alias.address;
+                list.push(alias.address);
             }
         }
+    }
+    if (list.length > 1) {
+        const lanIp = list.find(x => x.startsWith('192.168.'));
+        if (lanIp) {
+            return lanIp;
+        }
+    } else if (list.length === 1) {
+        return list[0];
     }
     return '0.0.0.0';
 };
@@ -41,6 +50,7 @@ export class AppController implements IExternalService {
             const moduleInfo = helper.backendService.moduleRepository.get('reactron');
 
             const result: IServerInfo = {
+                hostname: os.hostname(),
                 ip: getIPAddress(),
                 cpu: getCpuInfo(),
                 memory: getMemoryInfo(),
@@ -64,15 +74,15 @@ export class AppController implements IExternalService {
         registerRoute(helper.moduleApiRouter, routes.shutdownSystem, async (req, res) => {
             console.log('AppController.shutdownSystem');
             res.sendStatus(204);
-            await helper.backendService.exit();
             osCommand.shutdown();
+            helper.backendService.exit();
         });
 
         registerRoute(helper.moduleApiRouter, routes.restartSystem, async (req, res) => {
             console.log('AppController.restartSystem');
             res.sendStatus(204);
-            await helper.backendService.exit();
             osCommand.restart();
+            helper.backendService.exit();
         });
 
         registerRoute(helper.moduleApiRouter, routes.resetApplication, async (req, res) => {
