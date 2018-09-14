@@ -23,7 +23,7 @@ SystemJS.set('@fortawesome/react-fontawesome', SystemJS.newModule(FontAwesome));
 
 export class ComponentLoader {
     private moduleComponents: { [moduleName: string]: IComponentDefinition[] } = {
-        internal: internalComponents
+        'reactron': internalComponents
     };
 
     public async getModuleComponents(moduleName: string): Promise<IComponentDefinition[] | undefined> {
