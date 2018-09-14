@@ -26,7 +26,7 @@ exports.createConfig = function (root) {
         defaultWebComponentOptions: [{
                 id: 'mylist',
                 componentName: 'ListLayout',
-                moduleName: 'internal',
+                moduleName: 'reactron',
                 options: {
                     items: [
                         { content: "welcome" },
@@ -37,7 +37,7 @@ exports.createConfig = function (root) {
             }, {
                 id: 'mygrid',
                 componentName: 'GridLayout',
-                moduleName: 'internal',
+                moduleName: 'reactron',
                 options: {
                     cols: 2,
                     rows: 2,
@@ -58,7 +58,7 @@ exports.createConfig = function (root) {
             }, {
                 id: 'welcome',
                 componentName: 'Welcome',
-                moduleName: 'internal'
+                moduleName: 'reactron'
             }, {
                 id: 'hello1',
                 componentName: 'HelloWorld',
@@ -72,7 +72,7 @@ exports.createConfig = function (root) {
             }, {
                 id: 'iframe-weather',
                 componentName: 'IFrame',
-                moduleName: 'internal',
+                moduleName: 'reactron',
                 options: { url: 'https://wetter.tagesschau.de/deutschland/aussichten.html#aussichten' }
             }]
     };

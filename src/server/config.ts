@@ -26,7 +26,7 @@ export const createConfig = (root: string): IBackendServiceConfig => {
         defaultWebComponentOptions: [{
             id: 'mylist',
             componentName: 'ListLayout',
-            moduleName: 'internal',
+            moduleName: 'reactron',
             options: {
                 items: [
                     { content: "welcome" },
@@ -37,7 +37,7 @@ export const createConfig = (root: string): IBackendServiceConfig => {
         }, {
             id: 'mygrid',
             componentName: 'GridLayout',
-            moduleName: 'internal',
+            moduleName: 'reactron',
             options: {
                 cols: 2,
                 rows: 2,
@@ -58,7 +58,7 @@ export const createConfig = (root: string): IBackendServiceConfig => {
         }, {
             id: 'welcome',
             componentName: 'Welcome',
-            moduleName: 'internal'
+            moduleName: 'reactron'
         }, {
             id: 'hello1',
             componentName: 'HelloWorld',
@@ -72,7 +72,7 @@ export const createConfig = (root: string): IBackendServiceConfig => {
         }, {
             id: 'iframe-weather',
             componentName: 'IFrame',
-            moduleName: 'internal',
+            moduleName: 'reactron',
             options: { url: 'https://wetter.tagesschau.de/deutschland/aussichten.html#aussichten' }
         }]
     }

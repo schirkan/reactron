@@ -1,5 +1,6 @@
 export interface IServerInfo {
     ip: string;
-    cpu: string;
-    memory: string;
+    cpu: { count: number, speed: number };
+    memory: { free: number, total: number };
+    version: string;
 }

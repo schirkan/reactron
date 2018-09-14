@@ -13,13 +13,13 @@ export default class ComponentNotFound extends React.Component<IComponentNotFoun
   public render() {
     const text = [];
     if (this.props.id) {
-      text.push (<span>Id: {this.props.id}</span>);
+      text.push('Id: ' + this.props.id);
     }
     if (this.props.componentName) {
-      text.push (<span>Component: {this.props.componentName}</span>);
+      text.push('Component: ' + this.props.componentName);
     }
     if (this.props.moduleName) {
-      text.push (<span>Module: {this.props.moduleName}</span>);
+      text.push('Module: ' + this.props.moduleName);
     }
 
     return (

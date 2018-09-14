@@ -10,11 +10,11 @@ import { SystemCommand } from "./SystemCommand";
 
 export class ModuleManager {
     private modulesRootPath: string;
-    private moduleLoader = new ModuleLoader(this.config);
 
     constructor(
         private config: IBackendServiceConfig,
         private moduleRepository: ModuleRepository,
+        private moduleLoader: ModuleLoader,
     ) {
         this.modulesRootPath = path.join(this.config.root, 'modules');
 

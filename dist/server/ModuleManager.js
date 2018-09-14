@@ -38,13 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
 var commandResultWrapper_1 = require("./commandResultWrapper");
-var ModuleLoader_1 = require("./ModuleLoader");
 var SystemCommand_1 = require("./SystemCommand");
 var ModuleManager = /** @class */ (function () {
-    function ModuleManager(config, moduleRepository) {
+    function ModuleManager(config, moduleRepository, moduleLoader) {
         this.config = config;
         this.moduleRepository = moduleRepository;
-        this.moduleLoader = new ModuleLoader_1.ModuleLoader(this.config);
+        this.moduleLoader = moduleLoader;
         this.modulesRootPath = path.join(this.config.root, 'modules');
         this.add = commandResultWrapper_1.wrapCall(this.add.bind(this), 'add');
         this.build = commandResultWrapper_1.wrapCall(this.build.bind(this), 'build');

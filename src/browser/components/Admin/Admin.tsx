@@ -1,3 +1,5 @@
+import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
+import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom'
 import RoundButton from '../RoundButton/RoundButton';
@@ -14,7 +16,10 @@ export default class Admin extends React.Component {
   public render() {
     return (
       <section className="Admin">
-        <RoundButton to="/">Home</RoundButton>
+        <RoundButton to="/">
+          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faHome} />
+          Home
+        </RoundButton>
         <div className="title">Reactron Admin</div>
 
         <Navigation />

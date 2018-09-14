@@ -1,7 +1,7 @@
 import { ApiRoute, routes } from '../common/apiRoutes';
 import { BrowserModuleHelper } from './BrowserModuleHelper';
 
-const inernalModuleHelper = new BrowserModuleHelper('internal');
+const inernalModuleHelper = new BrowserModuleHelper('reactron');
 
 export class ApiClient {
     public getAllServices = apiCall(routes.getServices, true);

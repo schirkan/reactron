@@ -91,8 +91,9 @@ var ModuleLoader = /** @class */ (function () {
                     path: path.join(this.modulesPath, folderName),
                     name: p.name,
                     description: p.description,
+                    version: p.version,
                     author: p.author,
-                    repository: p.repository && p.repository.url,
+                    repository: p.repository && p.repository.url || p.repository,
                     isBuilded: true
                 };
                 moduleDefinition.commandLog = [];

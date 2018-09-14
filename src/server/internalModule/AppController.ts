@@ -1,3 +1,4 @@
+import * as os from 'os';
 import { routes } from '../../common/apiRoutes';
 import { IExternalService } from '../../interfaces/IExternalService';
 import { IServerInfo } from '../../interfaces/IServerInfo';
@@ -5,7 +6,30 @@ import { ServerModuleHelper } from '../ServerModuleHelper';
 import { registerRoute } from './registerRoute';
 
 // tslint:disable-next-line:no-var-requires
-const os = require('electron-shutdown-command');
+const osCommand = require('electron-shutdown-command');
+
+const getIPAddress = () => {
+    const interfaces = os.networkInterfaces();
+    const devices = Object.keys(interfaces);
+    for (const devName of devices) {
+        const iface = interfaces[devName];
+        for (const alias of iface) {
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
+            }
+        }
+    }
+    return '0.0.0.0';
+};
+
+const getCpuInfo = () => {
+    const cpus = os.cpus();
+    return { count: cpus.length, speed: cpus[0].speed };
+};
+
+const getMemoryInfo = () => {
+    return { free: os.freemem(), total: os.totalmem() };
+};
 
 export class AppController implements IExternalService {
     public async start(helper: ServerModuleHelper): Promise<void> {
@@ -13,10 +37,14 @@ export class AppController implements IExternalService {
 
         registerRoute(helper.moduleApiRouter, routes.getServerInfo, async (req, res) => {
             console.log('AppController.getServerInfo');
+
+            const moduleInfo = helper.backendService.moduleRepository.get('reactron');
+
             const result: IServerInfo = {
-                ip: '',
-                cpu: '',
-                memory: ''
+                ip: getIPAddress(),
+                cpu: getCpuInfo(),
+                memory: getMemoryInfo(),
+                version: moduleInfo && moduleInfo.version || ''
             };
             res.send(result);
         });
@@ -36,13 +64,15 @@ export class AppController implements IExternalService {
         registerRoute(helper.moduleApiRouter, routes.shutdownSystem, async (req, res) => {
             console.log('AppController.shutdownSystem');
             res.sendStatus(204);
-            os.shutdown({ quitapp: true });
+            await helper.backendService.exit();
+            osCommand.shutdown();
         });
 
         registerRoute(helper.moduleApiRouter, routes.restartSystem, async (req, res) => {
             console.log('AppController.restartSystem');
             res.sendStatus(204);
-            os.restart({ quitapp: true });
+            await helper.backendService.exit();
+            osCommand.restart();
         });
 
         registerRoute(helper.moduleApiRouter, routes.resetApplication, async (req, res) => {

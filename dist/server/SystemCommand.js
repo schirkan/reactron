@@ -20,7 +20,7 @@ var SystemCommand = /** @class */ (function () {
                 result.log.push('stdout: ' + stdout);
                 result.log.push('stderr: ' + stderr);
                 result.timestampEnd = Date.now();
-                result.success = !!error;
+                result.success = !error;
                 if (error) {
                     result.log.push('error: ' + JSON.stringify(error));
                     reject(result);

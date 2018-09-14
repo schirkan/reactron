@@ -8,7 +8,7 @@ import { apiClient } from './ApiClient';
 import { BrowserModuleHelper } from './BrowserModuleHelper';
 import { components as internalComponents } from "./internalModule";
 
-const inernalModuleHelper = new BrowserModuleHelper('internal');
+const inernalModuleHelper = new BrowserModuleHelper('reactron');
 
 const SystemJS = (window as any).SystemJS as SystemJSLoader.System;
 SystemJS.config({ baseURL: '/' });

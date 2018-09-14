@@ -40,7 +40,7 @@ var electron_1 = require("electron");
 var BackendService_1 = require("./BackendService");
 var config_1 = require("./config");
 exports.start = function (root) { return __awaiter(_this, void 0, void 0, function () {
-    var config;
+    var config, internalModule;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -50,33 +50,37 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                 console.log('BackendService is starting');
                 config = config_1.createConfig(root);
                 BackendService_1.BackendService.instance = new BackendService_1.BackendService(config);
-                // register internal module
-                BackendService_1.BackendService.instance.moduleRepository.add({
-                    name: 'internal',
-                    folder: 'internalModule',
-                    path: './internalModule',
-                    description: 'Internal Module',
-                    author: 'Martin Pietschmann',
-                    canRemove: false,
-                    canBuild: false,
-                    canUpdate: false,
-                    canInstall: false,
-                    isBuilded: true,
-                    isInstalled: true,
-                    commandLog: [],
-                    serverFile: './internalModule/index'
-                });
-                return [4 /*yield*/, BackendService_1.BackendService.instance.expressApp.start()];
+                return [4 /*yield*/, BackendService_1.BackendService.instance.moduleLoader.loadModule('../')];
             case 1:
-                _a.sent();
-                return [4 /*yield*/, BackendService_1.BackendService.instance.electronApp.start()];
+                internalModule = _a.sent();
+                if (internalModule) {
+                    /*
+                    internalModule.folder: 'internalModule',
+                    internalModule.path: './internalModule',
+                    internalModule.description: 'Internal Module',
+                    internalModule.author: 'Martin Pietschmann',
+                    internalModule.canBuild: false,
+                    internalModule.canUpdate: false,
+                    internalModule.canInstall: false,
+                    internalModule.isBuilded: true,
+                    internalModule.isInstalled: true,
+                    internalModule.name = 'internal',
+                    */
+                    internalModule.canRemove = false;
+                    internalModule.serverFile = './internalModule/index';
+                    BackendService_1.BackendService.instance.moduleRepository.add(internalModule);
+                }
+                return [4 /*yield*/, BackendService_1.BackendService.instance.expressApp.start()];
             case 2:
                 _a.sent();
-                return [4 /*yield*/, BackendService_1.BackendService.instance.moduleManager.loadAllModules()];
+                return [4 /*yield*/, BackendService_1.BackendService.instance.electronApp.start()];
             case 3:
                 _a.sent();
-                return [4 /*yield*/, BackendService_1.BackendService.instance.serviceManager.startAllServices()];
+                return [4 /*yield*/, BackendService_1.BackendService.instance.moduleManager.loadAllModules()];
             case 4:
+                _a.sent();
+                return [4 /*yield*/, BackendService_1.BackendService.instance.serviceManager.startAllServices()];
+            case 5:
                 _a.sent();
                 electron_1.app.on('before-quit', function () { return BackendService_1.BackendService.instance.serviceManager.stopAllServices(); });
                 BackendService_1.BackendService.instance.electronApp.mainWindow.loadURL('http://localhost:' + BackendService_1.BackendService.instance.config.frontendPort + BackendService_1.BackendService.instance.settings.get().startupPath);

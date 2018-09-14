@@ -1,19 +1,32 @@
 import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
+import { IServerInfo } from '../../../../interfaces/IServerInfo';
 import { apiClient } from '../../../ApiClient';
+import Loading from '../../Loading/Loading';
 
 import './SystemPage.css';
 
-export default class SystemPage extends React.Component {
+interface ISystemPageState {
+  info?: IServerInfo;
+}
+
+export default class SystemPage extends React.Component<any, ISystemPageState> {
   constructor(props: any) {
     super(props);
+    this.state = {};
 
     this.exitApplication = this.exitApplication.bind(this);
     this.restartApplication = this.restartApplication.bind(this);
     this.shutdownSystem = this.shutdownSystem.bind(this);
     this.restartSystem = this.restartSystem.bind(this);
     this.resetApplication = this.resetApplication.bind(this);
+  }
+
+  public componentDidMount() {
+    apiClient.getServerInfo().then(info => {
+      this.setState({ info });
+    });
   }
 
   public exitApplication() {
@@ -36,9 +49,43 @@ export default class SystemPage extends React.Component {
     apiClient.resetApplication();
   }
 
+  public renderInformation() {
+    if (!this.state.info) {
+      return <Loading />;
+    }
+
+    const free = Math.round(this.state.info.memory.free / 1024 / 1024);
+    const total = Math.round(this.state.info.memory.total / 1024 / 1024);
+    return (
+      <fieldset className="information">
+        <legend>Information</legend>
+        <ul>
+          <li>
+            <span className="label">Version</span>
+            <span className="value">{this.state.info.version}</span>
+          </li>
+          <li>
+            <span className="label">CPU</span>
+            <span className="value">{this.state.info.cpu.count} x {this.state.info.cpu.speed} MHz</span>
+          </li>
+          <li>
+            <span className="label">Memory</span>
+            <span className="value">{free} MB / {total} MB</span>
+          </li>
+          <li>
+            <span className="label">IP</span>
+            <span className="value">{this.state.info.ip}</span>
+          </li>
+        </ul>
+      </fieldset>
+    );
+  }
+
   public render() {
     return (
       <section className="SystemPage">
+        {this.renderInformation()}
+
         <fieldset>
           <legend>Application</legend>
           <button onClick={this.exitApplication}>

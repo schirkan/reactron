@@ -5,6 +5,7 @@ export interface IModuleRepositoryItem {
     folder: string;
     path: string;
     description: string;
+    version?: string;
     author: string | { name?: string, email?: string };
     repository?: string;
     browserFile?: string;
