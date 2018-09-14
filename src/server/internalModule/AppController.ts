@@ -4,30 +4,51 @@ import { IServerInfo } from '../../interfaces/IServerInfo';
 import { ServerModuleHelper } from '../ServerModuleHelper';
 import { registerRoute } from './registerRoute';
 
+// tslint:disable-next-line:no-var-requires
+const os = require('electron-shutdown-command');
+
 export class AppController implements IExternalService {
     public async start(helper: ServerModuleHelper): Promise<void> {
         console.log('AppController.start');
 
         registerRoute(helper.moduleApiRouter, routes.getServerInfo, async (req, res) => {
             console.log('AppController.getServerInfo');
-            const result:IServerInfo={
+            const result: IServerInfo = {
                 ip: '',
                 cpu: '',
-                memory:''
+                memory: ''
             };
             res.send(result);
         });
-        
-        registerRoute(helper.moduleApiRouter, routes.restartApp, async (req, res) => {
-            console.log('AppController.restartApp');
-            helper.backendService.restart();
+
+        registerRoute(helper.moduleApiRouter, routes.exitApplication, async (req, res) => {
+            console.log('AppController.exitApplication');
             res.sendStatus(201);
-        });
-        
-        registerRoute(helper.moduleApiRouter, routes.exitApp, async (req, res) => {
-            console.log('AppController.exitApp');
             helper.backendService.exit();
+        });
+
+        registerRoute(helper.moduleApiRouter, routes.restartApplication, async (req, res) => {
+            console.log('AppController.restartApplication');
             res.sendStatus(201);
+            helper.backendService.restart();
+        });
+
+        registerRoute(helper.moduleApiRouter, routes.shutdownSystem, async (req, res) => {
+            console.log('AppController.shutdownSystem');
+            res.sendStatus(201);
+            os.shutdown({ quitapp: true });
+        });
+
+        registerRoute(helper.moduleApiRouter, routes.restartSystem, async (req, res) => {
+            console.log('AppController.restartSystem');
+            res.sendStatus(201);
+            os.restart({ quitapp: true });
+        });
+
+        registerRoute(helper.moduleApiRouter, routes.resetApplication, async (req, res) => {
+            console.log('AppController.resetApplication');
+            res.sendStatus(201);
+            helper.backendService.reset();
         });
     }
 }

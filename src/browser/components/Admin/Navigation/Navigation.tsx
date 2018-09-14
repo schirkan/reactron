@@ -11,6 +11,7 @@ export default class Navigation extends React.Component {
         <NavLink activeClassName="active" to="/admin/ServiceManager" role="button">ServiceManager</NavLink>
         <NavLink activeClassName="active" to="/admin/Pages" role="button">Pages</NavLink>
         <NavLink activeClassName="active" to="/admin/Settings" role="button">Settings</NavLink>
+        <NavLink activeClassName="active" to="/admin/System" role="button">System</NavLink>
       </section>
     );
   }

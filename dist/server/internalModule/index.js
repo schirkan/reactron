@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var AppController_1 = require("./AppController");
 var ModuleController_1 = require("./ModuleController");
 var ServiceController_1 = require("./ServiceController");
 var SettingsController_1 = require("./SettingsController");
@@ -30,5 +31,10 @@ exports.services = [{
         displayName: 'SystemSettings API',
         description: 'API Controller for SystemSettings',
         service: SettingsController_1.SettingsController
+    }, {
+        name: 'AppController',
+        displayName: 'Application API',
+        description: 'API Controller for Application',
+        service: AppController_1.AppController
     }];
 //# sourceMappingURL=index.js.map

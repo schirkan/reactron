@@ -31,8 +31,11 @@ export const routes = {
     deleteWebPage: new ApiRoute<{ path: string }, undefined>('/pages/:path', 'delete'),
 
     getServerInfo: new ApiRoute<undefined, undefined, IServerInfo>('/app/', 'get'),
-    restartApp: new ApiRoute<undefined, undefined>('/app/restart', 'post'),
-    exitApp: new ApiRoute<undefined, undefined>('/app/exit', 'post'),
+    exitApplication: new ApiRoute<undefined, undefined>('/app/exitApplication', 'post'),
+    restartApplication: new ApiRoute<undefined, undefined>('/app/restartApplication', 'post'),
+    shutdownSystem: new ApiRoute<undefined, undefined>('/app/shutdownSystem', 'post'),
+    restartSystem: new ApiRoute<undefined, undefined>('/app/restartSystem', 'post'),
+    resetApplication: new ApiRoute<undefined, undefined>('/app/resetApplication', 'post'),
     
     getSettings: new ApiRoute<undefined, undefined, ISystemSettings>('/settings/', 'get'),
     setSettings: new ApiRoute<undefined, ISystemSettings>('/settings/', 'post'),

@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
+var path = require("path");
 var ElectronApp_1 = require("./ElectronApp");
 var ExpressApp_1 = require("./ExpressApp");
 var ModuleManager_1 = require("./ModuleManager");
@@ -44,6 +45,7 @@ var PubSub_1 = require("./PubSub");
 var ServiceManager_1 = require("./ServiceManager");
 var ServiceOptionsRepository_1 = require("./ServiceOptionsRepository");
 var ServiceRepository_1 = require("./ServiceRepository");
+var SystemCommand_1 = require("./SystemCommand");
 var SystemSettingsManager_1 = require("./SystemSettingsManager");
 var WebComponentsManager_1 = require("./WebComponentsManager");
 var WebPageManager_1 = require("./WebPageManager");
@@ -77,6 +79,24 @@ var BackendService = /** @class */ (function () {
                 electron_1.app.relaunch();
                 electron_1.app.quit();
                 return [2 /*return*/];
+            });
+        });
+    };
+    BackendService.prototype.reset = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var appPath, cwd;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        appPath = electron_1.app.getAppPath();
+                        cwd = path.join(appPath, '../');
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('rimraf ' + appPath, cwd)];
+                    case 1:
+                        _a.sent();
+                        electron_1.app.relaunch();
+                        electron_1.app.quit();
+                        return [2 /*return*/];
+                }
             });
         });
     };

@@ -21,6 +21,11 @@ export class ApiClient {
     public deleteWebPage = apiCall(routes.deleteWebPage);
 
     public getServerInfo = apiCall(routes.getServerInfo, true);
+    public exitApplication = apiCall(routes.exitApplication, true);
+    public restartApplication = apiCall(routes.restartApplication, true);
+    public shutdownSystem = apiCall(routes.shutdownSystem, true);
+    public restartSystem = apiCall(routes.restartSystem, true);
+    public resetApplication = apiCall(routes.resetApplication, true);
 
     public getSettings = apiCall(routes.getSettings, true);
     public setSettings = apiCall(routes.setSettings);
