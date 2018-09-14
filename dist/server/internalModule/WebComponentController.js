@@ -58,7 +58,7 @@ var WebComponentController = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         console.log('WebComponentController.createOrUpdate');
                         helper.backendService.webComponentsManager.createOrUpdate(req.body);
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         return [2 /*return*/];
                     });
                 }); });
@@ -66,7 +66,7 @@ var WebComponentController = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         console.log('WebComponentController.remove');
                         helper.backendService.webComponentsManager.remove(req.params.id);
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         return [2 /*return*/];
                     });
                 }); });

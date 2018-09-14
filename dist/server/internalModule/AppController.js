@@ -63,7 +63,7 @@ var AppController = /** @class */ (function () {
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.exitApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.exitApplication');
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         helper.backendService.exit();
                         return [2 /*return*/];
                     });
@@ -71,7 +71,7 @@ var AppController = /** @class */ (function () {
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.restartApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.restartApplication');
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         helper.backendService.restart();
                         return [2 /*return*/];
                     });
@@ -79,7 +79,7 @@ var AppController = /** @class */ (function () {
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.shutdownSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.shutdownSystem');
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         os.shutdown({ quitapp: true });
                         return [2 /*return*/];
                     });
@@ -87,7 +87,7 @@ var AppController = /** @class */ (function () {
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.restartSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.restartSystem');
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         os.restart({ quitapp: true });
                         return [2 /*return*/];
                     });
@@ -95,7 +95,7 @@ var AppController = /** @class */ (function () {
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.resetApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.resetApplication');
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         helper.backendService.reset();
                         return [2 /*return*/];
                     });

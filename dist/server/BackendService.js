@@ -84,15 +84,16 @@ var BackendService = /** @class */ (function () {
     };
     BackendService.prototype.reset = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var appPath, cwd;
+            var appPath, cwd, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        appPath = electron_1.app.getAppPath();
+                        appPath = electron_1.app.getPath('userData');
                         cwd = path.join(appPath, '../');
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('rimraf ' + appPath, cwd)];
                     case 1:
-                        _a.sent();
+                        result = _a.sent();
+                        console.log(result);
                         electron_1.app.relaunch();
                         electron_1.app.quit();
                         return [2 /*return*/];

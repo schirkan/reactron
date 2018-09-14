@@ -52,7 +52,7 @@ export class ModuleLoader {
         moduleDefinition.commandLog = [];
 
         if (p.browser) {
-            moduleDefinition.browserFile = './' + path.join('modules', folderName, p.browser);
+            moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
             if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
                 moduleDefinition.isBuilded = false;
             }

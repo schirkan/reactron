@@ -23,31 +23,31 @@ export class AppController implements IExternalService {
 
         registerRoute(helper.moduleApiRouter, routes.exitApplication, async (req, res) => {
             console.log('AppController.exitApplication');
-            res.sendStatus(201);
+            res.sendStatus(204);
             helper.backendService.exit();
         });
 
         registerRoute(helper.moduleApiRouter, routes.restartApplication, async (req, res) => {
             console.log('AppController.restartApplication');
-            res.sendStatus(201);
+            res.sendStatus(204);
             helper.backendService.restart();
         });
 
         registerRoute(helper.moduleApiRouter, routes.shutdownSystem, async (req, res) => {
             console.log('AppController.shutdownSystem');
-            res.sendStatus(201);
+            res.sendStatus(204);
             os.shutdown({ quitapp: true });
         });
 
         registerRoute(helper.moduleApiRouter, routes.restartSystem, async (req, res) => {
             console.log('AppController.restartSystem');
-            res.sendStatus(201);
+            res.sendStatus(204);
             os.restart({ quitapp: true });
         });
 
         registerRoute(helper.moduleApiRouter, routes.resetApplication, async (req, res) => {
             console.log('AppController.resetApplication');
-            res.sendStatus(201);
+            res.sendStatus(204);
             helper.backendService.reset();
         });
     }

@@ -25,7 +25,7 @@ export default class ComponentNotFound extends React.Component<IComponentNotFoun
     return (
       <section className="ComponentNotFound">
         <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationTriangle} size={this.props.iconSize} />
-        <div className="text">Component not found: {text}</div>
+        <div className="text">Component not found: {text.join(' | ')}</div>
       </section>
     );
   }

@@ -16,13 +16,13 @@ export class WebComponentController implements IExternalService {
         registerRoute(helper.moduleApiRouter, routes.setWebComponentOptions, async (req, res) => {
             console.log('WebComponentController.createOrUpdate');
             helper.backendService.webComponentsManager.createOrUpdate(req.body);
-            res.sendStatus(201);
+            res.sendStatus(204);
         });
         
         registerRoute(helper.moduleApiRouter, routes.deleteWebComponentOptions, async (req, res) => {
             console.log('WebComponentController.remove');
             helper.backendService.webComponentsManager.remove(req.params.id);
-            res.sendStatus(201);
+            res.sendStatus(204);
         });
     }
 }

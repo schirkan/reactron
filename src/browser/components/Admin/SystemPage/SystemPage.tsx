@@ -1,3 +1,5 @@
+import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
+import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { apiClient } from '../../../ApiClient';
 
@@ -37,14 +39,37 @@ export default class SystemPage extends React.Component {
   public render() {
     return (
       <section className="SystemPage">
-        <button onClick={this.exitApplication}>Exit Application</button>
-        <button onClick={this.restartApplication}>Restart Application</button>
-        <button onClick={this.shutdownSystem}>Shutdown System</button>
-        <button onClick={this.restartSystem}>Restart System</button>
-        <div className="danger">
-          <span>Danger Zone</span>
-          <button onClick={this.resetApplication}>Reset Application</button>
-        </div>
+        <fieldset>
+          <legend>Application</legend>
+          <button onClick={this.exitApplication}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSignOutAlt} />
+            Exit Application
+          </button>
+          <button onClick={this.restartApplication}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
+            Restart Application
+          </button>
+        </fieldset>
+
+        <fieldset>
+          <legend>System</legend>
+          <button onClick={this.shutdownSystem}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faPowerOff} />
+            Shutdown System
+          </button>
+          <button onClick={this.restartSystem}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
+            Restart System
+          </button>
+        </fieldset>
+
+        <fieldset className="danger">
+          <legend>Danger Zone</legend>
+          <button onClick={this.resetApplication}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationCircle} />
+            Reset Application
+          </button>
+        </fieldset>
       </section>
     );
   }

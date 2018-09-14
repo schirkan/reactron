@@ -43,9 +43,10 @@ export class BackendService {
     }
 
     public async reset(): Promise<void> {
-        const appPath = app.getAppPath();
+        const appPath = app.getPath('userData');
         const cwd = path.join(appPath, '../');
-        await SystemCommand.run('rimraf ' + appPath, cwd);
+        const result = await SystemCommand.run('rimraf ' + appPath, cwd);
+        console.log(result);
         app.relaunch();
         app.quit();
     }

@@ -1,14 +1,18 @@
 section.Navigation {
     background: rgb(80, 80, 80);
+    display: table;
+    width: 100%;
 }
 
 section.Navigation a {
-    display: inline-block;
+    /* display: inline-block; */
+    display: table-cell;
     padding: 8px;
     padding-top: 11px;
     color: white;
     text-decoration: none;
     border-bottom: 3px solid transparent;
+    text-align: center;
 }
 
 section.Navigation a.active {

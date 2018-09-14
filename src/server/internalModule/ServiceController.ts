@@ -28,7 +28,7 @@ export class ServiceController implements IExternalService {
             console.log('ServiceController.setServiceOptions');
             helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
             await helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
-            res.sendStatus(201);
+            res.sendStatus(204);
             // TODO: ex handling
         });
     }

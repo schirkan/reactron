@@ -16,7 +16,7 @@ export class SettingsController implements IExternalService {
         registerRoute(helper.moduleApiRouter, routes.setSettings, async (req, res) => {
             console.log('SettingsController.set');
             helper.backendService.settings.set(req.body);
-            res.sendStatus(201);
+            res.sendStatus(204);
             // TODO: ex handling
         });
     }

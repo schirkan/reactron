@@ -90,7 +90,7 @@ var ServiceController = /** @class */ (function () {
                                 return [4 /*yield*/, helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
                             case 1:
                                 _a.sent();
-                                res.sendStatus(201);
+                                res.sendStatus(204);
                                 return [2 /*return*/];
                         }
                     });

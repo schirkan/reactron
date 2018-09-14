@@ -63,7 +63,7 @@ var SettingsController = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         console.log('SettingsController.set');
                         helper.backendService.settings.set(req.body);
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         return [2 /*return*/];
                     });
                 }); });

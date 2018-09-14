@@ -58,7 +58,7 @@ var WebPageController = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         console.log('WebPageController.createOrUpdate');
                         helper.backendService.webPageManager.createOrUpdate(req.body);
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         return [2 /*return*/];
                     });
                 }); });
@@ -66,7 +66,7 @@ var WebPageController = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         console.log('WebPageController.remove');
                         helper.backendService.webPageManager.remove(req.params.path);
-                        res.sendStatus(201);
+                        res.sendStatus(204);
                         return [2 /*return*/];
                     });
                 }); });
