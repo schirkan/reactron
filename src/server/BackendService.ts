@@ -34,12 +34,12 @@ export class BackendService {
 
     public constructor(public readonly config: IBackendServiceConfig) { }
 
-    public async exit(): Promise<void> {
+    public exit(): void {
         this.electronApp.mainWindow.close();
         app.quit();
     }
 
-    public async restart(): Promise<void> {
+    public restart(): void {
         app.relaunch();
         app.quit();
     }

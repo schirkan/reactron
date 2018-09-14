@@ -67,22 +67,12 @@ var BackendService = /** @class */ (function () {
         this.settings = new SystemSettingsManager_1.SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
     }
     BackendService.prototype.exit = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                this.electronApp.mainWindow.close();
-                electron_1.app.quit();
-                return [2 /*return*/];
-            });
-        });
+        this.electronApp.mainWindow.close();
+        electron_1.app.quit();
     };
     BackendService.prototype.restart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                electron_1.app.relaunch();
-                electron_1.app.quit();
-                return [2 /*return*/];
-            });
-        });
+        electron_1.app.relaunch();
+        electron_1.app.quit();
     };
     BackendService.prototype.reset = function () {
         return __awaiter(this, void 0, void 0, function () {

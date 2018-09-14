@@ -29,7 +29,7 @@ export default class Welcome extends React.Component<any, IWelcomeState> {
 
     if (this.state.info) {
       info = (<div className="info">
-        Click Admin-Button or visit <i>http://{this.state.info.ip}/admin</i> or <i>http://{this.state.info.hostname}/admin</i>
+        Click Admin-Button or visit <i>http://{this.state.info.ip}:3000/admin</i>
       </div>);
     }
     return (

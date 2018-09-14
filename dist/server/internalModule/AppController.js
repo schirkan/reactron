@@ -125,7 +125,7 @@ var AppController = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.restartSystem');
                         res.sendStatus(204);
-                        osCommand.restart();
+                        osCommand.reboot();
                         helper.backendService.exit();
                         return [2 /*return*/];
                     });
