@@ -1,5 +1,6 @@
 import { ICommandResult } from '../interfaces/ICommandResult';
 import { IModuleRepositoryItem } from '../interfaces/IModuleRepositoryItem';
+import { IServerInfo } from '../interfaces/IServerInfo';
 import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { ISystemSettings } from '../interfaces/ISystemSettings';
 import { IWebComponentOptions } from '../interfaces/IWebComponentOptions';
@@ -29,6 +30,10 @@ export const routes = {
     setWebPage: new ApiRoute<undefined, IWebPageOptions>('/pages/', 'post'),
     deleteWebPage: new ApiRoute<{ path: string }, undefined>('/pages/:path', 'delete'),
 
+    getServerInfo: new ApiRoute<undefined, undefined, IServerInfo>('/app/', 'get'),
+    restartApp: new ApiRoute<undefined, undefined>('/app/restart', 'post'),
+    exitApp: new ApiRoute<undefined, undefined>('/app/exit', 'post'),
+    
     getSettings: new ApiRoute<undefined, undefined, ISystemSettings>('/settings/', 'get'),
     setSettings: new ApiRoute<undefined, ISystemSettings>('/settings/', 'post'),
 

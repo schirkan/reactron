@@ -1,4 +1,5 @@
 import { IServiceDefinition } from "../../interfaces/IServiceDefinition";
+import { AppController } from "./AppController";
 import { ModuleController } from "./ModuleController";
 import { ServiceController } from "./ServiceController";
 import { SettingsController } from "./SettingsController";
@@ -30,4 +31,9 @@ export const services: IServiceDefinition[] = [{
     displayName: 'SystemSettings API',
     description: 'API Controller for SystemSettings',
     service: SettingsController
+}, {
+    name: 'AppController',
+    displayName: 'Application API',
+    description: 'API Controller for Application',
+    service: AppController
 }];
