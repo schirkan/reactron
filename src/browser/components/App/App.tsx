@@ -9,7 +9,7 @@ import WebComponent from '../WebComponent/WebComponent';
 
 import './App.css';
 
-interface IAppState {
+export interface IAppState {
   pages?: IWebPageOptions[];
 }
 

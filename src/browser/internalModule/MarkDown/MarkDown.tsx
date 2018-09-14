@@ -1,11 +1,8 @@
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
+import { IMarkDownProps } from './IMarkDownProps';
 
 import './MarkDown.css';
-
-export interface IMarkDownProps {
-  text: string;
-}
 
 export default class MarkDown extends React.Component<IMarkDownProps> {
   public render() {

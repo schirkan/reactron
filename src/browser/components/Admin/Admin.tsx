@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom'
 import RoundButton from '../RoundButton/RoundButton';
-import './Admin.css';
 import ModuleManagerPage from './ModuleManagerPage/ModuleManagerPage';
 import Navigation from './Navigation/Navigation';
 import PageManagerPage from './PageManagerPage/PageManagerPage';
 import ServiceManagerPage from './ServiceManagerPage/ServiceManagerPage';
 import SettingsManagerPage from './SettingsManagerPage/SettingsManagerPage';
+
+import './Admin.css';
 
 export default class Admin extends React.Component {
   public render() {

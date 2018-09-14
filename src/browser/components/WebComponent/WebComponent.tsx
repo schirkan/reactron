@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { IComponentDefinition } from '../../../interfaces/IComponentDefinition';
+import { IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
 import { IWebComponentOptions } from '../../../interfaces/IWebComponentOptions';
 import { apiClient } from '../../ApiClient';
 import { componentLoader } from '../../ComponentLoader';
@@ -7,9 +9,16 @@ import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
 import { IWebComponentProps } from './IWebComponentProps';
-import { IWebComponentState } from './IWebComponentState';
 
 import './WebComponent.css';
+
+interface IWebComponentState {
+  componentFound?: boolean;
+  componentProps?: IDynamicReactComponentProps;
+  componentDefinition?: IComponentDefinition;
+  componentOptions?: IWebComponentOptions;
+}
+
 export default class WebComponent extends React.Component<IWebComponentProps, IWebComponentState> {
   constructor(props: IWebComponentProps) {
     super(props);

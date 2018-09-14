@@ -1,18 +1,8 @@
 import * as React from 'react';
 import { IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
+import { IListLayoutItemOptions, IListLayoutOptions } from './IListLayoutOptions';
 
 import './ListLayout.css';
-
-interface IListLayoutItemOptions {
-  content: string;
-  style: any;
-}
-
-interface IListLayoutOptions {
-  listStyle: any;
-  itemStyle: any;
-  items: IListLayoutItemOptions[];
-}
 
 export default class ListLayout extends React.Component<IDynamicReactComponentProps<IListLayoutOptions>> {
   constructor(props: IDynamicReactComponentProps<IListLayoutOptions>) {
