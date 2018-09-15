@@ -23,6 +23,12 @@ section.ModuleTile>.title>* {
     margin-right: 6px;
 }
 
+section.ModuleTile>.title>.hasUpdates {
+    font-size: 10px;
+    color: rgb(89, 170, 255);
+    vertical-align: text-top;
+}
+
 section.ModuleTile>.description {
     padding: 6px;
     border-bottom: 1px solid #ddd;

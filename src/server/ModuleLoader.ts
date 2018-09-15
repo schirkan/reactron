@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
 import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
+import { SystemCommand } from './SystemCommand';
 
 export class ModuleLoader {
     private modulesPath: string;
@@ -70,14 +71,24 @@ export class ModuleLoader {
             console.log('No module in folder ' + folderName);
             return null;
         }
-
         moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
         moduleDefinition.canUpdate = !!moduleDefinition.repository;
         moduleDefinition.canInstall = !!(p.dependencies || p.devDependencies);
         moduleDefinition.canRemove = true;
         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
+        moduleDefinition.hasUpdates = await this.hasUpdates(moduleDefinition);
 
         console.log('Module loaded: ' + moduleDefinition.name);
         return moduleDefinition;
     };
+
+    public async hasUpdates(moduleDefinition: IModuleRepositoryItem): Promise<boolean> {
+        if (!moduleDefinition || !moduleDefinition.canUpdate) {
+            return false;
+        }
+
+        const result = await SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path);
+        moduleDefinition.commandLog.push(result);
+        return result.log[0] !== '0';
+    }
 }

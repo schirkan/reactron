@@ -12,6 +12,9 @@ export const start = async (root: string): Promise<void> => {
     const config = createConfig(root);
     BackendService.instance = new BackendService(config);
 
+    await BackendService.instance.expressApp.start();
+    await BackendService.instance.electronApp.start();
+    
     // register internal module
     const internalModule = await BackendService.instance.moduleLoader.loadModule('../');
     if (internalModule) {
@@ -32,8 +35,6 @@ export const start = async (root: string): Promise<void> => {
         BackendService.instance.moduleRepository.add(internalModule);
     }
 
-    await BackendService.instance.expressApp.start();
-    await BackendService.instance.electronApp.start();
     await BackendService.instance.moduleManager.loadAllModules();
     await BackendService.instance.serviceManager.startAllServices();
 

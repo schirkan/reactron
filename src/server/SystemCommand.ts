@@ -17,8 +17,12 @@ export class SystemCommand {
             } as ICommandResult;
 
             exec(command, { cwd }, (error: any, stdout: string, stderr: string) => {
-                result.log.push('stdout: ' + stdout);
-                result.log.push('stderr: ' + stderr);
+                if (stdout) {
+                    result.log.push(stdout.trim());
+                }
+                if (stderr) {
+                    result.log.push(stderr.trim());
+                }
                 result.timestampEnd = Date.now();
                 result.success = !error;
 

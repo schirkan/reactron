@@ -122,7 +122,7 @@ var ModuleManager = /** @class */ (function () {
                         if (!moduleDefinition || !moduleDefinition.canUpdate) {
                             throw new Error('Can not update module');
                         }
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git pull -n', moduleDefinition.path)];
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git fetch --all && git reset --hard origin/master', moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
                         moduleDefinition.commandLog.push(result);

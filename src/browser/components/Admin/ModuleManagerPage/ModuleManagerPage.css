@@ -26,6 +26,7 @@ section.ModuleManagerPage .overlay .result {
     background: whitesmoke;
     color: #222;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 section.ModuleManagerPage .overlay .result .title {
@@ -34,7 +35,7 @@ section.ModuleManagerPage .overlay .result .title {
 }
 
 section.ModuleManagerPage .overlay .result .log {
-    overflow: scroll;
+    overflow: auto;
     position: absolute;
     top: 31px;
     bottom: 0;

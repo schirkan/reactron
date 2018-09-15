@@ -17,8 +17,12 @@ var SystemCommand = /** @class */ (function () {
                 timestampEnd: 0
             };
             child_process_1.exec(command, { cwd: cwd }, function (error, stdout, stderr) {
-                result.log.push('stdout: ' + stdout);
-                result.log.push('stderr: ' + stderr);
+                if (stdout) {
+                    result.log.push(stdout.trim());
+                }
+                if (stderr) {
+                    result.log.push(stderr.trim());
+                }
                 result.timestampEnd = Date.now();
                 result.success = !error;
                 if (error) {

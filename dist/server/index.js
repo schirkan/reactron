@@ -50,8 +50,14 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                 console.log('BackendService is starting');
                 config = config_1.createConfig(root);
                 BackendService_1.BackendService.instance = new BackendService_1.BackendService(config);
-                return [4 /*yield*/, BackendService_1.BackendService.instance.moduleLoader.loadModule('../')];
+                return [4 /*yield*/, BackendService_1.BackendService.instance.expressApp.start()];
             case 1:
+                _a.sent();
+                return [4 /*yield*/, BackendService_1.BackendService.instance.electronApp.start()];
+            case 2:
+                _a.sent();
+                return [4 /*yield*/, BackendService_1.BackendService.instance.moduleLoader.loadModule('../')];
+            case 3:
                 internalModule = _a.sent();
                 if (internalModule) {
                     /*
@@ -70,12 +76,6 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                     internalModule.serverFile = './internalModule/index';
                     BackendService_1.BackendService.instance.moduleRepository.add(internalModule);
                 }
-                return [4 /*yield*/, BackendService_1.BackendService.instance.expressApp.start()];
-            case 2:
-                _a.sent();
-                return [4 /*yield*/, BackendService_1.BackendService.instance.electronApp.start()];
-            case 3:
-                _a.sent();
                 return [4 /*yield*/, BackendService_1.BackendService.instance.moduleManager.loadAllModules()];
             case 4:
                 _a.sent();

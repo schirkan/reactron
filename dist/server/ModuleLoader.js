@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
+var SystemCommand_1 = require("./SystemCommand");
 var ModuleLoader = /** @class */ (function () {
     function ModuleLoader(config) {
         this.config = config;
@@ -74,56 +75,81 @@ var ModuleLoader = /** @class */ (function () {
     };
     ModuleLoader.prototype.loadModule = function (folderName) {
         return __awaiter(this, void 0, void 0, function () {
-            var packageFile, p, fileContent, moduleDefinition;
-            return __generator(this, function (_a) {
-                packageFile = path.join(this.modulesPath, folderName, 'package.json');
-                try {
-                    fileContent = fs.readFileSync(packageFile, { encoding: 'utf-8' });
-                    p = JSON.parse(fileContent);
-                    console.log('reading ' + packageFile);
+            var packageFile, p, fileContent, moduleDefinition, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        packageFile = path.join(this.modulesPath, folderName, 'package.json');
+                        try {
+                            fileContent = fs.readFileSync(packageFile, { encoding: 'utf-8' });
+                            p = JSON.parse(fileContent);
+                            console.log('reading ' + packageFile);
+                        }
+                        catch (error) {
+                            console.log('Error reading package.json', error);
+                            return [2 /*return*/, null];
+                        }
+                        moduleDefinition = {
+                            folder: folderName,
+                            path: path.join(this.modulesPath, folderName),
+                            name: p.name,
+                            description: p.description,
+                            version: p.version,
+                            author: p.author,
+                            repository: p.repository && p.repository.url || p.repository,
+                            isBuilded: true
+                        };
+                        moduleDefinition.commandLog = [];
+                        if (p.browser) {
+                            moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
+                            if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+                                moduleDefinition.isBuilded = false;
+                            }
+                        }
+                        if (p.main) {
+                            moduleDefinition.serverFile = path.join(this.config.root, 'modules', folderName, p.main);
+                            if (!fs.existsSync(moduleDefinition.serverFile)) {
+                                moduleDefinition.isBuilded = false;
+                            }
+                        }
+                        if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
+                            console.log('No module in folder ' + folderName);
+                            return [2 /*return*/, null];
+                        }
+                        moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
+                        moduleDefinition.canUpdate = !!moduleDefinition.repository;
+                        moduleDefinition.canInstall = !!(p.dependencies || p.devDependencies);
+                        moduleDefinition.canRemove = true;
+                        moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
+                        _a = moduleDefinition;
+                        return [4 /*yield*/, this.hasUpdates(moduleDefinition)];
+                    case 1:
+                        _a.hasUpdates = _b.sent();
+                        console.log('Module loaded: ' + moduleDefinition.name);
+                        return [2 /*return*/, moduleDefinition];
                 }
-                catch (error) {
-                    console.log('Error reading package.json', error);
-                    return [2 /*return*/, null];
-                }
-                moduleDefinition = {
-                    folder: folderName,
-                    path: path.join(this.modulesPath, folderName),
-                    name: p.name,
-                    description: p.description,
-                    version: p.version,
-                    author: p.author,
-                    repository: p.repository && p.repository.url || p.repository,
-                    isBuilded: true
-                };
-                moduleDefinition.commandLog = [];
-                if (p.browser) {
-                    moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
-                    if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
-                        moduleDefinition.isBuilded = false;
-                    }
-                }
-                if (p.main) {
-                    moduleDefinition.serverFile = path.join(this.config.root, 'modules', folderName, p.main);
-                    if (!fs.existsSync(moduleDefinition.serverFile)) {
-                        moduleDefinition.isBuilded = false;
-                    }
-                }
-                if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
-                    console.log('No module in folder ' + folderName);
-                    return [2 /*return*/, null];
-                }
-                moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
-                moduleDefinition.canUpdate = !!moduleDefinition.repository;
-                moduleDefinition.canInstall = !!(p.dependencies || p.devDependencies);
-                moduleDefinition.canRemove = true;
-                moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
-                console.log('Module loaded: ' + moduleDefinition.name);
-                return [2 /*return*/, moduleDefinition];
             });
         });
     };
     ;
+    ModuleLoader.prototype.hasUpdates = function (moduleDefinition) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!moduleDefinition || !moduleDefinition.canUpdate) {
+                            return [2 /*return*/, false];
+                        }
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path)];
+                    case 1:
+                        result = _a.sent();
+                        moduleDefinition.commandLog.push(result);
+                        return [2 /*return*/, result.log[0] !== '0'];
+                }
+            });
+        });
+    };
     return ModuleLoader;
 }());
 exports.ModuleLoader = ModuleLoader;

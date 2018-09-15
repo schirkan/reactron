@@ -12,6 +12,7 @@ export interface IModuleRepositoryItem {
     serverFile?: string;
     isInstalled?: boolean;
     isBuilded?: boolean;
+    hasUpdates?: boolean;
     canUpdate?: boolean;
     canInstall?: boolean;
     canBuild?: boolean;

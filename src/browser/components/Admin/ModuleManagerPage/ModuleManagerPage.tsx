@@ -70,16 +70,22 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     };
 
     this.setState({ loading: true }, async () => {
-      const result = await apiClient.updateModule({ moduleName: module.name });
+      const result = await apiClient.deleteModule({ moduleName: module.name });
       this.showResult(result);
+      apiClient.getModules.clearCache();
+      this.loadModules();
     });
   }
 
-  public async add(repository: string): Promise<void> {
+  public async add(repository: string | null): Promise<void> {
+    if (!repository || !repository.trim()) {
+      return;
+    };
+
     this.setState({ loading: true }, async () => {
       const result = await apiClient.addModule({ repository });
-      apiClient.getModules.clearCache();
       this.showResult(result);
+      apiClient.getModules.clearCache();
       this.loadModules();
     });
   }
@@ -143,11 +149,7 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
 
   public renderAdd() {
     let input: HTMLInputElement | null;
-    const onAdd = () => {
-      if (input && input.value && input.value.trim()) {
-        this.add(input.value);
-      }
-    };
+    const onAdd = () => this.add(input && input.value);
     return (
       <div className="addForm">
         <input ref={el => input = el} placeholder="GitHub Repository URL" />

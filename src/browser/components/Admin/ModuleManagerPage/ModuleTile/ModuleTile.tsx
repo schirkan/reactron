@@ -30,7 +30,7 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
     const hideActions = () => this.setState({ showActions: false });
 
     let updateButton: JSX.Element;
-    if (this.props.module.canUpdate) {
+    if (this.props.module.canUpdate && this.props.module.hasUpdates) {
       const onUpdate = () => {
         hideActions();
         this.props.update(this.props.module);
@@ -48,7 +48,7 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
       };
       rebuildButton = <div className="enabled clickable" onClick={onRebuild}>Rebuild</div>;
     } else {
-      rebuildButton = <div className="disabled">Update</div>;
+      rebuildButton = <div className="disabled">Rebuild</div>;
     }
 
     let removeButton: JSX.Element;
@@ -57,9 +57,9 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
         hideActions();
         this.props.remove(this.props.module);
       };
-      removeButton = <div className="enabled clickable" onClick={onRemove}>Delete</div>;
+      removeButton = <div className="enabled clickable" onClick={onRemove}>Remove</div>;
     } else {
-      removeButton = <div className="disabled">Update</div>;
+      removeButton = <div className="disabled">Remove</div>;
     }
 
     const className = 'footer actions ' + (this.state.showActions ? 'show' : 'hide');
@@ -75,7 +75,7 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
   }
 
   public renderFooter() {
-    let repoLink = null;
+    let repoLink = <div />;
     if (this.props.module.repository) {
       repoLink = (<a className="clickable" href={this.props.module.repository}>
         <FontAwesomeIcon icon={BrandIcons.faGithub} /> GitHub
@@ -93,11 +93,17 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
   }
 
   public renderTitle() {
+    let updateIcon: JSX.Element | undefined;
+    if (this.props.module.hasUpdates) {
+      updateIcon = <span className="hasUpdates"><FontAwesomeIcon icon={SolidIcons.faStarOfLife} /></span>;
+    }
+
     return (
       <div className="title">
         <FontAwesomeIcon icon={SolidIcons.faCube} />
         <span className="name">{this.props.module.name}</span>
         <span className="version">(v{this.props.module.version})</span>
+        {updateIcon}
       </div>
     );
   }
