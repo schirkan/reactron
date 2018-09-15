@@ -82,7 +82,7 @@ export class ModuleManager {
             throw new Error('Can not update module');
         }
 
-        const result = await SystemCommand.run('git pull -n', moduleDefinition.path);
+        const result = await SystemCommand.run('git fetch --all && git reset --hard origin/master', moduleDefinition.path);
         moduleDefinition.commandLog.push(result);
         return result;
     }
