@@ -5,7 +5,6 @@ section.Navigation {
 }
 
 section.Navigation a {
-    /* display: inline-block; */
     display: table-cell;
     padding: 8px;
     padding-top: 11px;
@@ -13,9 +12,35 @@ section.Navigation a {
     text-decoration: none;
     border-bottom: 3px solid transparent;
     text-align: center;
+    transition: 0.5s;
 }
 
-section.Navigation a.active {
+section.Navigation a:hover,
+section.Navigation a:active {
+    background: transparent;
+}
+
+section.Navigation a:nth-child(1).active {
     background: rgb(74, 133, 153);
     border-bottom: 3px solid rgb(66, 225, 247);
+}
+
+section.Navigation a:nth-child(2).active {
+    background: rgb(105, 0, 111);
+    border-bottom: 3px solid rgb(240, 0, 255);
+}
+
+section.Navigation a:nth-child(3).active {
+    background: rgb(95, 86, 0);
+    border-bottom: 3px solid rgb(255, 231, 0);
+}
+
+section.Navigation a:nth-child(4).active {
+    background: rgb(47, 97, 8);
+    border-bottom: 3px solid rgb(116, 238, 21);
+}
+
+section.Navigation a:nth-child(5).active {
+    background: rgb(0, 16, 134);
+    border-bottom: 3px solid rgb(0, 30, 255);
 }

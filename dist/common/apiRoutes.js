@@ -26,7 +26,7 @@ exports.routes = {
     exitApplication: new ApiRoute('/app/exitApplication', 'post'),
     restartApplication: new ApiRoute('/app/restartApplication', 'post'),
     shutdownSystem: new ApiRoute('/app/shutdownSystem', 'post'),
-    restartSystem: new ApiRoute('/app/restartSystem', 'post'),
+    rebootSystem: new ApiRoute('/app/restartSystem', 'post'),
     resetApplication: new ApiRoute('/app/resetApplication', 'post'),
     getSettings: new ApiRoute('/settings/', 'get'),
     setSettings: new ApiRoute('/settings/', 'post'),

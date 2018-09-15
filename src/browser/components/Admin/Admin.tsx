@@ -16,14 +16,13 @@ export default class Admin extends React.Component {
   public render() {
     return (
       <section className="Admin">
-        <RoundButton to="/">
-          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faHome} />
-          Home
-        </RoundButton>
-        <div className="title">Reactron Admin</div>
-
+        <header>
+          <RoundButton to="/">
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faHome} /> Home
+          </RoundButton>
+          <div className="title">Reactron Admin</div>
+        </header>
         <Navigation />
-
         <div className="content">
           <Switch>
             <Route path="/admin/ModuleManager" component={ModuleManagerPage} />

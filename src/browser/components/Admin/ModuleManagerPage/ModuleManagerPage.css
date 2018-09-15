@@ -1,1 +1,79 @@
-section.ModuleManagerPage {}
+section.ModuleManagerPage .overlay {
+    position: fixed;
+    z-index: 1;
+    background: rgba(99, 99, 99, 0.47);
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+section.ModuleManagerPage .overlay section.Loading {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+section.ModuleManagerPage .overlay .result {
+    position: absolute;
+    margin: 20px;
+    top: 118px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: whitesmoke;
+    color: #222;
+    box-sizing: border-box;
+}
+
+section.ModuleManagerPage .overlay .result .title {
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
+}
+
+section.ModuleManagerPage .overlay .result .log {
+    overflow: scroll;
+    position: absolute;
+    top: 31px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+section.ModuleManagerPage .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 6px;
+    width: 18px;
+    text-align: center;
+}
+
+section.ModuleManagerPage>.addForm {
+    position: relative;
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: whitesmoke;
+    color: #222;
+    box-sizing: border-box;
+    margin-bottom: 6px;
+    overflow: hidden;
+}
+
+section.ModuleManagerPage .addForm input {
+    padding-left: 6px;
+    border: none;
+    width: 100%;
+}
+
+section.ModuleManagerPage .addForm .addButton {
+    float: right;
+    padding: 6px;
+    border-left: 1px solid #ddd;
+    white-space: nowrap;
+}

@@ -34,7 +34,7 @@ export const routes = {
     exitApplication: new ApiRoute<undefined, undefined>('/app/exitApplication', 'post'),
     restartApplication: new ApiRoute<undefined, undefined>('/app/restartApplication', 'post'),
     shutdownSystem: new ApiRoute<undefined, undefined>('/app/shutdownSystem', 'post'),
-    restartSystem: new ApiRoute<undefined, undefined>('/app/restartSystem', 'post'),
+    rebootSystem: new ApiRoute<undefined, undefined>('/app/restartSystem', 'post'),
     resetApplication: new ApiRoute<undefined, undefined>('/app/resetApplication', 'post'),
     
     getSettings: new ApiRoute<undefined, undefined, ISystemSettings>('/settings/', 'get'),

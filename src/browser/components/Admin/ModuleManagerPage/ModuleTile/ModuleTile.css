@@ -1,0 +1,77 @@
+section.ModuleTile {
+    position: relative;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: whitesmoke;
+    color: #222;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+section.ModuleTile~section.ModuleTile {
+    margin-top: 6px;
+}
+
+section.ModuleTile>.title {
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+}
+
+section.ModuleTile>.title>* {
+    margin-right: 6px;
+}
+
+section.ModuleTile>.description {
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
+}
+
+section.ModuleTile>.author {
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
+}
+
+section.ModuleTile>.author a {
+    color: #555;
+}
+
+section.ModuleTile>.footer {
+    display: table;
+    width: 100%;
+    background: whitesmoke;
+}
+
+section.ModuleTile>.footer a {
+    color: #222;
+    text-decoration: none;
+}
+
+section.ModuleTile>.footer>* {
+    display: table-cell;
+    padding: 6px;
+    text-align: center;
+}
+
+section.ModuleTile>.footer>*:not(:first-child) {
+    border-left: 1px solid #ddd;
+}
+
+section.ModuleTile>.footer>.disabled {
+    background: #eee;
+    color: #bbb;
+    user-select: none;
+}
+
+section.ModuleTile>.footer.actions {
+    transform: translateY(-100%);
+    position: absolute;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    transition: 0.5s ease-in-out;
+}
+
+section.ModuleTile>.footer.actions.hide {
+    transform: translateY(-100%) translateX(100%);
+}

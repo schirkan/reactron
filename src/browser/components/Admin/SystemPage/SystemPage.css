@@ -11,7 +11,11 @@ section.SystemPage button svg {
     margin-right: 5px;
 }
 
-section.SystemPage fieldset~fieldset{
+section.SystemPage fieldset {
+    border-radius: 8px;
+}
+
+section.SystemPage fieldset~fieldset {
     margin-top: 6px;
 }
 

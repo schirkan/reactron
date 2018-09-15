@@ -19,7 +19,7 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
     this.exitApplication = this.exitApplication.bind(this);
     this.restartApplication = this.restartApplication.bind(this);
     this.shutdownSystem = this.shutdownSystem.bind(this);
-    this.restartSystem = this.restartSystem.bind(this);
+    this.rebootSystem = this.rebootSystem.bind(this);
     this.resetApplication = this.resetApplication.bind(this);
   }
 
@@ -41,8 +41,8 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
     apiClient.shutdownSystem();
   }
 
-  public restartSystem() {
-    apiClient.restartSystem();
+  public rebootSystem() {
+    apiClient.rebootSystem();
   }
 
   public resetApplication() {
@@ -108,9 +108,9 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
             <FontAwesome.FontAwesomeIcon icon={SvgIcons.faPowerOff} />
             Shutdown System
           </button>
-          <button onClick={this.restartSystem}>
+          <button onClick={this.rebootSystem}>
             <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
-            Restart System
+            Reboot System
           </button>
         </fieldset>
 

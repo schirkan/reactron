@@ -121,9 +121,9 @@ var AppController = /** @class */ (function () {
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.restartSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.rebootSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        console.log('AppController.restartSystem');
+                        console.log('AppController.rebootSystem');
                         res.sendStatus(204);
                         osCommand.reboot();
                         helper.backendService.exit();

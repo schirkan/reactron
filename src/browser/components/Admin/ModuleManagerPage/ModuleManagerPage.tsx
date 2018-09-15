@@ -1,10 +1,18 @@
+import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
+import { ICommandResult } from '../../../../interfaces/ICommandResult';
 import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryItem';
 import { apiClient } from '../../../ApiClient';
+import Loading from '../../Loading/Loading';
+import ModuleTile from './ModuleTile/ModuleTile';
 
 import './ModuleManagerPage.css';
 
 interface IModuleManagerPageState {
+  loading: boolean;
+  showResult: boolean;
+  result: string[];
   modules: IModuleRepositoryItem[];
 }
 
@@ -13,59 +21,152 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     super(props);
 
     this.state = {
+      loading: false,
+      showResult: false,
+      result: [],
       modules: []
     };
+
+    this.update = this.update.bind(this);
+    this.remove = this.remove.bind(this);
+    this.rebuild = this.rebuild.bind(this);
+    this.hideResult = this.hideResult.bind(this);
   }
 
   public componentDidMount() {
-    apiClient.getModules().then(modules => this.setState({ modules }));
+    this.loadModules();
+  }
+
+  public loadModules() {
+    return apiClient.getModules().then(modules => this.setState({ modules }));
+  }
+
+  public async update(module: IModuleRepositoryItem): Promise<void> {
+    if (!module.canUpdate) {
+      return
+    };
+
+    this.setState({ loading: true }, async () => {
+      const result = await apiClient.updateModule({ moduleName: module.name });
+      this.showResult(result);
+    });
+  }
+
+  public async rebuild(module: IModuleRepositoryItem): Promise<void> {
+    if (!module.canBuild) {
+      return;
+    };
+
+    this.setState({ loading: true }, async () => {
+      const result1 = await apiClient.installModule({ moduleName: module.name });
+      const result2 = await apiClient.buildModule({ moduleName: module.name });
+      this.showResult(result1, result2);
+    });
+  }
+
+  public async remove(module: IModuleRepositoryItem): Promise<void> {
+    if (!module.canRemove) {
+      return;
+    };
+
+    this.setState({ loading: true }, async () => {
+      const result = await apiClient.updateModule({ moduleName: module.name });
+      this.showResult(result);
+    });
+  }
+
+  public async add(repository: string): Promise<void> {
+    this.setState({ loading: true }, async () => {
+      const result = await apiClient.addModule({ repository });
+      apiClient.getModules.clearCache();
+      this.showResult(result);
+      this.loadModules();
+    });
+  }
+
+  private showResult(...results: Array<ICommandResult<void>>) {
+    const log: string[] = [];
+
+    const pushLog = (commandResult: ICommandResult<void>) => {
+      log.push((commandResult.success ? 'success' : 'fail') + ': ' + commandResult.command);
+      log.push(...commandResult.log);
+
+      if (commandResult.children) {
+        commandResult.children.forEach(r => {
+          pushLog(r);
+        });
+      }
+    }
+
+    results.forEach(r => {
+      pushLog(r);
+    });
+
+    this.setState({
+      loading: false,
+      showResult: true,
+      result: log
+    });
+  }
+
+  public hideResult() {
+    this.setState({ showResult: false });
+  }
+
+  public renderLoading() {
+    return this.state.loading && <div className="overlay"><Loading /></div>;
+  }
+
+  public renderResult() {
+    if (!this.state.showResult) {
+      return;
+    }
+
+    return (
+      <div className="overlay">
+        <div className="result">
+          <div className="title">
+            Result:
+          </div>
+          <div className="close clickable" onClick={this.hideResult}>
+            <FontAwesomeIcon icon={SolidIcons.faTimes} />
+          </div>
+          <ul className="log">
+            {this.state.result.map((item, index) =>
+              <li key={index}>{item}</li>
+            )}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
+  public renderAdd() {
+    let input: HTMLInputElement | null;
+    const onAdd = () => {
+      if (input && input.value && input.value.trim()) {
+        this.add(input.value);
+      }
+    };
+    return (
+      <div className="addForm">
+        <input ref={el => input = el} placeholder="GitHub Repository URL" />
+        <div className="addButton clickable" onClick={onAdd}>
+          <FontAwesomeIcon icon={SolidIcons.faPlus} /> Add
+        </div>
+      </div>
+    );
   }
 
   public render() {
     return (
       <section className="ModuleManagerPage">
-        <table>
-          <thead>
-            <tr>
-              <th>Module</th>
-              <th>Version</th>
-              <th>Description</th>
-              <th>Author</th>
-              <th>Repository</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.modules.map(item => {
-              let author = item.author;
-              if (typeof item.author === 'object' && item.author.name) {
-                author = item.author.name;
-                if (item.author.email) {
-                  author += ' ' + item.author.email;
-                }
-              }
-
-              const onUpdate = () => apiClient.updateModule({ moduleName: item.name });
-              const onInstall = () => apiClient.installModule({ moduleName: item.name });
-              const onBuild = () => apiClient.buildModule({ moduleName: item.name });
-              const onRemove = () => apiClient.deleteModule({ moduleName: item.name });
-
-              return (<tr key={item.name}>
-                <td>{item.name}</td>
-                <td>{item.version}</td>
-                <td>{item.description}</td>
-                <td>{author}</td>
-                <td>{item.repository}</td>
-                <td>
-                  <button disabled={!item.canUpdate} onClick={onUpdate}>update</button>
-                  <button disabled={!item.canInstall} onClick={onInstall}>install</button>
-                  <button disabled={!item.canBuild} onClick={onBuild}>build</button>
-                  <button disabled={!item.canRemove} onClick={onRemove}>delete</button>
-                </td>
-              </tr>);
-            })}
-          </tbody>
-        </table>
+        {this.renderLoading()}
+        {this.renderResult()}
+        {this.renderAdd()}
+        {this.state.modules.map(item =>
+          <ModuleTile key={item.name} module={item} remove={this.remove}
+            rebuild={this.rebuild} update={this.update} />)}
       </section>
     );
   }

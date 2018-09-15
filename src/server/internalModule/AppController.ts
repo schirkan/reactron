@@ -78,8 +78,8 @@ export class AppController implements IExternalService {
             helper.backendService.exit();
         });
 
-        registerRoute(helper.moduleApiRouter, routes.restartSystem, async (req, res) => {
-            console.log('AppController.restartSystem');
+        registerRoute(helper.moduleApiRouter, routes.rebootSystem, async (req, res) => {
+            console.log('AppController.rebootSystem');
             res.sendStatus(204);
             osCommand.reboot();
             helper.backendService.exit();

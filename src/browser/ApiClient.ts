@@ -24,7 +24,7 @@ export class ApiClient {
     public exitApplication = apiCall(routes.exitApplication);
     public restartApplication = apiCall(routes.restartApplication);
     public shutdownSystem = apiCall(routes.shutdownSystem);
-    public restartSystem = apiCall(routes.restartSystem);
+    public rebootSystem = apiCall(routes.rebootSystem);
     public resetApplication = apiCall(routes.resetApplication);
 
     public getSettings = apiCall(routes.getSettings, true);
