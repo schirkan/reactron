@@ -15,7 +15,7 @@ export class ModuleController implements IExternalService {
 
         registerRoute(helper.moduleApiRouter, routes.addModule, async (req, res) => {
             console.log('ModuleController.add');
-            const result = await helper.backendService.moduleManager.add(req.params.repository);
+            const result = await helper.backendService.moduleManager.add(req.body.repository);
             res.send(result);
         });
 

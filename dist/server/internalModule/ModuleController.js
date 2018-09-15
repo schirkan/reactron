@@ -60,7 +60,7 @@ var ModuleController = /** @class */ (function () {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.add');
-                                return [4 /*yield*/, helper.backendService.moduleManager.add(req.params.repository)];
+                                return [4 /*yield*/, helper.backendService.moduleManager.add(req.body.repository)];
                             case 1:
                                 result = _a.sent();
                                 res.send(result);

@@ -83,7 +83,7 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     };
 
     this.setState({ loading: true }, async () => {
-      const result = await apiClient.addModule({ repository });
+      const result = await apiClient.addModule(undefined, { repository });
       this.showResult(result);
       apiClient.getModules.clearCache();
       this.loadModules();

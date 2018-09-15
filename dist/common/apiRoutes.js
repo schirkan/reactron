@@ -13,7 +13,7 @@ exports.routes = {
     getServiceOptions: new ApiRoute('/service/:moduleName/:serviceName', 'get'),
     setServiceOptions: new ApiRoute('/service/:moduleName/:serviceName', 'post'),
     getModules: new ApiRoute('/modules/', 'get'),
-    addModule: new ApiRoute('/modules/:repository', 'post'),
+    addModule: new ApiRoute('/modules/', 'post'),
     getModule: new ApiRoute('/modules/:moduleName', 'get'),
     deleteModule: new ApiRoute('/modules/:moduleName', 'delete'),
     buildModule: new ApiRoute('/modules/:moduleName/build', 'post'),
