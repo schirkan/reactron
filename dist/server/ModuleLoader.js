@@ -134,18 +134,22 @@ var ModuleLoader = /** @class */ (function () {
     ;
     ModuleLoader.prototype.hasUpdates = function (moduleDefinition) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var result1, result2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!moduleDefinition || !moduleDefinition.canUpdate) {
                             return [2 /*return*/, false];
                         }
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path)];
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git remote -v update', moduleDefinition.path)];
                     case 1:
-                        result = _a.sent();
-                        moduleDefinition.commandLog.push(result);
-                        return [2 /*return*/, result.log[0] !== '0'];
+                        result1 = _a.sent();
+                        moduleDefinition.commandLog.push(result1);
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path)];
+                    case 2:
+                        result2 = _a.sent();
+                        moduleDefinition.commandLog.push(result2);
+                        return [2 /*return*/, result2.log[0] !== '0'];
                 }
             });
         });

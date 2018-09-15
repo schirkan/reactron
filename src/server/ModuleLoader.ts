@@ -87,8 +87,10 @@ export class ModuleLoader {
             return false;
         }
 
-        const result = await SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path);
-        moduleDefinition.commandLog.push(result);
-        return result.log[0] !== '0';
+        const result1 = await SystemCommand.run('git remote -v update', moduleDefinition.path);
+        moduleDefinition.commandLog.push(result1);
+        const result2 = await SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path);
+        moduleDefinition.commandLog.push(result2);
+        return result2.log[0] !== '0';
     }
 }
