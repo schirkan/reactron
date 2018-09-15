@@ -1,6 +1,6 @@
-# Dynamic Electron React Module Loader
-Boilerplate with Electron and React.
-External modules are loaded dynamically.
+# Reactron = Dynamic Electron React Module Loader
+
+Dynamically load external services and react components.
 
 Example Module: [reactron-hello-world](https://github.com/schirkan/reactron-hello-world)
 
@@ -12,7 +12,6 @@ npm i
 cd modules
 git clone https://github.com/schirkan/reactron-hello-world
 cd ..
-npm run build-modules
 npm run start
 ```
 
