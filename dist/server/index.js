@@ -60,18 +60,6 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
             case 3:
                 internalModule = _a.sent();
                 if (internalModule) {
-                    /*
-                    internalModule.folder: 'internalModule',
-                    internalModule.path: './internalModule',
-                    internalModule.description: 'Internal Module',
-                    internalModule.author: 'Martin Pietschmann',
-                    internalModule.canBuild: false,
-                    internalModule.canUpdate: false,
-                    internalModule.canInstall: false,
-                    internalModule.isBuilded: true,
-                    internalModule.isInstalled: true,
-                    internalModule.name = 'internal',
-                    */
                     internalModule.canRemove = false;
                     internalModule.serverFile = './internalModule/index';
                     BackendService_1.BackendService.instance.moduleRepository.add(internalModule);
@@ -82,6 +70,7 @@ exports.start = function (root) { return __awaiter(_this, void 0, void 0, functi
                 return [4 /*yield*/, BackendService_1.BackendService.instance.serviceManager.startAllServices()];
             case 5:
                 _a.sent();
+                BackendService_1.BackendService.instance.expressApp.registerErrorHandler();
                 electron_1.app.on('before-quit', function () { return BackendService_1.BackendService.instance.serviceManager.stopAllServices(); });
                 BackendService_1.BackendService.instance.electronApp.mainWindow.loadURL('http://localhost:' + BackendService_1.BackendService.instance.config.frontendPort + BackendService_1.BackendService.instance.settings.get().startupPath);
                 console.log('BackendService is running');

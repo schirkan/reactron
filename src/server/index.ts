@@ -18,18 +18,6 @@ export const start = async (root: string): Promise<void> => {
     // register internal module
     const internalModule = await BackendService.instance.moduleLoader.loadModule('../');
     if (internalModule) {
-        /*
-        internalModule.folder: 'internalModule',
-        internalModule.path: './internalModule',
-        internalModule.description: 'Internal Module',
-        internalModule.author: 'Martin Pietschmann',
-        internalModule.canBuild: false,
-        internalModule.canUpdate: false,
-        internalModule.canInstall: false,
-        internalModule.isBuilded: true,
-        internalModule.isInstalled: true,
-        internalModule.name = 'internal',
-        */
         internalModule.canRemove = false;
         internalModule.serverFile = './internalModule/index'
         BackendService.instance.moduleRepository.add(internalModule);
@@ -37,6 +25,8 @@ export const start = async (root: string): Promise<void> => {
 
     await BackendService.instance.moduleManager.loadAllModules();
     await BackendService.instance.serviceManager.startAllServices();
+
+    BackendService.instance.expressApp.registerErrorHandler();
 
     app.on('before-quit', () => BackendService.instance.serviceManager.stopAllServices());
     BackendService.instance.electronApp.mainWindow.loadURL(

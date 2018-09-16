@@ -48,7 +48,7 @@ exports.wrapCall = function (callback, commandName) {
     };
 };
 exports.command = function (commandName, args, callback) { return __awaiter(_this, void 0, void 0, function () {
-    var result, callbackResult, innerResult, error_1;
+    var result, callbackResult, innerResult, error_1, message;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -57,9 +57,10 @@ exports.command = function (commandName, args, callback) { return __awaiter(_thi
                     children: [],
                     log: [],
                     command: commandName || callback.prototype.name + '.' + callback.name,
-                    success: true,
+                    success: undefined,
                     timestampStart: Date.now(),
-                    timestampEnd: 0
+                    timestampEnd: 0,
+                    data: undefined
                 };
                 console.log('Start Command: ' + result.command + ' ' + result.args);
                 _a.label = 1;
@@ -71,18 +72,28 @@ exports.command = function (commandName, args, callback) { return __awaiter(_thi
                 // check if callbackResult is ICommandResult
                 if (callbackResult && callbackResult.hasOwnProperty('success') && callbackResult.hasOwnProperty('command')) {
                     innerResult = callbackResult;
-                    result.success = callbackResult.success;
-                    result.children.push(callbackResult);
+                    result.success = innerResult.success;
+                    result.children.push(innerResult);
                     result.data = innerResult.data;
                 }
-                else {
+                else if (callbackResult) {
                     result.data = callbackResult;
+                }
+                // evaluate success
+                if (result.success === undefined) {
+                    if (result.children.length) {
+                        result.success = result.children.every(function (x) { return x.success === true || x.success === undefined; });
+                    }
+                    else {
+                        result.success = true;
+                    }
                 }
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _a.sent();
                 console.log('Error in Command: ' + result.command + ' ' + result.args, error_1);
-                result.log.push(error_1);
+                message = error_1 && error_1.message || JSON.stringify(error_1);
+                result.log.push(message);
                 result.success = false;
                 return [3 /*break*/, 4];
             case 4:

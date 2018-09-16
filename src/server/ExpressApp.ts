@@ -26,7 +26,6 @@ export class ExpressApp {
                 console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
                 next();
             });
-            // TODO: default api error/notfound handler
 
             this.express.use('/api', this.apiRouter);
             this.express.use('/modules', express.static(this.config.root + '/modules'));
@@ -47,6 +46,15 @@ export class ExpressApp {
                 console.log('ExpressApp is listening on Port ' + this.config.backendPort);
                 resolve();
             });
+        });
+    }
+
+    public registerErrorHandler() {
+        this.apiRouter.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+            res.status(500).send(err);
+        });
+        this.express.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+            res.status(500).send(err);
         });
     }
 }

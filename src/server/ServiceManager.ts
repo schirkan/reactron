@@ -90,6 +90,7 @@ export class ServiceManager {
             } catch (error) {
                 serviceRepositoryItem.state = "error";
                 serviceRepositoryItem.log.push(error);
+                result.success = false;
                 result.log.push('Error stopping service: ' + serviceKey);
             }
         });

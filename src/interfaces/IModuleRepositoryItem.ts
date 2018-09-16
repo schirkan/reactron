@@ -17,5 +17,4 @@ export interface IModuleRepositoryItem {
     canInstall?: boolean;
     canBuild?: boolean;
     canRemove?: boolean;
-    commandLog: ICommandResult[];
 }

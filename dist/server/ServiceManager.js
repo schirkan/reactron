@@ -192,6 +192,7 @@ var ServiceManager = /** @class */ (function () {
                         error_2 = _a.sent();
                         serviceRepositoryItem.state = "error";
                         serviceRepositoryItem.log.push(error_2);
+                        result.success = false;
                         result.log.push('Error stopping service: ' + serviceKey);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];

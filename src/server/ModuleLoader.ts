@@ -51,8 +51,6 @@ export class ModuleLoader {
             isBuilded: true
         } as IModuleRepositoryItem;
 
-        moduleDefinition.commandLog = [];
-
         if (p.browser) {
             moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
             if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
@@ -73,7 +71,10 @@ export class ModuleLoader {
         }
         moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
         moduleDefinition.canUpdate = !!moduleDefinition.repository;
-        moduleDefinition.canInstall = !!(p.dependencies || p.devDependencies);
+        moduleDefinition.canInstall = !!(
+            (p.dependencies && Object.keys(p.dependencies).length) ||
+            (p.devDependencies && Object.keys(p.devDependencies.length))
+        );
         moduleDefinition.canRemove = true;
         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
         moduleDefinition.hasUpdates = await this.hasUpdates(moduleDefinition);
@@ -88,9 +89,15 @@ export class ModuleLoader {
         }
 
         const result1 = await SystemCommand.run('git remote -v update', moduleDefinition.path);
-        moduleDefinition.commandLog.push(result1);
+        if (result1.success === false) {
+            return false;
+        }
+
         const result2 = await SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path);
-        moduleDefinition.commandLog.push(result2);
+        if (result2.success === false) {
+            return false;
+        }
+
         return result2.log[0] !== '0';
     }
 }

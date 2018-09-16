@@ -86,6 +86,7 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
 
     return (
       <div className="footer">
+        <div className="version">{this.props.module.version}</div>
         {repoLink}
         <div className="clickable" onClick={showActions}><FontAwesomeIcon icon={SolidIcons.faCog} /> Modify</div>
       </div>
@@ -102,7 +103,6 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
       <div className="title">
         <FontAwesomeIcon icon={SolidIcons.faCube} />
         <span className="name">{this.props.module.name}</span>
-        <span className="version">(v{this.props.module.version})</span>
         {updateIcon}
       </div>
     );

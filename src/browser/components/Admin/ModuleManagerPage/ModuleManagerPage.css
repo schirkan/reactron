@@ -14,7 +14,7 @@ section.ModuleManagerPage .overlay section.Loading {
     transform: translateY(-50%);
 }
 
-section.ModuleManagerPage .overlay .result {
+section.ModuleManagerPage .overlay section.CommandResult {
     position: absolute;
     margin: 20px;
     top: 118px;
@@ -29,28 +29,13 @@ section.ModuleManagerPage .overlay .result {
     overflow: hidden;
 }
 
-section.ModuleManagerPage .overlay .result .title {
-    padding: 6px;
-    border-bottom: 1px solid #ddd;
-}
-
-section.ModuleManagerPage .overlay .result .log {
-    overflow: auto;
-    position: absolute;
-    top: 31px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-    word-wrap: break-word;
-}
-
 section.ModuleManagerPage .close {
     position: absolute;
     right: 0;
     top: 0;
     padding: 6px;
     width: 18px;
+    min-width: 18px;
     text-align: center;
 }
 

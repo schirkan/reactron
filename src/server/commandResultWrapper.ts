@@ -1,39 +1,50 @@
-import { ICommandResult } from "../interfaces/ICommandResult";
+import { ICommandResult, ICommandResultWithData } from "../interfaces/ICommandResult";
 
-export const wrapCall = (callback: (...args: any[]) => Promise<ICommandResult | any> | Promise<any> | any, commandName: string | undefined = undefined) => {
+export const wrapCall = (callback: (...args: any[]) => Promise<any>, commandName: string | undefined = undefined) => {
     commandName = commandName || callback.prototype.name + '.' + callback.name;
-    return (...args: any[]): Promise<ICommandResult> => {
+    return (...args: any[]) => {
         return command(commandName, args, () => callback(...args));
     };
 }
 
-export const command = async <T = void>(commandName: string | undefined, args: any, callback: (result: ICommandResult<T>) => Promise<T> | T): Promise<ICommandResult<T>> => {
+export const command = async <T = void>(commandName: string | undefined, args: any, callback: (result: ICommandResultWithData<T>) => Promise<T> | T): Promise<ICommandResultWithData<T>> => {
     const result = {
         args: args ? JSON.stringify(args) : '',
         children: [],
         log: [],
         command: commandName || callback.prototype.name + '.' + callback.name,
-        success: true,
+        success: undefined,
         timestampStart: Date.now(),
-        timestampEnd: 0
-    } as ICommandResult<T>;
+        timestampEnd: 0,
+        data: undefined as any
+    } as ICommandResultWithData<T>;
 
     console.log('Start Command: ' + result.command + ' ' + result.args);
 
     try {
-        const callbackResult = await Promise.resolve(callback(result)) as any;
+        const callbackResult = await Promise.resolve(callback(result));
         // check if callbackResult is ICommandResult
         if (callbackResult && callbackResult.hasOwnProperty('success') && callbackResult.hasOwnProperty('command')) {
-            const innerResult = callbackResult as ICommandResult<T>
-            result.success = callbackResult.success;
-            result.children.push(callbackResult);
+            const innerResult = callbackResult as any as ICommandResultWithData<T>;
+            result.success = innerResult.success;
+            result.children.push(innerResult);
             result.data = innerResult.data;
-        } else {
+        } else if (callbackResult) {
             result.data = callbackResult;
+        }
+        
+        // evaluate success
+        if (result.success === undefined) {
+            if (result.children.length) {
+                result.success = result.children.every(x => x.success === true || x.success === undefined);
+            } else {
+                result.success = true;
+            }
         }
     } catch (error) {
         console.log('Error in Command: ' + result.command + ' ' + result.args, error);
-        result.log.push(error);
+        const message = error && error.message || JSON.stringify(error);
+        result.log.push(message);
         result.success = false;
     }
 

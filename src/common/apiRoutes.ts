@@ -19,12 +19,11 @@ export const routes = {
     setServiceOptions: new ApiRoute<{ moduleName: string, serviceName: string }, object>('/service/:moduleName/:serviceName', 'post'),
 
     getModules: new ApiRoute<undefined, undefined, IModuleRepositoryItem[]>('/modules/', 'get'),
-    addModule: new ApiRoute<undefined, { repository: string }, ICommandResult<void>>('/modules/', 'post'),
+    addModule: new ApiRoute<undefined, { repository: string }, ICommandResult[]>('/modules/', 'post'),
     getModule: new ApiRoute<{ moduleName: string }, undefined, IModuleRepositoryItem>('/modules/:moduleName', 'get'),
-    deleteModule: new ApiRoute<{ moduleName: string }, undefined, ICommandResult<void>>('/modules/:moduleName', 'delete'),
-    buildModule: new ApiRoute<{ moduleName: string }, undefined, ICommandResult<void>>('/modules/:moduleName/build', 'post'),
-    installModule: new ApiRoute<{ moduleName: string }, undefined, ICommandResult<void>>('/modules/:moduleName/install', 'post'),
-    updateModule: new ApiRoute<{ moduleName: string }, undefined, ICommandResult<void>>('/modules/:moduleName/update', 'post'),
+    deleteModule: new ApiRoute<{ moduleName: string }, undefined, ICommandResult[]>('/modules/:moduleName', 'delete'),
+    rebuildModule: new ApiRoute<{ moduleName: string }, undefined, ICommandResult[]>('/modules/:moduleName/rebuild', 'post'),
+    updateModule: new ApiRoute<{ moduleName: string }, undefined, ICommandResult[]>('/modules/:moduleName/update', 'post'),
 
     getWebPages: new ApiRoute<undefined, undefined, IWebPageOptions[]>('/pages/', 'get'),
     setWebPage: new ApiRoute<undefined, IWebPageOptions>('/pages/', 'post'),

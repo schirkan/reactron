@@ -99,7 +99,6 @@ var ModuleLoader = /** @class */ (function () {
                             repository: p.repository && p.repository.url || p.repository,
                             isBuilded: true
                         };
-                        moduleDefinition.commandLog = [];
                         if (p.browser) {
                             moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
                             if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
@@ -118,7 +117,8 @@ var ModuleLoader = /** @class */ (function () {
                         }
                         moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
                         moduleDefinition.canUpdate = !!moduleDefinition.repository;
-                        moduleDefinition.canInstall = !!(p.dependencies || p.devDependencies);
+                        moduleDefinition.canInstall = !!((p.dependencies && Object.keys(p.dependencies).length) ||
+                            (p.devDependencies && Object.keys(p.devDependencies.length)));
                         moduleDefinition.canRemove = true;
                         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
                         _a = moduleDefinition;
@@ -144,11 +144,15 @@ var ModuleLoader = /** @class */ (function () {
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git remote -v update', moduleDefinition.path)];
                     case 1:
                         result1 = _a.sent();
-                        moduleDefinition.commandLog.push(result1);
+                        if (result1.success === false) {
+                            return [2 /*return*/, false];
+                        }
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path)];
                     case 2:
                         result2 = _a.sent();
-                        moduleDefinition.commandLog.push(result2);
+                        if (result2.success === false) {
+                            return [2 /*return*/, false];
+                        }
                         return [2 /*return*/, result2.log[0] !== '0'];
                 }
             });

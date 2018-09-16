@@ -73,7 +73,7 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.add = function (repository) {
         return __awaiter(this, void 0, void 0, function () {
-            var parts, folderName, fullModulePath, result, moduleDefinition;
+            var existingModule, parts, folderName, fullModulePath, result, moduleDefinition;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -89,6 +89,10 @@ var ModuleManager = /** @class */ (function () {
                         if (!repository) {
                             throw new Error('Invalid repository');
                         }
+                        existingModule = this.getAll().find(function (x) { return x.repository === repository; });
+                        if (existingModule) {
+                            throw new Error('Module already exists');
+                        }
                         parts = repository.split('/');
                         folderName = parts[parts.length - 1];
                         fullModulePath = path.join(this.modulesRootPath, folderName);
@@ -103,7 +107,7 @@ var ModuleManager = /** @class */ (function () {
                     case 2:
                         moduleDefinition = _a.sent();
                         if (moduleDefinition) {
-                            moduleDefinition.commandLog.push(result);
+                            result.data = moduleDefinition;
                             this.moduleRepository.add(moduleDefinition);
                         }
                         _a.label = 3;
@@ -112,32 +116,29 @@ var ModuleManager = /** @class */ (function () {
             });
         });
     };
-    ModuleManager.prototype.update = function (moduleName) {
+    ModuleManager.prototype.update = function (moduleDefinition) {
         return __awaiter(this, void 0, void 0, function () {
-            var moduleDefinition, result;
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        moduleDefinition = this.get(moduleName);
                         if (!moduleDefinition || !moduleDefinition.canUpdate) {
                             throw new Error('Can not update module');
                         }
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git fetch --all && git reset --hard origin/master', moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
-                        moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }
             });
         });
     };
-    ModuleManager.prototype.install = function (moduleName) {
+    ModuleManager.prototype.install = function (moduleDefinition) {
         return __awaiter(this, void 0, void 0, function () {
-            var moduleDefinition, result;
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        moduleDefinition = this.get(moduleName);
                         if (!moduleDefinition || !moduleDefinition.canInstall) {
                             throw new Error('Can not install module');
                         }
@@ -145,19 +146,17 @@ var ModuleManager = /** @class */ (function () {
                     case 1:
                         result = _a.sent();
                         moduleDefinition.isInstalled = moduleDefinition.isInstalled || result.success;
-                        moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }
             });
         });
     };
-    ModuleManager.prototype.build = function (moduleName) {
+    ModuleManager.prototype.build = function (moduleDefinition) {
         return __awaiter(this, void 0, void 0, function () {
-            var moduleDefinition, result;
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        moduleDefinition = this.get(moduleName);
                         if (!moduleDefinition || !moduleDefinition.canBuild) {
                             throw new Error('Can not build module');
                         }
@@ -165,18 +164,16 @@ var ModuleManager = /** @class */ (function () {
                     case 1:
                         result = _a.sent();
                         moduleDefinition.isBuilded = moduleDefinition.isBuilded || result.success;
-                        moduleDefinition.commandLog.push(result);
                         return [2 /*return*/, result];
                 }
             });
         });
     };
-    ModuleManager.prototype.remove = function (moduleName) {
-        var moduleDefinition = this.get(moduleName);
+    ModuleManager.prototype.remove = function (moduleDefinition) {
         if (!moduleDefinition || !moduleDefinition.canRemove) {
             throw new Error('Can not remove module');
         }
-        this.moduleRepository.remove(moduleName);
+        this.moduleRepository.remove(moduleDefinition.name);
         return SystemCommand_1.SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
     };
     ModuleManager.prototype.isDirEmpty = function (dirname) {

@@ -12,8 +12,7 @@ export class ApiClient {
     public addModule = apiCall(routes.addModule);
     public getModule = apiCall(routes.getModule);
     public deleteModule = apiCall(routes.deleteModule);
-    public buildModule = apiCall(routes.buildModule);
-    public installModule = apiCall(routes.installModule);
+    public rebuildModule = apiCall(routes.rebuildModule);
     public updateModule = apiCall(routes.updateModule);
 
     public getWebPages = apiCall(routes.getWebPages, true);
@@ -54,7 +53,7 @@ const apiCall = <TParams, TBody, TResponse>(
     let cache: any;
     const method = route.method.toLocaleLowerCase();
 
-    const call: any = (params: TParams, body: TBody): Promise<TResponse> => {
+    const call: any = (params: TParams, data: TBody): Promise<TResponse> => {
         if (cacheResponse && cache) {
             return Promise.resolve(cache);
         }
@@ -68,9 +67,19 @@ const apiCall = <TParams, TBody, TResponse>(
         }
         return fetch(inernalModuleHelper.moduleApiPath + path, {
             method,
-            body: body && JSON.stringify(body)
+            body: data && JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            }
         })
-            .then(response => response.json())
+            .then(async response => {
+                if (response.status.toString().startsWith('2')) {
+                    return response.json();
+                }
+                const error = await response.text();
+                console.log(error);
+                throw Error(error);
+            })
             .then(response => {
                 if (cacheResponse) {
                     cache = response;

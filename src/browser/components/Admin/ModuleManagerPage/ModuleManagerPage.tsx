@@ -5,6 +5,7 @@ import { ICommandResult } from '../../../../interfaces/ICommandResult';
 import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryItem';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
+import CommandResult from './CommandResult/CommandResult';
 import ModuleTile from './ModuleTile/ModuleTile';
 
 import './ModuleManagerPage.css';
@@ -12,7 +13,7 @@ import './ModuleManagerPage.css';
 interface IModuleManagerPageState {
   loading: boolean;
   showResult: boolean;
-  result: string[];
+  results: ICommandResult[];
   modules: IModuleRepositoryItem[];
 }
 
@@ -23,7 +24,7 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     this.state = {
       loading: false,
       showResult: false,
-      result: [],
+      results: [],
       modules: []
     };
 
@@ -47,8 +48,14 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     };
 
     this.setState({ loading: true }, async () => {
-      const result = await apiClient.updateModule({ moduleName: module.name });
-      this.showResult(result);
+      try {
+        const result = await apiClient.updateModule({ moduleName: module.name });
+        this.showResult(result);
+      } catch (error) {
+        this.showError(error);
+      }
+      apiClient.getModules.clearCache();
+      this.loadModules();
     });
   }
 
@@ -58,9 +65,14 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     };
 
     this.setState({ loading: true }, async () => {
-      const result1 = await apiClient.installModule({ moduleName: module.name });
-      const result2 = await apiClient.buildModule({ moduleName: module.name });
-      this.showResult(result1, result2);
+      try {
+        const result = await apiClient.rebuildModule({ moduleName: module.name });
+        this.showResult(result);
+      } catch (error) {
+        this.showError(error);
+      }
+      apiClient.getModules.clearCache();
+      this.loadModules();
     });
   }
 
@@ -70,8 +82,12 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     };
 
     this.setState({ loading: true }, async () => {
-      const result = await apiClient.deleteModule({ moduleName: module.name });
-      this.showResult(result);
+      try {
+        const result = await apiClient.deleteModule({ moduleName: module.name });
+        this.showResult(result);
+      } catch (error) {
+        this.showError(error);
+      }
       apiClient.getModules.clearCache();
       this.loadModules();
     });
@@ -83,36 +99,28 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     };
 
     this.setState({ loading: true }, async () => {
-      const result = await apiClient.addModule(undefined, { repository });
-      this.showResult(result);
+      try {
+        const result = await apiClient.addModule(undefined, { repository });
+        this.showResult(result);
+      } catch (error) {
+        this.showError(error);
+      }
       apiClient.getModules.clearCache();
       this.loadModules();
     });
   }
 
-  private showResult(...results: Array<ICommandResult<void>>) {
-    const log: string[] = [];
-
-    const pushLog = (commandResult: ICommandResult<void>) => {
-      log.push((commandResult.success ? 'success' : 'fail') + ': ' + commandResult.command);
-      log.push(...commandResult.log);
-
-      if (commandResult.children) {
-        commandResult.children.forEach(r => {
-          pushLog(r);
-        });
-      }
-    }
-
-    results.forEach(r => {
-      pushLog(r);
-    });
-
+  private showError(err: any) {
+    const message = err && err.message || JSON.stringify(err);
     this.setState({
       loading: false,
       showResult: true,
-      result: log
+      results: [message]
     });
+  }
+
+  private showResult(results: ICommandResult[]) {
+    this.setState({ loading: false, showResult: true, results });
   }
 
   public hideResult() {
@@ -120,29 +128,23 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
   }
 
   public renderLoading() {
-    return this.state.loading && <div className="overlay"><Loading /></div>;
+    if (!this.state.loading) {
+      return;
+    }
+    return (
+      <div className="overlay">
+        <Loading />
+      </div>
+    );
   }
 
   public renderResult() {
     if (!this.state.showResult) {
       return;
     }
-
     return (
       <div className="overlay">
-        <div className="result">
-          <div className="title">
-            Result:
-          </div>
-          <div className="close clickable" onClick={this.hideResult}>
-            <FontAwesomeIcon icon={SolidIcons.faTimes} />
-          </div>
-          <ul className="log">
-            {this.state.result.map((item, index) =>
-              <li key={index}>{item}</li>
-            )}
-          </ul>
-        </div>
+        <CommandResult results={this.state.results} onClose={this.hideResult} />
       </div>
     );
   }

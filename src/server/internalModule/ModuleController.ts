@@ -1,4 +1,5 @@
 import { routes } from '../../common/apiRoutes';
+import { ICommandResult } from '../../interfaces/ICommandResult';
 import { IExternalService } from '../../interfaces/IExternalService';
 import { ServerModuleHelper } from '../ServerModuleHelper';
 import { registerRoute } from './registerRoute';
@@ -9,44 +10,85 @@ export class ModuleController implements IExternalService {
 
         registerRoute(helper.moduleApiRouter, routes.getModules, async (req, res) => {
             console.log('ModuleController.getAll');
+
             const modules = helper.backendService.moduleManager.getAll();
             res.send(modules);
         });
 
-        registerRoute(helper.moduleApiRouter, routes.addModule, async (req, res) => {
-            console.log('ModuleController.add');
-            const result = await helper.backendService.moduleManager.add(req.body.repository);
-            res.send(result);
-        });
-
         registerRoute(helper.moduleApiRouter, routes.getModule, async (req, res) => {
             console.log('ModuleController.get');
-            const module = helper.backendService.moduleManager.get(req.params.moduleName);
-            res.send(module);
+
+            const moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+            if (moduleRepositoryItem) {
+                res.send(moduleRepositoryItem);
+            } else {
+                res.sendStatus(404);
+            }
         });
-        
+
+        registerRoute(helper.moduleApiRouter, routes.addModule, async (req, res) => {
+            console.log('ModuleController.add');
+
+            const results: ICommandResult[] = [];
+            const resultAdd = await helper.backendService.moduleManager.add(req.body.repository);
+            results.push(resultAdd);
+
+            if (resultAdd.success && resultAdd.data) {
+                const moduleRepositoryItem = resultAdd.data;
+                const resultInstall = await helper.backendService.moduleManager.install(moduleRepositoryItem);
+                results.push(resultInstall);
+
+                if (!resultAdd.data.isBuilded) {
+                    const resultBuild = await helper.backendService.moduleManager.build(moduleRepositoryItem);
+                    results.push(resultBuild);
+                }
+            }
+            res.send(results);
+        });
+
         registerRoute(helper.moduleApiRouter, routes.deleteModule, async (req, res) => {
             console.log('ModuleController.remove');
-            const result = await helper.backendService.moduleManager.remove(req.params.moduleName);
-            res.send(result);
+
+            const moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+            if (moduleRepositoryItem) {
+                const result = await helper.backendService.moduleManager.remove(moduleRepositoryItem);
+                res.send([result]);
+            } else {
+                res.sendStatus(404);
+            }
         });
-        
-        registerRoute(helper.moduleApiRouter, routes.buildModule, async (req, res) => {
-            console.log('ModuleController.build');
-            const result = await helper.backendService.moduleManager.build(req.params.moduleName);
-            res.send(result);
+
+        registerRoute(helper.moduleApiRouter, routes.rebuildModule, async (req, res) => {
+            console.log('ModuleController.rebuild');
+
+            const moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+            if (moduleRepositoryItem) {
+                const resultInstall = await helper.backendService.moduleManager.install(moduleRepositoryItem);
+                const resultBuild = await helper.backendService.moduleManager.build(moduleRepositoryItem);
+                res.send([resultInstall, resultBuild]);
+            } else {
+                res.sendStatus(404);
+            }
         });
-        
-        registerRoute(helper.moduleApiRouter, routes.installModule, async (req, res) => {
-            console.log('ModuleController.install');
-            const result = await helper.backendService.moduleManager.install(req.params.moduleName);
-            res.send(result);
-        });
-        
+
         registerRoute(helper.moduleApiRouter, routes.updateModule, async (req, res) => {
             console.log('ModuleController.update');
-            const result = await helper.backendService.moduleManager.update(req.params.moduleName);
-            res.send(result);
+
+            const moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+            if (moduleRepositoryItem) {
+                const results: ICommandResult[] = [];
+                if (moduleRepositoryItem.hasUpdates) {
+                    const resultUpdate = await helper.backendService.moduleManager.update(moduleRepositoryItem);
+                    results.push(resultUpdate);
+                    const resultInstall = await helper.backendService.moduleManager.install(moduleRepositoryItem);
+                    results.push(resultInstall);
+                    const resultBuild = await helper.backendService.moduleManager.build(moduleRepositoryItem);
+                    results.push(resultBuild);
+                }
+                res.send(results);
+            } else {
+                res.sendStatus(404);
+            }
         });
     }
 }

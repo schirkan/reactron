@@ -54,82 +54,122 @@ var ModuleController = /** @class */ (function () {
                         return [2 /*return*/];
                     });
                 }); });
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var moduleRepositoryItem;
+                    return __generator(this, function (_a) {
+                        console.log('ModuleController.get');
+                        moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+                        if (moduleRepositoryItem) {
+                            res.send(moduleRepositoryItem);
+                        }
+                        else {
+                            res.sendStatus(404);
+                        }
+                        return [2 /*return*/];
+                    });
+                }); });
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
+                    var results, resultAdd, moduleRepositoryItem, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.add');
+                                results = [];
                                 return [4 /*yield*/, helper.backendService.moduleManager.add(req.body.repository)];
                             case 1:
-                                result = _a.sent();
-                                res.send(result);
+                                resultAdd = _a.sent();
+                                results.push(resultAdd);
+                                if (!(resultAdd.success && resultAdd.data)) return [3 /*break*/, 4];
+                                moduleRepositoryItem = resultAdd.data;
+                                return [4 /*yield*/, helper.backendService.moduleManager.install(moduleRepositoryItem)];
+                            case 2:
+                                resultInstall = _a.sent();
+                                results.push(resultInstall);
+                                if (!!resultAdd.data.isBuilded) return [3 /*break*/, 4];
+                                return [4 /*yield*/, helper.backendService.moduleManager.build(moduleRepositoryItem)];
+                            case 3:
+                                resultBuild = _a.sent();
+                                results.push(resultBuild);
+                                _a.label = 4;
+                            case 4:
+                                res.send(results);
                                 return [2 /*return*/];
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var module;
-                    return __generator(this, function (_a) {
-                        console.log('ModuleController.get');
-                        module = helper.backendService.moduleManager.get(req.params.moduleName);
-                        res.send(module);
-                        return [2 /*return*/];
-                    });
-                }); });
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.deleteModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
+                    var moduleRepositoryItem, result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.remove');
-                                return [4 /*yield*/, helper.backendService.moduleManager.remove(req.params.moduleName)];
+                                moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+                                if (!moduleRepositoryItem) return [3 /*break*/, 2];
+                                return [4 /*yield*/, helper.backendService.moduleManager.remove(moduleRepositoryItem)];
                             case 1:
                                 result = _a.sent();
-                                res.send(result);
-                                return [2 /*return*/];
+                                res.send([result]);
+                                return [3 /*break*/, 3];
+                            case 2:
+                                res.sendStatus(404);
+                                _a.label = 3;
+                            case 3: return [2 /*return*/];
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.buildModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.rebuildModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var moduleRepositoryItem, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('ModuleController.build');
-                                return [4 /*yield*/, helper.backendService.moduleManager.build(req.params.moduleName)];
+                                console.log('ModuleController.rebuild');
+                                moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+                                if (!moduleRepositoryItem) return [3 /*break*/, 3];
+                                return [4 /*yield*/, helper.backendService.moduleManager.install(moduleRepositoryItem)];
                             case 1:
-                                result = _a.sent();
-                                res.send(result);
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.installModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                console.log('ModuleController.install');
-                                return [4 /*yield*/, helper.backendService.moduleManager.install(req.params.moduleName)];
-                            case 1:
-                                result = _a.sent();
-                                res.send(result);
-                                return [2 /*return*/];
+                                resultInstall = _a.sent();
+                                return [4 /*yield*/, helper.backendService.moduleManager.build(moduleRepositoryItem)];
+                            case 2:
+                                resultBuild = _a.sent();
+                                res.send([resultInstall, resultBuild]);
+                                return [3 /*break*/, 4];
+                            case 3:
+                                res.sendStatus(404);
+                                _a.label = 4;
+                            case 4: return [2 /*return*/];
                         }
                     });
                 }); });
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.updateModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
+                    var moduleRepositoryItem, results, resultUpdate, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.update');
-                                return [4 /*yield*/, helper.backendService.moduleManager.update(req.params.moduleName)];
+                                moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+                                if (!moduleRepositoryItem) return [3 /*break*/, 5];
+                                results = [];
+                                if (!moduleRepositoryItem.hasUpdates) return [3 /*break*/, 4];
+                                return [4 /*yield*/, helper.backendService.moduleManager.update(moduleRepositoryItem)];
                             case 1:
-                                result = _a.sent();
-                                res.send(result);
-                                return [2 /*return*/];
+                                resultUpdate = _a.sent();
+                                results.push(resultUpdate);
+                                return [4 /*yield*/, helper.backendService.moduleManager.install(moduleRepositoryItem)];
+                            case 2:
+                                resultInstall = _a.sent();
+                                results.push(resultInstall);
+                                return [4 /*yield*/, helper.backendService.moduleManager.build(moduleRepositoryItem)];
+                            case 3:
+                                resultBuild = _a.sent();
+                                results.push(resultBuild);
+                                _a.label = 4;
+                            case 4:
+                                res.send(results);
+                                return [3 /*break*/, 6];
+                            case 5:
+                                res.sendStatus(404);
+                                _a.label = 6;
+                            case 6: return [2 /*return*/];
                         }
                     });
                 }); });
