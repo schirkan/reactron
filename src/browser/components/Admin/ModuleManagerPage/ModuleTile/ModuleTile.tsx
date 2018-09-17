@@ -109,7 +109,11 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
   }
 
   public renderDescription() {
-    return this.props.module.description && <div className="description">{this.props.module.description}</div>;
+    const text = this.props.module.description ? this.props.module.description : 'no description';
+
+    return (
+      <div className="description">{text}</div>
+    );
   }
 
   public renderAuthor() {
