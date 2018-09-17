@@ -1,6 +1,5 @@
 section.ModuleTile {
     position: relative;
-    width: 100%;
     border: 1px solid #ddd;
     border-radius: 2px;
     background: white;
@@ -8,10 +7,6 @@ section.ModuleTile {
     overflow: hidden;
     box-sizing: border-box;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
-}
-
-section.ModuleTile~section.ModuleTile {
-    margin-top: 14px;
 }
 
 section.ModuleTile>.title {

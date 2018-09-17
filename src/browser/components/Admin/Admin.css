@@ -19,7 +19,6 @@ section.Admin>header .title {
 }
 
 section.Admin>.content {
-    padding: 20px;
     position: relative;
     font-size: 14px;
     line-height: 1.5;

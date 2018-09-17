@@ -1,3 +1,7 @@
+section.ModuleManagerPage {
+    padding-right: 20px;
+}
+
 section.ModuleManagerPage .overlay {
     position: fixed;
     z-index: 1;
@@ -38,7 +42,33 @@ section.ModuleManagerPage .close {
     text-align: center;
 }
 
+.ModuleManagerPage > * {
+    width: calc(25% - 20px);
+    float: left;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 1200px) {
+    .ModuleManagerPage > * {
+        width: calc(33.3% - 20px);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .ModuleManagerPage > * {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .ModuleManagerPage > * {
+        width: calc(100% - 20px);
+    }
+}
+
 section.ModuleManagerPage>.addForm {
+    float: none;
     position: relative;
     display: flex;
     border: 1px solid #ddd;
@@ -46,7 +76,6 @@ section.ModuleManagerPage>.addForm {
     background: whitesmoke;
     color: #222;
     box-sizing: border-box;
-    margin-bottom: 20px;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
 }
