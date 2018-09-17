@@ -22,9 +22,8 @@ section.ModuleManagerPage .overlay section.CommandResult {
     left: 0;
     right: 0;
     border: 1px solid #ddd;
-    border-radius: 6px;
-    background: whitesmoke;
-    color: #222;
+    border-radius: 2px;
+    background: white;
     box-sizing: border-box;
     overflow: hidden;
 }
@@ -43,21 +42,22 @@ section.ModuleManagerPage>.addForm {
     position: relative;
     display: flex;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 2px;
     background: whitesmoke;
     color: #222;
     box-sizing: border-box;
-    margin-bottom: 6px;
+    margin-bottom: 20px;
     overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
 }
 
-section.ModuleManagerPage .addForm input {
+section.ModuleManagerPage>.addForm input {
     padding-left: 6px;
     border: none;
     width: 100%;
 }
 
-section.ModuleManagerPage .addForm .addButton {
+section.ModuleManagerPage>.addForm .addButton {
     float: right;
     padding: 6px;
     border-left: 1px solid #ddd;

@@ -7,7 +7,7 @@ section.CommandResult>.results>.result {
 section.CommandResult>.results {
     overflow: auto;
     position: absolute;
-    top: 31px;
+    top: 34px;
     bottom: 0;
     left: 0;
     right: 0;

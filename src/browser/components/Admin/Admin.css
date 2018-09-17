@@ -1,14 +1,14 @@
 section.Admin {
-    background-color: #222;
-    color: white;
     height: 100%;
     overflow: auto;
+    background: #fdfdfd;
 }
 
 section.Admin>header {
+    background-color: #567;
+    color: white;
     position: relative;
     z-index: 2;
-    background-color: #222;
 }
 
 section.Admin>header .title {
@@ -21,6 +21,8 @@ section.Admin>header .title {
 section.Admin>.content {
     padding: 20px;
     position: relative;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 section.Admin section.Navigation {
