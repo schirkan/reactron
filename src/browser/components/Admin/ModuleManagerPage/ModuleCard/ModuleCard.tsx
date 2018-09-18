@@ -3,22 +3,23 @@ import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IModuleRepositoryItem } from '../../../../../interfaces/IModuleRepositoryItem';
+import UiCard from '../../UiCard/UiCard';
 
-import './ModuleTile.css';
+import './ModuleCard.css';
 
-interface IModuleTileProps {
+interface IModuleCardProps {
   module: IModuleRepositoryItem;
   update: (module: IModuleRepositoryItem) => void;
   rebuild: (module: IModuleRepositoryItem) => void;
   remove: (module: IModuleRepositoryItem) => void;
 }
 
-interface IModuleTileState {
+interface IModuleCardState {
   showActions: boolean;
 }
 
-export default class ModuleTile extends React.Component<IModuleTileProps, IModuleTileState> {
-  constructor(props: IModuleTileProps) {
+export default class ModuleCard extends React.Component<IModuleCardProps, IModuleCardState> {
+  constructor(props: IModuleCardProps) {
     super(props);
 
     this.state = {
@@ -30,7 +31,7 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
     const hideActions = () => this.setState({ showActions: false });
 
     let updateButton: JSX.Element;
-    if (this.props.module.canUpdate && this.props.module.hasUpdates) {
+    if (this.props.module.hasUpdate) {
       const onUpdate = () => {
         hideActions();
         this.props.update(this.props.module);
@@ -84,8 +85,10 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
 
     const showActions = () => this.setState({ showActions: true });
 
+    const className = 'footer default ' + (this.state.showActions ? 'hide' : 'show');
+
     return (
-      <div className="footer">
+      <div className={className}>
         <div className="version">{this.props.module.version}</div>
         {repoLink}
         <div className="clickable" onClick={showActions}><FontAwesomeIcon icon={SolidIcons.faCog} /> Modify</div>
@@ -95,7 +98,7 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
 
   public renderTitle() {
     let updateIcon: JSX.Element | undefined;
-    if (this.props.module.hasUpdates) {
+    if (this.props.module.hasUpdate) {
       updateIcon = <span className="hasUpdates"><FontAwesomeIcon icon={SolidIcons.faStarOfLife} /></span>;
     }
 
@@ -132,13 +135,13 @@ export default class ModuleTile extends React.Component<IModuleTileProps, IModul
 
   public render() {
     return (
-      <section className="ModuleTile">
+      <UiCard className="ModuleCard">
         {this.renderTitle()}
         {this.renderDescription()}
         {this.renderAuthor()}
         {this.renderFooter()}
         {this.renderActions()}
-      </section >
+      </UiCard>
     );
   }
 }

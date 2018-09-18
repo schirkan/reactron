@@ -15,15 +15,11 @@ export class ModuleController implements IExternalService {
             res.send(modules);
         });
 
-        registerRoute(helper.moduleApiRouter, routes.getModule, async (req, res) => {
-            console.log('ModuleController.get');
+        registerRoute(helper.moduleApiRouter, routes.checkUpdates, async (req, res) => {
+            console.log('ModuleController.checkUpdates');
 
-            const moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
-            if (moduleRepositoryItem) {
-                res.send(moduleRepositoryItem);
-            } else {
-                res.sendStatus(404);
-            }
+            const resultCheckUpdates = await helper.backendService.moduleManager.checkUpdates();
+            res.send([resultCheckUpdates]);
         });
 
         registerRoute(helper.moduleApiRouter, routes.addModule, async (req, res) => {
@@ -77,7 +73,7 @@ export class ModuleController implements IExternalService {
             const moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
             if (moduleRepositoryItem) {
                 const results: ICommandResult[] = [];
-                if (moduleRepositoryItem.hasUpdates) {
+                if (moduleRepositoryItem.hasUpdate) {
                     const resultUpdate = await helper.backendService.moduleManager.update(moduleRepositoryItem);
                     results.push(resultUpdate);
                     const resultInstall = await helper.backendService.moduleManager.install(moduleRepositoryItem);

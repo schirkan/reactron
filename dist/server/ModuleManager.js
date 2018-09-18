@@ -45,11 +45,6 @@ var ModuleManager = /** @class */ (function () {
         this.moduleRepository = moduleRepository;
         this.moduleLoader = moduleLoader;
         this.modulesRootPath = path.join(this.config.root, 'modules');
-        this.add = commandResultWrapper_1.wrapCall(this.add.bind(this), 'add');
-        this.build = commandResultWrapper_1.wrapCall(this.build.bind(this), 'build');
-        this.update = commandResultWrapper_1.wrapCall(this.update.bind(this), 'update');
-        this.remove = commandResultWrapper_1.wrapCall(this.remove.bind(this), 'remove');
-        this.install = commandResultWrapper_1.wrapCall(this.install.bind(this), 'install');
     }
     ModuleManager.prototype.loadAllModules = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -72,8 +67,9 @@ var ModuleManager = /** @class */ (function () {
         return this.moduleRepository.get(moduleName);
     };
     ModuleManager.prototype.add = function (repository) {
-        return __awaiter(this, void 0, void 0, function () {
-            var existingModule, parts, folderName, fullModulePath, result, moduleDefinition;
+        var _this = this;
+        return commandResultWrapper_1.command('install', repository, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var existingModule, parts, folderName, fullModulePath, resultGitClone, moduleDefinition;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -101,40 +97,39 @@ var ModuleManager = /** @class */ (function () {
                         }
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git clone ' + repository + ' ' + folderName, this.modulesRootPath)];
                     case 1:
-                        result = _a.sent();
-                        if (!result.success) return [3 /*break*/, 3];
+                        resultGitClone = _a.sent();
+                        result.children.push(resultGitClone);
+                        if (!resultGitClone.success) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.moduleLoader.loadModule(folderName)];
                     case 2:
                         moduleDefinition = _a.sent();
                         if (moduleDefinition) {
-                            result.data = moduleDefinition;
                             this.moduleRepository.add(moduleDefinition);
                         }
                         _a.label = 3;
-                    case 3: return [2 /*return*/, result];
+                    case 3: return [2 /*return*/, moduleDefinition];
                 }
             });
-        });
+        }); });
     };
     ModuleManager.prototype.update = function (moduleDefinition) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result;
+        var _this = this;
+        return commandResultWrapper_1.command('update', moduleDefinition.name, function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!moduleDefinition || !moduleDefinition.canUpdate) {
+                        if (!moduleDefinition) {
                             throw new Error('Can not update module');
                         }
                         return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git fetch --all && git reset --hard origin/master', moduleDefinition.path)];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/, result];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
-        });
+        }); });
     };
     ModuleManager.prototype.install = function (moduleDefinition) {
-        return __awaiter(this, void 0, void 0, function () {
+        var _this = this;
+        return commandResultWrapper_1.command('install', moduleDefinition.name, function () { return __awaiter(_this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -149,10 +144,11 @@ var ModuleManager = /** @class */ (function () {
                         return [2 /*return*/, result];
                 }
             });
-        });
+        }); });
     };
     ModuleManager.prototype.build = function (moduleDefinition) {
-        return __awaiter(this, void 0, void 0, function () {
+        var _this = this;
+        return commandResultWrapper_1.command('build', moduleDefinition.name, function () { return __awaiter(_this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -167,14 +163,76 @@ var ModuleManager = /** @class */ (function () {
                         return [2 /*return*/, result];
                 }
             });
-        });
+        }); });
     };
     ModuleManager.prototype.remove = function (moduleDefinition) {
-        if (!moduleDefinition || !moduleDefinition.canRemove) {
-            throw new Error('Can not remove module');
-        }
-        this.moduleRepository.remove(moduleDefinition.name);
-        return SystemCommand_1.SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
+        var _this = this;
+        return commandResultWrapper_1.command('remove', moduleDefinition.name, function () {
+            if (!moduleDefinition || !moduleDefinition.canRemove) {
+                throw new Error('Can not remove module');
+            }
+            _this.moduleRepository.remove(moduleDefinition.name);
+            return SystemCommand_1.SystemCommand.run('rimraf ' + moduleDefinition.path, _this.modulesRootPath);
+        });
+    };
+    ModuleManager.prototype.checkUpdates = function () {
+        var _this = this;
+        return commandResultWrapper_1.command('checkUpdates', undefined, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var modulesWithUpdate;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        modulesWithUpdate = [];
+                        return [4 /*yield*/, this.moduleRepository.getAll().forEach(function (item) { return __awaiter(_this, void 0, void 0, function () {
+                                var resultHasUpdate;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, this.hasUpdate(item)];
+                                        case 1:
+                                            resultHasUpdate = _a.sent();
+                                            result.children.push(resultHasUpdate);
+                                            if (resultHasUpdate.success) {
+                                                item.hasUpdate = resultHasUpdate.data;
+                                                if (item.hasUpdate) {
+                                                    modulesWithUpdate.push(item.name);
+                                                }
+                                            }
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, modulesWithUpdate];
+                }
+            });
+        }); });
+    };
+    ModuleManager.prototype.hasUpdate = function (moduleDefinition) {
+        var _this = this;
+        return commandResultWrapper_1.command('remove', moduleDefinition.name, function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var result1, result2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git remote -v update', moduleDefinition.path)];
+                    case 1:
+                        result1 = _a.sent();
+                        result.children.push(result1);
+                        if (result1.success === false) {
+                            return [2 /*return*/, false];
+                        }
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path)];
+                    case 2:
+                        result2 = _a.sent();
+                        result.children.push(result2);
+                        if (result2.success === false) {
+                            return [2 /*return*/, false];
+                        }
+                        return [2 /*return*/, result2.log[0] !== '0'];
+                }
+            });
+        }); });
     };
     ModuleManager.prototype.isDirEmpty = function (dirname) {
         try {

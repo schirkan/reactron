@@ -1,0 +1,63 @@
+section.ModuleManagerPage {
+    .overlay {
+        position: fixed;
+        z-index: 1;
+        background: rgba(99, 99, 99, 0.47);
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        section.Loading {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        section.CommandResult {
+            position: absolute;
+            margin: 20px;
+            top: 118px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            background: white;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+    }
+    .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 6px;
+        width: 18px;
+        min-width: 18px;
+        text-align: center;
+    }
+    >.addForm {
+        margin: 20px;
+        margin-bottom: 0;
+        position: relative;
+        display: flex;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+        background: whitesmoke;
+        color: #222;
+        box-sizing: border-box;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+        input {
+            padding-left: 6px;
+            border: none;
+            width: 100%;
+        }
+        .addButton {
+            float: right;
+            padding: 6px;
+            border-left: 1px solid #ddd;
+            white-space: nowrap;
+        }
+    }
+}

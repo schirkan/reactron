@@ -10,7 +10,7 @@ export class ApiClient {
 
     public getModules = apiCall(routes.getModules, true);
     public addModule = apiCall(routes.addModule);
-    public getModule = apiCall(routes.getModule);
+    public checkUpdates = apiCall(routes.checkUpdates);
     public deleteModule = apiCall(routes.deleteModule);
     public rebuildModule = apiCall(routes.rebuildModule);
     public updateModule = apiCall(routes.updateModule);

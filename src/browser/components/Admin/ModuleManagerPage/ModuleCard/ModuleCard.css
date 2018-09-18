@@ -1,0 +1,63 @@
+.ModuleCard {
+  position: relative; }
+  .ModuleCard > * {
+    padding: 6px; }
+  .ModuleCard > .title {
+    padding-left: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; }
+    .ModuleCard > .title > * {
+      margin-right: 6px; }
+    .ModuleCard > .title > .hasUpdates {
+      font-size: 10px;
+      color: #59aaff;
+      vertical-align: text-top; }
+  .ModuleCard > .description {
+    border-bottom: 1px solid #ddd; }
+  .ModuleCard > .author {
+    border-bottom: 1px solid #ddd; }
+    .ModuleCard > .author a {
+      color: #555; }
+  .ModuleCard > .footer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+    width: 100%;
+    background: #fafafa;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0; }
+    .ModuleCard > .footer > * {
+      text-align: center;
+      padding: 6px;
+      position: relative; }
+    .ModuleCard > .footer a {
+      color: #222;
+      text-decoration: none; }
+    .ModuleCard > .footer .disabled {
+      background: #eee;
+      color: #bbb;
+      user-select: none; }
+    .ModuleCard > .footer.default {
+      transition: 0.5s ease-in-out; }
+      .ModuleCard > .footer.default.hide {
+        margin-left: -100%; }
+      .ModuleCard > .footer.default > *:not(:first-child)::before {
+        border-left: 1px solid #ddd;
+        content: " ";
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        left: 0; }
+    .ModuleCard > .footer.actions {
+      position: absolute;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      transition: 0.5s ease-in-out;
+      margin-top: -33px; }
+      .ModuleCard > .footer.actions.hide {
+        margin-left: 100%; }
+      .ModuleCard > .footer.actions > *:not(:first-child) {
+        border-left: 1px solid #ddd; }

@@ -28,7 +28,7 @@ export class ModuleLoader {
         return result;
     }
 
-    public async loadModule(folderName: string): Promise<IModuleRepositoryItem | null> {
+    public async loadModule(folderName: string): Promise<IModuleRepositoryItem | undefined> {
         const packageFile = path.join(this.modulesPath, folderName, 'package.json');
         let p: any;
         try {
@@ -37,7 +37,7 @@ export class ModuleLoader {
             console.log('reading ' + packageFile);
         } catch (error) {
             console.log('Error reading package.json', error);
-            return null;
+            return;
         }
 
         const moduleDefinition = {
@@ -67,37 +67,17 @@ export class ModuleLoader {
 
         if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
             console.log('No module in folder ' + folderName);
-            return null;
+            return;
         }
         moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
-        moduleDefinition.canUpdate = !!moduleDefinition.repository;
         moduleDefinition.canInstall = !!(
             (p.dependencies && Object.keys(p.dependencies).length) ||
             (p.devDependencies && Object.keys(p.devDependencies.length))
         );
         moduleDefinition.canRemove = true;
         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
-        moduleDefinition.hasUpdates = await this.hasUpdates(moduleDefinition);
 
         console.log('Module loaded: ' + moduleDefinition.name);
         return moduleDefinition;
     };
-
-    public async hasUpdates(moduleDefinition: IModuleRepositoryItem): Promise<boolean> {
-        if (!moduleDefinition || !moduleDefinition.canUpdate) {
-            return false;
-        }
-
-        const result1 = await SystemCommand.run('git remote -v update', moduleDefinition.path);
-        if (result1.success === false) {
-            return false;
-        }
-
-        const result2 = await SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path);
-        if (result2.success === false) {
-            return false;
-        }
-
-        return result2.log[0] !== '0';
-    }
 }

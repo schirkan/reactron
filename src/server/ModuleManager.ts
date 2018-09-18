@@ -3,7 +3,7 @@ import * as path from 'path';
 import { IBackendServiceConfig } from "../interfaces/IBackendServiceConfig";
 import { ICommandResult, ICommandResultWithData } from "../interfaces/ICommandResult";
 import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
-import { wrapCall } from './commandResultWrapper';
+import { command } from './commandResultWrapper';
 import { ModuleLoader } from "./ModuleLoader";
 import { ModuleRepository } from "./ModuleRepository";
 import { SystemCommand } from "./SystemCommand";
@@ -17,12 +17,6 @@ export class ModuleManager {
         private moduleLoader: ModuleLoader,
     ) {
         this.modulesRootPath = path.join(this.config.root, 'modules');
-
-        this.add = wrapCall(this.add.bind(this), 'add');
-        this.build = wrapCall(this.build.bind(this), 'build');
-        this.update = wrapCall(this.update.bind(this), 'update');
-        this.remove = wrapCall(this.remove.bind(this), 'remove');
-        this.install = wrapCall(this.install.bind(this), 'install');
     }
 
     public async loadAllModules(): Promise<void> {
@@ -38,84 +32,133 @@ export class ModuleManager {
         return this.moduleRepository.get(moduleName);
     }
 
-    public async add(repository: string): Promise<ICommandResultWithData<IModuleRepositoryItem | undefined>> {
-        repository = (repository || '').trim();
+    public add(repository: string): Promise<ICommandResultWithData<IModuleRepositoryItem | undefined>> {
+        return command<IModuleRepositoryItem | undefined>('install', repository, async (result) => {
+            repository = (repository || '').trim();
 
-        // remove / from end
-        if (repository.endsWith('/')) {
-            repository = repository.substr(0, repository.length - 1);
-        }
-        // remove .git from end
-        if (repository.endsWith('.git')) {
-            repository = repository.substr(0, repository.length - 4);
-        }
-        if (!repository) {
-            throw new Error('Invalid repository');
-        }
-        
-        const existingModule = this.getAll().find(x => x.repository === repository);
-        if (existingModule) {
-            throw new Error('Module already exists');
-        }
-
-        const parts = repository.split('/');
-        const folderName = parts[parts.length - 1];
-
-        // check destination folder 
-        const fullModulePath = path.join(this.modulesRootPath, folderName);
-        if (!this.isDirEmpty(fullModulePath)) {
-            throw new Error('Destination folder already exists');
-        }
-
-        const result = await SystemCommand.run('git clone ' + repository + ' ' + folderName, this.modulesRootPath) as ICommandResultWithData<IModuleRepositoryItem>;
-
-        if (result.success) {
-            const moduleDefinition = await this.moduleLoader.loadModule(folderName);
-            if (moduleDefinition) {
-                result.data = moduleDefinition;
-                this.moduleRepository.add(moduleDefinition);
+            // remove / from end
+            if (repository.endsWith('/')) {
+                repository = repository.substr(0, repository.length - 1);
             }
-        }
+            // remove .git from end
+            if (repository.endsWith('.git')) {
+                repository = repository.substr(0, repository.length - 4);
+            }
+            if (!repository) {
+                throw new Error('Invalid repository');
+            }
 
-        return result;
+            const existingModule = this.getAll().find(x => x.repository === repository);
+            if (existingModule) {
+                throw new Error('Module already exists');
+            }
+
+            const parts = repository.split('/');
+            const folderName = parts[parts.length - 1];
+
+            // check destination folder 
+            const fullModulePath = path.join(this.modulesRootPath, folderName);
+            if (!this.isDirEmpty(fullModulePath)) {
+                throw new Error('Destination folder already exists');
+            }
+
+            const resultGitClone = await SystemCommand.run('git clone ' + repository + ' ' + folderName, this.modulesRootPath);
+            result.children.push(resultGitClone);
+
+            let moduleDefinition: IModuleRepositoryItem | undefined;
+
+            if (resultGitClone.success) {
+                moduleDefinition = await this.moduleLoader.loadModule(folderName);
+                if (moduleDefinition) {
+                    this.moduleRepository.add(moduleDefinition);
+                }
+            }
+
+            return moduleDefinition;
+        });
     }
 
-    public async update(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
-        if (!moduleDefinition || !moduleDefinition.canUpdate) {
-            throw new Error('Can not update module');
-        }
+    public update(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
+        return command('update', moduleDefinition.name, async () => {
+            if (!moduleDefinition) {
+                throw new Error('Can not update module');
+            }
 
-        const result = await SystemCommand.run('git fetch --all && git reset --hard origin/master', moduleDefinition.path);
-        return result;
+            return await SystemCommand.run('git fetch --all && git reset --hard origin/master', moduleDefinition.path);
+        });
     }
 
-    public async install(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
-        if (!moduleDefinition || !moduleDefinition.canInstall) {
-            throw new Error('Can not install module');
-        }
+    public install(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
+        return command('install', moduleDefinition.name, async () => {
+            if (!moduleDefinition || !moduleDefinition.canInstall) {
+                throw new Error('Can not install module');
+            }
 
-        const result = await SystemCommand.run('npm install', moduleDefinition.path);
-        moduleDefinition.isInstalled = moduleDefinition.isInstalled || result.success;
-        return result;
+            const result = await SystemCommand.run('npm install', moduleDefinition.path);
+            moduleDefinition.isInstalled = moduleDefinition.isInstalled || result.success;
+            return result;
+        });
     }
 
-    public async build(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
-        if (!moduleDefinition || !moduleDefinition.canBuild) {
-            throw new Error('Can not build module');
-        }
+    public build(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
+        return command('build', moduleDefinition.name, async () => {
+            if (!moduleDefinition || !moduleDefinition.canBuild) {
+                throw new Error('Can not build module');
+            }
 
-        const result = await SystemCommand.run('npm run build', moduleDefinition.path);
-        moduleDefinition.isBuilded = moduleDefinition.isBuilded || result.success;
-        return result;
+            const result = await SystemCommand.run('npm run build', moduleDefinition.path);
+            moduleDefinition.isBuilded = moduleDefinition.isBuilded || result.success;
+            return result;
+        });
     }
 
     public remove(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
-        if (!moduleDefinition || !moduleDefinition.canRemove) {
-            throw new Error('Can not remove module');
-        }
+        return command('remove', moduleDefinition.name, () => {
+            if (!moduleDefinition || !moduleDefinition.canRemove) {
+                throw new Error('Can not remove module');
+            }
 
-        this.moduleRepository.remove(moduleDefinition.name);
-        return SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
+            this.moduleRepository.remove(moduleDefinition.name);
+            return SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
+        });
+    }
+
+    public checkUpdates(): Promise<ICommandResultWithData<string[]>> {
+        return command<string[]>('checkUpdates', undefined, async (result) => {
+            const modulesWithUpdate: string[] = [];
+
+            await this.moduleRepository.getAll().forEach(async item => {
+                const resultHasUpdate = await this.hasUpdate(item);
+                result.children.push(resultHasUpdate);
+
+                if (resultHasUpdate.success) {
+                    item.hasUpdate = resultHasUpdate.data;
+                    if (item.hasUpdate) {
+                        modulesWithUpdate.push(item.name);
+                    }
+                }
+            });
+
+            return modulesWithUpdate;
+        });
+    }
+
+    public hasUpdate(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResultWithData<boolean>> {
+        return command<boolean>('remove', moduleDefinition.name, async (result) => {
+            const result1 = await SystemCommand.run('git remote -v update', moduleDefinition.path);
+            result.children.push(result1);
+            if (result1.success === false) {
+                return false;
+            }
+
+            const result2 = await SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path);
+            result.children.push(result2);
+            if (result2.success === false) {
+                return false;
+            }
+
+            return result2.log[0] !== '0';
+        });
     }
 
     private isDirEmpty(dirname: string): boolean {

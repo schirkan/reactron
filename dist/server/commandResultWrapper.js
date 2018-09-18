@@ -36,17 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wrapCall = function (callback, commandName) {
-    if (commandName === void 0) { commandName = undefined; }
-    commandName = commandName || callback.prototype.name + '.' + callback.name;
-    return function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        return exports.command(commandName, args, function () { return callback.apply(void 0, args); });
-    };
-};
 exports.command = function (commandName, args, callback) { return __awaiter(_this, void 0, void 0, function () {
     var result, callbackResult, innerResult, error_1, message;
     return __generator(this, function (_a) {

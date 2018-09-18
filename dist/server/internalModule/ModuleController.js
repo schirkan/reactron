@@ -54,18 +54,18 @@ var ModuleController = /** @class */ (function () {
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var moduleRepositoryItem;
+                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.checkUpdates, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var resultCheckUpdates;
                     return __generator(this, function (_a) {
-                        console.log('ModuleController.get');
-                        moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
-                        if (moduleRepositoryItem) {
-                            res.send(moduleRepositoryItem);
+                        switch (_a.label) {
+                            case 0:
+                                console.log('ModuleController.checkUpdates');
+                                return [4 /*yield*/, helper.backendService.moduleManager.checkUpdates()];
+                            case 1:
+                                resultCheckUpdates = _a.sent();
+                                res.send([resultCheckUpdates]);
+                                return [2 /*return*/];
                         }
-                        else {
-                            res.sendStatus(404);
-                        }
-                        return [2 /*return*/];
                     });
                 }); });
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
@@ -149,7 +149,7 @@ var ModuleController = /** @class */ (function () {
                                 moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 5];
                                 results = [];
-                                if (!moduleRepositoryItem.hasUpdates) return [3 /*break*/, 4];
+                                if (!moduleRepositoryItem.hasUpdate) return [3 /*break*/, 4];
                                 return [4 /*yield*/, helper.backendService.moduleManager.update(moduleRepositoryItem)];
                             case 1:
                                 resultUpdate = _a.sent();

@@ -1,11 +1,11 @@
 section.Navigation {
     background: #456;
-    display: flex;
     width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
 }
 
 section.Navigation a {
-    width: 20%;
     padding-bottom: 8px;
     padding-top: 11px;
     color: white;

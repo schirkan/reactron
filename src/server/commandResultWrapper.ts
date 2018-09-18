@@ -1,13 +1,8 @@
-import { ICommandResult, ICommandResultWithData } from "../interfaces/ICommandResult";
+import { ICommandResultWithData } from "../interfaces/ICommandResult";
 
-export const wrapCall = (callback: (...args: any[]) => Promise<any>, commandName: string | undefined = undefined) => {
-    commandName = commandName || callback.prototype.name + '.' + callback.name;
-    return (...args: any[]) => {
-        return command(commandName, args, () => callback(...args));
-    };
-}
-
-export const command = async <T = void>(commandName: string | undefined, args: any, callback: (result: ICommandResultWithData<T>) => Promise<T> | T): Promise<ICommandResultWithData<T>> => {
+export const command = async <T = void>(commandName: string | undefined, args: any,
+    callback: (result: ICommandResultWithData<T>) => Promise<T> | T | Promise<ICommandResultWithData<T>> | ICommandResultWithData<T>)
+    : Promise<ICommandResultWithData<T>> => {
     const result = {
         args: args ? JSON.stringify(args) : '',
         children: [],
@@ -22,7 +17,7 @@ export const command = async <T = void>(commandName: string | undefined, args: a
     console.log('Start Command: ' + result.command + ' ' + result.args);
 
     try {
-        const callbackResult = await Promise.resolve(callback(result));
+        const callbackResult = await Promise.resolve(callback(result) as any);
         // check if callbackResult is ICommandResult
         if (callbackResult && callbackResult.hasOwnProperty('success') && callbackResult.hasOwnProperty('command')) {
             const innerResult = callbackResult as any as ICommandResultWithData<T>;
@@ -32,7 +27,7 @@ export const command = async <T = void>(commandName: string | undefined, args: a
         } else if (callbackResult) {
             result.data = callbackResult;
         }
-        
+
         // evaluate success
         if (result.success === undefined) {
             if (result.children.length) {

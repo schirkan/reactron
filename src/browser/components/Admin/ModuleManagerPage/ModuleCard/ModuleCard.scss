@@ -1,0 +1,85 @@
+.ModuleCard {
+    position: relative;
+    >* {
+        padding: 6px;
+    }
+    >.title {
+        padding-left: 10px;
+        border-bottom: 1px solid #ddd;
+        font-size: 16px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        >* {
+            margin-right: 6px;
+        }
+        >.hasUpdates {
+            font-size: 10px;
+            color: rgb(89, 170, 255);
+            vertical-align: text-top;
+        }
+    }
+    >.description {
+        border-bottom: 1px solid #ddd;
+    }
+    >.author {
+        border-bottom: 1px solid #ddd;
+        a {
+            color: #555;
+        }
+    }
+    >.footer {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+        width: 100%;
+        background: #fafafa;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        >* {
+            text-align: center;
+            padding: 6px;
+            position: relative;
+        }
+        a {
+            color: #222;
+            text-decoration: none;
+        }
+        .disabled {
+            background: #eee;
+            color: #bbb;
+            user-select: none;
+        }
+        &.default {
+            // transform: translateX(0%);
+            transition: 0.5s ease-in-out;
+            &.hide {
+                // transform: translateX(-100%);
+                margin-left: -100%;
+            }
+            >*:not(:first-child)::before {
+                border-left: 1px solid #ddd;
+                content: " ";
+                position: absolute;
+                top: 6px;
+                bottom: 6px;
+                left: 0;
+            }
+        }
+        &.actions {
+            // transform: translateY(-100%);
+            position: absolute;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            transition: 0.5s ease-in-out;
+            margin-top: -33px;
+            &.hide {
+                // transform: translateY(-100%) translateX(100%);
+                margin-left: 100%;
+            }
+            >*:not(:first-child) {
+                border-left: 1px solid #ddd;
+            }
+        }
+    }
+}

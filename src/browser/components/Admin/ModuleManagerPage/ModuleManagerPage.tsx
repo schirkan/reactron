@@ -5,8 +5,10 @@ import { ICommandResult } from '../../../../interfaces/ICommandResult';
 import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryItem';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
+import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
+import UiGridLayout from '../UiGridLayout/UiGridLayout';
 import CommandResult from './CommandResult/CommandResult';
-import ModuleTile from './ModuleTile/ModuleTile';
+import ModuleCard from './ModuleCard/ModuleCard';
 
 import './ModuleManagerPage.css';
 
@@ -43,7 +45,7 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
   }
 
   public async update(module: IModuleRepositoryItem): Promise<void> {
-    if (!module.canUpdate) {
+    if (!module.hasUpdate) {
       return
     };
 
@@ -162,15 +164,31 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     );
   }
 
+  public renderModules() {
+    return (
+      <UiFlowLayout>
+        {this.state.modules.map(item =>
+          <ModuleCard key={item.name} module={item} remove={this.remove}
+            rebuild={this.rebuild} update={this.update} />)}
+            
+        {this.state.modules.map(item =>
+          <ModuleCard key={item.name + "2"} module={item} remove={this.remove}
+            rebuild={this.rebuild} update={this.update} />)}
+            
+        {this.state.modules.map(item =>
+          <ModuleCard key={item.name + "3"} module={item} remove={this.remove}
+            rebuild={this.rebuild} update={this.update} />)}
+      </UiFlowLayout>
+    );
+  }
+
   public render() {
     return (
       <section className="ModuleManagerPage">
         {this.renderLoading()}
         {this.renderResult()}
         {this.renderAdd()}
-        {this.state.modules.map(item =>
-          <ModuleTile key={item.name} module={item} remove={this.remove}
-            rebuild={this.rebuild} update={this.update} />)}
+        {this.renderModules()}
       </section>
     );
   }
