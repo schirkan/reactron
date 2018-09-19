@@ -1,55 +1,35 @@
 section.Admin {
-    height: 100%;
-    overflow: auto;
-    background: #fdfdfd;
-}
-
-section.Admin>header {
+  height: 100%;
+  overflow: auto;
+  background: #fdfdfd; }
+  section.Admin > header {
     background-color: #456;
     color: white;
     position: relative;
-    z-index: 2;
-}
-
-section.Admin>header .title {
-    display: inline-block;
-    font-size: 1.5em;
-    margin: 25px;
-    text-align: center;
-}
-
-section.Admin>.content {
+    z-index: 2; }
+    section.Admin > header .title {
+      display: inline-block;
+      font-size: 1.5em;
+      margin: 25px;
+      text-align: center; }
+  section.Admin > .content {
     position: relative;
     font-size: 14px;
-    line-height: 1.5;
-}
-
-section.Admin section.Navigation {
+    line-height: 1.5; }
+  section.Admin section.Navigation {
     position: sticky;
     top: 0;
-    z-index: 2;
-}
-
-section.Admin a,
-section.Admin .clickable {
+    z-index: 2; }
+  section.Admin a,
+  section.Admin .clickable {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-section.Admin .clickable {
     cursor: pointer;
-    user-select: none;
-}
-
-section.Admin .clickable:hover {
-    background: #fff;
-}
-
-section.Admin .clickable:active {
-    background: #ddd;
-}
-
-section.Admin select,
-section.Admin textarea,
-section.Admin input {
-    font-size: 16px;
-}
+    user-select: none; }
+  section.Admin .clickable:hover {
+    background: #fff; }
+  section.Admin .clickable:active {
+    background: #ddd; }
+  section.Admin select,
+  section.Admin textarea,
+  section.Admin input {
+    font-size: 16px; }

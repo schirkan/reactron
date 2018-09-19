@@ -1,0 +1,64 @@
+section.Navigation {
+    background: #456;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+    a {
+        padding-bottom: 8px;
+        padding-top: 11px;
+        color: white;
+        text-decoration: none;
+        border-bottom: 3px solid transparent;
+        text-align: center;
+        transition: 0.5s;
+        &:hover,
+        &:active {
+            background: transparent;
+        }
+        &:nth-child(1) {
+            &.active {
+                background: rgb(74, 133, 153);
+            }
+            &.active,
+            &:hover {
+                border-bottom: 3px solid rgb(66, 225, 247);
+            }
+        }
+        &:nth-child(2) {
+            &.active {
+                background: rgb(105, 0, 111);
+            }
+            &.active,
+            &:hover {
+                border-bottom: 3px solid rgb(240, 0, 255);
+            }
+        }
+        &:nth-child(3) {
+            &.active {
+                background: rgb(95, 86, 0);
+            }
+            &.active,
+            &:hover {
+                border-bottom: 3px solid rgb(255, 231, 0);
+            }
+        }
+        &:nth-child(4) {
+            &.active {
+                background: rgb(47, 97, 8);
+            }
+            &.active,
+            &:hover {
+                border-bottom: 3px solid rgb(116, 238, 21);
+            }
+        }
+        &:nth-child(5) {
+            &.active {
+                background: rgb(0, 16, 134);
+            }
+            &.active,
+            &:hover {
+                border-bottom: 3px solid rgb(0, 30, 255);
+            }
+        }
+    }
+}

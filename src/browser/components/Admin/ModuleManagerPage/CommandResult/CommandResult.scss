@@ -1,0 +1,17 @@
+section.CommandResult {
+    >.title,
+    >.results>.result {
+        padding: 6px;
+        border-bottom: 1px solid #ddd;
+    }
+    >.results {
+        overflow: auto;
+        position: absolute;
+        top: 34px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        word-wrap: break-word;
+    }
+}

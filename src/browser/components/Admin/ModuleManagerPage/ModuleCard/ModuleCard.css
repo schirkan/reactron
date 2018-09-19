@@ -11,7 +11,7 @@
     overflow: hidden; }
     .ModuleCard > .title > * {
       margin-right: 6px; }
-    .ModuleCard > .title > .hasUpdates {
+    .ModuleCard > .title > .hasUpdate {
       font-size: 10px;
       color: #59aaff;
       vertical-align: text-top; }

@@ -1,26 +1,19 @@
 a.RoundButton {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    color: white;
-    border: 3px solid white;
-    border-radius: 18px;
-    padding: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    min-width: 80px;
-    text-align: center;
-}
-
-a.RoundButton:hover {
-    background: rgba(255, 255, 255, 0.178);
-}
-
-a.RoundButton~a.RoundButton {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: white;
+  border: 3px solid white;
+  border-radius: 18px;
+  padding: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  min-width: 80px;
+  text-align: center; }
+  a.RoundButton:hover {
+    background: rgba(255, 255, 255, 0.178); }
+  a.RoundButton ~ a.RoundButton {
     transform: translateX(-100%);
-    margin-right: 10px;
-}
-
-a.RoundButton svg {
-    margin-right: 6px;
-}
+    margin-right: 10px; }
+  a.RoundButton svg {
+    margin-right: 6px; }

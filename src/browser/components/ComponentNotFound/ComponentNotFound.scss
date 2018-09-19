@@ -1,0 +1,9 @@
+section.ComponentNotFound {
+    text-align: center;
+    .text {
+        margin-top: 10px;
+        span~span {
+            margin-left: 6px;
+        }
+    }
+}

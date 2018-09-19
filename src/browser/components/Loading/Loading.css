@@ -1,8 +1,5 @@
 section.Loading {
-    text-align: center;
-    color: white;
-}
-
-section.Loading .text {
-    margin-top: 10px;
-}
+  text-align: center;
+  color: white; }
+  section.Loading .text {
+    margin-top: 10px; }

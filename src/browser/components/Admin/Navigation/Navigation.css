@@ -1,66 +1,35 @@
 section.Navigation {
-    background: #456;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
-}
-
-section.Navigation a {
+  background: #456;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); }
+  section.Navigation a {
     padding-bottom: 8px;
     padding-top: 11px;
     color: white;
     text-decoration: none;
     border-bottom: 3px solid transparent;
     text-align: center;
-    transition: 0.5s;
-}
-
-section.Navigation a:hover,
-section.Navigation a:active {
-    background: transparent;
-}
-
-section.Navigation a:nth-child(1).active {
-    background: rgb(74, 133, 153);
-    border-bottom: 3px solid rgb(66, 225, 247);
-}
-
-section.Navigation a:nth-child(1):hover {
-    border-bottom: 3px solid rgb(66, 225, 247);
-}
-
-section.Navigation a:nth-child(2).active {
-    background: rgb(105, 0, 111);
-    border-bottom: 3px solid rgb(240, 0, 255);
-}
-
-section.Navigation a:nth-child(2):hover {
-    border-bottom: 3px solid rgb(240, 0, 255);
-}
-
-section.Navigation a:nth-child(3).active {
-    background: rgb(95, 86, 0);
-    border-bottom: 3px solid rgb(255, 231, 0);
-}
-
-section.Navigation a:nth-child(3):hover {
-    border-bottom: 3px solid rgb(255, 231, 0);
-}
-
-section.Navigation a:nth-child(4).active {
-    background: rgb(47, 97, 8);
-    border-bottom: 3px solid rgb(116, 238, 21);
-}
-
-section.Navigation a:nth-child(4):hover {
-    border-bottom: 3px solid rgb(116, 238, 21);
-}
-
-section.Navigation a:nth-child(5).active {
-    background: rgb(0, 16, 134);
-    border-bottom: 3px solid rgb(0, 30, 255);
-}
-
-section.Navigation a:nth-child(5):hover {
-    border-bottom: 3px solid rgb(0, 30, 255);
-}
+    transition: 0.5s; }
+    section.Navigation a:hover, section.Navigation a:active {
+      background: transparent; }
+    section.Navigation a:nth-child(1).active {
+      background: #4a8599; }
+    section.Navigation a:nth-child(1).active, section.Navigation a:nth-child(1):hover {
+      border-bottom: 3px solid #42e1f7; }
+    section.Navigation a:nth-child(2).active {
+      background: #69006f; }
+    section.Navigation a:nth-child(2).active, section.Navigation a:nth-child(2):hover {
+      border-bottom: 3px solid #f000ff; }
+    section.Navigation a:nth-child(3).active {
+      background: #5f5600; }
+    section.Navigation a:nth-child(3).active, section.Navigation a:nth-child(3):hover {
+      border-bottom: 3px solid #ffe700; }
+    section.Navigation a:nth-child(4).active {
+      background: #2f6108; }
+    section.Navigation a:nth-child(4).active, section.Navigation a:nth-child(4):hover {
+      border-bottom: 3px solid #74ee15; }
+    section.Navigation a:nth-child(5).active {
+      background: #001086; }
+    section.Navigation a:nth-child(5).active, section.Navigation a:nth-child(5):hover {
+      border-bottom: 3px solid #001eff; }

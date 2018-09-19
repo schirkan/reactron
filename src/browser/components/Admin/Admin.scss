@@ -1,0 +1,44 @@
+section.Admin {
+    height: 100%;
+    overflow: auto;
+    background: #fdfdfd;
+    >header {
+        background-color: #456;
+        color: white;
+        position: relative;
+        z-index: 2;
+        .title {
+            display: inline-block;
+            font-size: 1.5em;
+            margin: 25px;
+            text-align: center;
+        }
+    }
+    >.content {
+        position: relative;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    section.Navigation {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+    a,
+    .clickable {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        cursor: pointer;
+        user-select: none;
+    }
+    .clickable:hover {
+        background: #fff;
+    }
+    .clickable:active {
+        background: #ddd;
+    }
+    select,
+    textarea,
+    input {
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,23 @@
+section.Welcome {
+    background-color: #222;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    .title {
+        font-size: 1.5em;
+        margin: 1.5em;
+    }
+    .logo {
+        animation: Welcome-logo-spin infinite 20s linear;
+        height: 80px;
+    }
+}
+
+@keyframes Welcome-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
