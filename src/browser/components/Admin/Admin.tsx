@@ -1,7 +1,7 @@
 import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import RoundButton from '../RoundButton/RoundButton';
 import ModuleManagerPage from './ModuleManagerPage/ModuleManagerPage';
 import Navigation from './Navigation/Navigation';
@@ -30,6 +30,7 @@ export default class Admin extends React.Component {
             <Route path="/admin/Pages" component={PageManagerPage} />
             <Route path="/admin/Settings" component={SettingsManagerPage} />
             <Route path="/admin/System" component={SystemPage} />
+            <Redirect to="/admin/ModuleManager" />
           </Switch>
         </div>
       </section>

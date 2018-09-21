@@ -1,25 +1,30 @@
-section.SystemPage button {
-  display: block;
-  width: 210px;
-  padding: 4px;
-  margin: 4px;
-  font-size: 20px;
-  text-align: left; }
-  section.SystemPage button svg {
-    margin-right: 5px; }
+section.SystemPage .ui-card > * {
+  padding: 6px; }
 
-section.SystemPage fieldset {
-  border-radius: 8px; }
-  section.SystemPage fieldset ~ fieldset {
-    margin-top: 6px; }
-  section.SystemPage fieldset.danger {
-    border: 1px solid red; }
-    section.SystemPage fieldset.danger legend {
-      color: red; }
-  section.SystemPage fieldset.information ul {
+section.SystemPage .title {
+  padding-left: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px; }
+
+section.SystemPage .clickable {
+  float: left;
+  width: 50%;
+  box-sizing: border-box; }
+  section.SystemPage .clickable svg {
+    margin: 0 6px; }
+
+section.SystemPage .danger {
+  border: 1px solid red; }
+  section.SystemPage .danger .title {
+    color: red; }
+
+section.SystemPage .information {
+  height: 156px; }
+  section.SystemPage .information section.Loading {
+    margin-top: 20px; }
+  section.SystemPage .information ul {
     list-style: none;
-    padding: 0;
     margin: 0; }
-  section.SystemPage fieldset.information .label {
-    width: 100px;
-    display: inline-block; }
+    section.SystemPage .information ul span:first-child {
+      width: 100px;
+      display: inline-block; }

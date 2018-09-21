@@ -78,9 +78,11 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
   public renderFooter() {
     let repoLink = <div />;
     if (this.props.module.repository) {
-      repoLink = (<a className="clickable" href={this.props.module.repository}>
+      repoLink = (
+      <a className="clickable" href={this.props.module.repository} target="_blank">
         <FontAwesomeIcon icon={BrandIcons.faGithub} /> GitHub
-      </a>);
+      </a>
+      );
     }
 
     const showActions = () => this.setState({ showActions: true });

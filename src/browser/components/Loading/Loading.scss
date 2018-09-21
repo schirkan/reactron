@@ -1,6 +1,10 @@
 section.Loading {
     text-align: center;
-    color: white;
+    &.center{
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
     .text {
         margin-top: 10px;
     }

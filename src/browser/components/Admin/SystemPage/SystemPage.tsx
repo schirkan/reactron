@@ -4,6 +4,8 @@ import * as React from 'react';
 import { IServerInfo } from '../../../../interfaces/IServerInfo';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
+import UiCard from '../UiCard/UiCard';
+import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
 
 import './SystemPage.css';
 
@@ -49,78 +51,100 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
     apiClient.resetApplication();
   }
 
-  public renderInformation() {
+  public renderInformationCard() {
+    let content;
     if (!this.state.info) {
-      return <Loading />;
-    }
-
-    const free = Math.round(this.state.info.memory.free / 1024 / 1024);
-    const total = Math.round(this.state.info.memory.total / 1024 / 1024);
-    return (
-      <fieldset className="information">
-        <legend>Information</legend>
+      content = <Loading />;
+    } else {
+      const free = Math.round(this.state.info.memory.free / 1024 / 1024);
+      const total = Math.round(this.state.info.memory.total / 1024 / 1024);
+      content = (
         <ul>
           <li>
-            <span className="label">Version</span>
-            <span className="value">{this.state.info.version}</span>
+            <span>Version</span>
+            <span>{this.state.info.version}</span>
           </li>
           <li>
-            <span className="label">CPU</span>
-            <span className="value">{this.state.info.cpu.count} x {this.state.info.cpu.speed} MHz</span>
+            <span>CPU</span>
+            <span>{this.state.info.cpu.count} x {this.state.info.cpu.speed} MHz</span>
           </li>
           <li>
-            <span className="label">Memory</span>
-            <span className="value">{free} MB / {total} MB</span>
+            <span>Memory</span>
+            <span>{free} MB / {total} MB</span>
           </li>
           <li>
-            <span className="label">IP</span>
-            <span className="value">{this.state.info.ip}</span>
+            <span>IP</span>
+            <span>{this.state.info.ip}</span>
           </li>
           <li>
-            <span className="label">Hostname</span>
-            <span className="value">{this.state.info.hostname}</span>
+            <span>Hostname</span>
+            <span>{this.state.info.hostname}</span>
           </li>
         </ul>
-      </fieldset>
+      );
+    }
+
+    return (
+      <UiCard className="information">
+        <div className="title">Information</div>
+        {content}
+      </UiCard>
+    );
+  }
+
+  public renderApplicationCard() {
+    return (
+      <UiCard>
+        <div className="title">Application</div>
+        <div className="clickable" onClick={this.exitApplication}>
+          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSignOutAlt} />
+          Exit
+        </div>
+        <div className="clickable" onClick={this.restartApplication}>
+          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
+          Restart
+        </div>
+      </UiCard>
+    );
+  }
+
+  public renderSystemCard() {
+    return (
+      <UiCard>
+        <div className="title">System</div>
+        <div className="clickable" onClick={this.shutdownSystem}>
+          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faPowerOff} />
+          Shutdown
+        </div>
+        <div className="clickable" onClick={this.rebootSystem}>
+          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
+          Reboot
+        </div>
+      </UiCard>
+    );
+  }
+
+  public renderDangerCard() {
+    return (
+      <UiCard className="danger">
+        <div className="title">Danger Zone</div>
+        <div className="clickable" onClick={this.resetApplication}>
+          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationTriangle} />
+          Reset Application
+        </div>
+      </UiCard>
     );
   }
 
   public render() {
     return (
       <section className="SystemPage">
-        {this.renderInformation()}
-
-        <fieldset>
-          <legend>Application</legend>
-          <button onClick={this.exitApplication}>
-            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSignOutAlt} />
-            Exit Application
-          </button>
-          <button onClick={this.restartApplication}>
-            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
-            Restart Application
-          </button>
-        </fieldset>
-
-        <fieldset>
-          <legend>System</legend>
-          <button onClick={this.shutdownSystem}>
-            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faPowerOff} />
-            Shutdown System
-          </button>
-          <button onClick={this.rebootSystem}>
-            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
-            Reboot System
-          </button>
-        </fieldset>
-
-        <fieldset className="danger">
-          <legend>Danger Zone</legend>
-          <button onClick={this.resetApplication}>
-            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationCircle} />
-            Reset Application
-          </button>
-        </fieldset>
+        <UiFlowLayout>
+          {this.renderInformationCard()}
+          {this.renderApplicationCard()}
+          {this.renderSystemCard()}
+          {this.renderDangerCard()}
+        </UiFlowLayout>
       </section>
     );
   }

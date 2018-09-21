@@ -36,15 +36,7 @@ section.ModuleManagerPage .close {
 section.ModuleManagerPage > .addForm {
   margin: 20px;
   margin-bottom: 0;
-  position: relative;
-  display: flex;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-  background: whitesmoke;
-  color: #222;
-  box-sizing: border-box;
-  overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px; }
+  display: flex; }
   section.ModuleManagerPage > .addForm input {
     padding-left: 6px;
     border: none;

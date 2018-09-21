@@ -5,6 +5,7 @@ import { ICommandResult } from '../../../../interfaces/ICommandResult';
 import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryItem';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
+import UiCard from '../UiCard/UiCard';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
 import UiGridLayout from '../UiGridLayout/UiGridLayout';
 import CommandResult from './CommandResult/CommandResult';
@@ -155,12 +156,12 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     let input: HTMLInputElement | null;
     const onAdd = () => this.add(input && input.value);
     return (
-      <div className="addForm">
+      <UiCard className="addForm">
         <input ref={el => input = el} placeholder="GitHub Repository URL" />
         <div className="addButton clickable" onClick={onAdd}>
           <FontAwesomeIcon icon={SolidIcons.faPlus} /> Add
         </div>
-      </div>
+      </UiCard>
     );
   }
 
@@ -169,14 +170,6 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
       <UiFlowLayout>
         {this.state.modules.map(item =>
           <ModuleCard key={item.name} module={item} remove={this.remove}
-            rebuild={this.rebuild} update={this.update} />)}
-            
-        {this.state.modules.map(item =>
-          <ModuleCard key={item.name + "2"} module={item} remove={this.remove}
-            rebuild={this.rebuild} update={this.update} />)}
-            
-        {this.state.modules.map(item =>
-          <ModuleCard key={item.name + "3"} module={item} remove={this.remove}
             rebuild={this.rebuild} update={this.update} />)}
       </UiFlowLayout>
     );

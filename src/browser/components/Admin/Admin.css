@@ -19,12 +19,14 @@ section.Admin {
   section.Admin section.Navigation {
     position: sticky;
     top: 0;
-    z-index: 2; }
+    z-index: 2;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); }
   section.Admin a,
   section.Admin .clickable {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     cursor: pointer;
-    user-select: none; }
+    user-select: none;
+    white-space: nowrap; }
   section.Admin .clickable:hover {
     background: #fff; }
   section.Admin .clickable:active {
