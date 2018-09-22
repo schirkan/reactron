@@ -1,0 +1,13 @@
+section.AddModuleCard {
+    display: inline-flex;
+    input {
+        padding-left: 6px;
+        border: none;
+        width: 100%;
+    }
+    .addButton {
+        padding: 6px;
+        border-left: 1px solid #ddd;
+        white-space: nowrap;
+    }
+}

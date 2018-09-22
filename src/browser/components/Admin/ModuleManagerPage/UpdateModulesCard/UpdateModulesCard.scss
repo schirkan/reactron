@@ -1,0 +1,12 @@
+section.UpdateModulesCard {
+    display: inline-flex;
+    >* {
+        padding: 6px;
+        ~* {
+            border-left: 1px solid #ddd;
+        }
+    }
+    .title {
+        width: 100%;
+    }
+}

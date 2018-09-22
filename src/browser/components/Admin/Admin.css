@@ -24,13 +24,21 @@ section.Admin {
   section.Admin a,
   section.Admin .clickable {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    cursor: pointer;
     user-select: none;
     white-space: nowrap; }
-  section.Admin .clickable:hover {
-    background: #fff; }
-  section.Admin .clickable:active {
-    background: #ddd; }
+  section.Admin .clickable {
+    padding-left: 8px;
+    padding-right: 8px; }
+    section.Admin .clickable.disabled {
+      cursor: default;
+      background: #eee;
+      color: #bbb; }
+    section.Admin .clickable:not(.disabled) {
+      cursor: pointer; }
+      section.Admin .clickable:not(.disabled):hover {
+        background: #fff; }
+      section.Admin .clickable:not(.disabled):active {
+        background: #ddd; }
   section.Admin select,
   section.Admin textarea,
   section.Admin input {

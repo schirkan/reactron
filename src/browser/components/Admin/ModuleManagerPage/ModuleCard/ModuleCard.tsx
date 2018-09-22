@@ -2,17 +2,10 @@ import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
-import { IModuleRepositoryItem } from '../../../../../interfaces/IModuleRepositoryItem';
 import UiCard from '../../UiCard/UiCard';
+import { IModuleCardProps } from './IModuleCardProps';
 
 import './ModuleCard.css';
-
-interface IModuleCardProps {
-  module: IModuleRepositoryItem;
-  update: (module: IModuleRepositoryItem) => void;
-  rebuild: (module: IModuleRepositoryItem) => void;
-  remove: (module: IModuleRepositoryItem) => void;
-}
 
 interface IModuleCardState {
   showActions: boolean;
@@ -34,33 +27,33 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
     if (this.props.module.hasUpdate) {
       const onUpdate = () => {
         hideActions();
-        this.props.update(this.props.module);
+        this.props.onUpdate(this.props.module);
       };
-      updateButton = <div className="enabled clickable" onClick={onUpdate}>Update</div>;
+      updateButton = <div className="clickable enabled" onClick={onUpdate}>Update</div>;
     } else {
-      updateButton = <div className="disabled">Update</div>;
+      updateButton = <div className="clickable disabled">Update</div>;
     }
 
     let rebuildButton: JSX.Element;
     if (this.props.module.canBuild) {
       const onRebuild = () => {
         hideActions();
-        this.props.rebuild(this.props.module);
+        this.props.onRebuild(this.props.module);
       };
-      rebuildButton = <div className="enabled clickable" onClick={onRebuild}>Rebuild</div>;
+      rebuildButton = <div className="clickable enabled" onClick={onRebuild}>Rebuild</div>;
     } else {
-      rebuildButton = <div className="disabled">Rebuild</div>;
+      rebuildButton = <div className="clickable disabled">Rebuild</div>;
     }
 
     let removeButton: JSX.Element;
     if (this.props.module.canRemove) {
       const onRemove = () => {
         hideActions();
-        this.props.remove(this.props.module);
+        this.props.onRemove(this.props.module);
       };
-      removeButton = <div className="enabled clickable" onClick={onRemove}>Remove</div>;
+      removeButton = <div className="clickable enabled" onClick={onRemove}>Remove</div>;
     } else {
-      removeButton = <div className="disabled">Remove</div>;
+      removeButton = <div className="clickable disabled">Remove</div>;
     }
 
     const className = 'footer actions ' + (this.state.showActions ? 'show' : 'hide');

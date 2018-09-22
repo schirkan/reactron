@@ -87,7 +87,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
   }
 
   public render() {
-    let content = <Loading />;
+    let content = <Loading center={true} />;
 
     if (this.state.componentFound === false) {
       content = <ComponentNotFound {...this.props} />;

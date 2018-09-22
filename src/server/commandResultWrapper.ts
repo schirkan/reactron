@@ -24,9 +24,8 @@ export const command = async <T = void>(commandName: string | undefined, args: a
             result.success = innerResult.success;
             result.children.push(innerResult);
             result.data = innerResult.data;
-        } else if (callbackResult) {
-            result.data = callbackResult;
         }
+        result.data = result.data || callbackResult;
 
         // evaluate success
         if (result.success === undefined) {

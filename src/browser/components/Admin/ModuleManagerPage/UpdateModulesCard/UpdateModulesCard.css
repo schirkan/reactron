@@ -1,0 +1,8 @@
+section.UpdateModulesCard {
+  display: inline-flex; }
+  section.UpdateModulesCard > * {
+    padding: 6px; }
+    section.UpdateModulesCard > * ~ * {
+      border-left: 1px solid #ddd; }
+  section.UpdateModulesCard .title {
+    width: 100%; }

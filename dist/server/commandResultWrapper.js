@@ -65,9 +65,7 @@ exports.command = function (commandName, args, callback) { return __awaiter(_thi
                     result.children.push(innerResult);
                     result.data = innerResult.data;
                 }
-                else if (callbackResult) {
-                    result.data = callbackResult;
-                }
+                result.data = result.data || callbackResult;
                 // evaluate success
                 if (result.success === undefined) {
                     if (result.children.length) {

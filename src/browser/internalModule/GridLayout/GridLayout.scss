@@ -1,3 +1,4 @@
 section.GridLayout {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
 }

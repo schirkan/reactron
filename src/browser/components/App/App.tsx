@@ -34,7 +34,7 @@ export default class App extends React.Component<{}, IAppState> {
   }
 
   public render() {
-    let content = <Loading text="Loading Reactron..." />;
+    let content = <Loading text="Loading Reactron..." center={true} />;
 
     if (this.state.pages) {
       content = (

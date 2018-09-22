@@ -1,20 +1,20 @@
-import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import * as React from 'react';
 import { ICommandResult } from '../../../../interfaces/ICommandResult';
 import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryItem';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
-import UiCard from '../UiCard/UiCard';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
-import UiGridLayout from '../UiGridLayout/UiGridLayout';
+import AddModuleCard from './AddModuleCard/AddModuleCard';
 import CommandResult from './CommandResult/CommandResult';
 import ModuleCard from './ModuleCard/ModuleCard';
 
 import './ModuleManagerPage.css';
+import UpdateModulesCard from './UpdateModulesCard/UpdateModulesCard';
 
-interface IModuleManagerPageState {
+export interface IModuleManagerPageState {
   loading: boolean;
+  checkingUpdates: boolean;
   showResult: boolean;
   results: ICommandResult[];
   modules: IModuleRepositoryItem[];
@@ -26,12 +26,15 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
 
     this.state = {
       loading: false,
+      checkingUpdates: false,
       showResult: false,
       results: [],
       modules: []
     };
 
-    this.update = this.update.bind(this);
+    this.checkUpdates = this.checkUpdates.bind(this);
+    this.updateAll = this.updateAll.bind(this);
+    this.updateModule = this.updateModule.bind(this);
     this.remove = this.remove.bind(this);
     this.rebuild = this.rebuild.bind(this);
     this.hideResult = this.hideResult.bind(this);
@@ -45,7 +48,40 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     return apiClient.getModules().then(modules => this.setState({ modules }));
   }
 
-  public async update(module: IModuleRepositoryItem): Promise<void> {
+  public checkUpdates() {
+    this.setState({ checkingUpdates: true }, () => {
+      apiClient.checkUpdates().then(() => {
+        this.setState({ checkingUpdates: false });
+        apiClient.getModules.clearCache();
+        this.loadModules();
+      });
+    });
+  }
+
+  public updateAll() {
+    const modulesWithUpdates = this.state.modules.filter(x => x.hasUpdate);
+    if (!modulesWithUpdates.length) {
+      return;
+    }
+
+    const results: ICommandResult[] = [];
+
+    this.setState({ loading: true }, async () => {
+      try {
+        for (const module of modulesWithUpdates) {
+          const result = await apiClient.updateModule({ moduleName: module.name });
+          results.push(...result);
+        }
+        this.showResult(results);
+      } catch (error) {
+        this.showError(error);
+      }
+      apiClient.getModules.clearCache();
+      this.loadModules();
+    });
+  }
+
+  public async updateModule(module: IModuleRepositoryItem): Promise<void> {
     if (!module.hasUpdate) {
       return
     };
@@ -115,11 +151,8 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
 
   private showError(err: any) {
     const message = err && err.message || JSON.stringify(err);
-    this.setState({
-      loading: false,
-      showResult: true,
-      results: [message]
-    });
+    const result = { command: 'Error', success: false, log: [message] } as ICommandResult;
+    this.setState({ loading: false, showResult: true, results: [result] });
   }
 
   private showResult(results: ICommandResult[]) {
@@ -136,7 +169,7 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     }
     return (
       <div className="overlay">
-        <Loading />
+        <Loading center={true} />
       </div>
     );
   }
@@ -152,36 +185,28 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     );
   }
 
-  public renderAdd() {
-    let input: HTMLInputElement | null;
-    const onAdd = () => this.add(input && input.value);
-    return (
-      <UiCard className="addForm">
-        <input ref={el => input = el} placeholder="GitHub Repository URL" />
-        <div className="addButton clickable" onClick={onAdd}>
-          <FontAwesomeIcon icon={SolidIcons.faPlus} /> Add
-        </div>
-      </UiCard>
-    );
-  }
-
-  public renderModules() {
-    return (
-      <UiFlowLayout>
-        {this.state.modules.map(item =>
-          <ModuleCard key={item.name} module={item} remove={this.remove}
-            rebuild={this.rebuild} update={this.update} />)}
-      </UiFlowLayout>
-    );
-  }
-
   public render() {
     return (
       <section className="ModuleManagerPage">
         {this.renderLoading()}
         {this.renderResult()}
-        {this.renderAdd()}
-        {this.renderModules()}
+        <UiFlowLayout>
+          <AddModuleCard onAdd={this.add} />
+          <UpdateModulesCard
+            checkingUpdates={this.state.checkingUpdates}
+            modules={this.state.modules}
+            onCheckUpdates={this.checkUpdates}
+            onUpdateAll={this.updateAll}
+            onUpdateModule={this.updateModule} />
+        </UiFlowLayout>
+        <UiFlowLayout>
+          {this.state.modules.map(item =>
+            <ModuleCard key={item.name}
+              module={item}
+              onRemove={this.remove}
+              onRebuild={this.rebuild}
+              onUpdate={this.updateModule} />)}
+        </UiFlowLayout>
       </section>
     );
   }

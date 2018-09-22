@@ -36,10 +36,6 @@
     .ModuleCard > .footer a {
       color: #222;
       text-decoration: none; }
-    .ModuleCard > .footer .disabled {
-      background: #eee;
-      color: #bbb;
-      user-select: none; }
     .ModuleCard > .footer.default {
       transition: 0.5s ease-in-out; }
       .ModuleCard > .footer.default.hide {
@@ -52,7 +48,6 @@
         bottom: 6px;
         left: 0; }
     .ModuleCard > .footer.actions {
-      position: absolute;
       border-bottom-left-radius: 6px;
       border-bottom-right-radius: 6px;
       transition: 0.5s ease-in-out;

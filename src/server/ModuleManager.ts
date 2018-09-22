@@ -126,8 +126,8 @@ export class ModuleManager {
     public checkUpdates(): Promise<ICommandResultWithData<string[]>> {
         return command<string[]>('checkUpdates', undefined, async (result) => {
             const modulesWithUpdate: string[] = [];
-
-            await this.moduleRepository.getAll().forEach(async item => {
+            const modules = this.moduleRepository.getAll();
+            for (const item of modules) {
                 const resultHasUpdate = await this.hasUpdate(item);
                 result.children.push(resultHasUpdate);
 
@@ -137,14 +137,14 @@ export class ModuleManager {
                         modulesWithUpdate.push(item.name);
                     }
                 }
-            });
+            }
 
             return modulesWithUpdate;
         });
     }
 
     public hasUpdate(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResultWithData<boolean>> {
-        return command<boolean>('remove', moduleDefinition.name, async (result) => {
+        return command<boolean>('checkUpdate', moduleDefinition.name, async (result) => {
             const result1 = await SystemCommand.run('git remote -v update', moduleDefinition.path);
             result.children.push(result1);
             if (result1.success === false) {

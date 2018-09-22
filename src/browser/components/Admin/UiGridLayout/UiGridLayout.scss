@@ -1,4 +1,4 @@
-section.ui-grid-layout {
+section.UiGridLayout {
     padding-right: 20px;
     >* {
         width: calc(25% - 20px);
@@ -9,19 +9,19 @@ section.ui-grid-layout {
 }
 
 @media screen and (max-width: 1200px) {
-    section.ui-grid-layout>* {
+    section.UiGridLayout>* {
         width: calc(33.3% - 20px);
     }
 }
 
 @media screen and (max-width: 900px) {
-    section.ui-grid-layout>* {
+    section.UiGridLayout>* {
         width: calc(50% - 20px);
     }
 }
 
 @media screen and (max-width: 600px) {
-    section.ui-grid-layout>* {
+    section.UiGridLayout>* {
         width: calc(100% - 20px);
     }
 }

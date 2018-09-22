@@ -178,40 +178,39 @@ var ModuleManager = /** @class */ (function () {
     ModuleManager.prototype.checkUpdates = function () {
         var _this = this;
         return commandResultWrapper_1.command('checkUpdates', undefined, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var modulesWithUpdate;
-            var _this = this;
+            var modulesWithUpdate, modules, _i, modules_1, item, resultHasUpdate;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         modulesWithUpdate = [];
-                        return [4 /*yield*/, this.moduleRepository.getAll().forEach(function (item) { return __awaiter(_this, void 0, void 0, function () {
-                                var resultHasUpdate;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, this.hasUpdate(item)];
-                                        case 1:
-                                            resultHasUpdate = _a.sent();
-                                            result.children.push(resultHasUpdate);
-                                            if (resultHasUpdate.success) {
-                                                item.hasUpdate = resultHasUpdate.data;
-                                                if (item.hasUpdate) {
-                                                    modulesWithUpdate.push(item.name);
-                                                }
-                                            }
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
+                        modules = this.moduleRepository.getAll();
+                        _i = 0, modules_1 = modules;
+                        _a.label = 1;
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/, modulesWithUpdate];
+                        if (!(_i < modules_1.length)) return [3 /*break*/, 4];
+                        item = modules_1[_i];
+                        return [4 /*yield*/, this.hasUpdate(item)];
+                    case 2:
+                        resultHasUpdate = _a.sent();
+                        result.children.push(resultHasUpdate);
+                        if (resultHasUpdate.success) {
+                            item.hasUpdate = resultHasUpdate.data;
+                            if (item.hasUpdate) {
+                                modulesWithUpdate.push(item.name);
+                            }
+                        }
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/, modulesWithUpdate];
                 }
             });
         }); });
     };
     ModuleManager.prototype.hasUpdate = function (moduleDefinition) {
         var _this = this;
-        return commandResultWrapper_1.command('remove', moduleDefinition.name, function (result) { return __awaiter(_this, void 0, void 0, function () {
+        return commandResultWrapper_1.command('checkUpdate', moduleDefinition.name, function (result) { return __awaiter(_this, void 0, void 0, function () {
             var result1, result2;
             return __generator(this, function (_a) {
                 switch (_a.label) {

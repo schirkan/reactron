@@ -45,16 +45,9 @@
             color: #222;
             text-decoration: none;
         }
-        .disabled {
-            background: #eee;
-            color: #bbb;
-            user-select: none;
-        }
         &.default {
-            // transform: translateX(0%);
             transition: 0.5s ease-in-out;
             &.hide {
-                // transform: translateX(-100%);
                 margin-left: -100%;
             }
             >*:not(:first-child)::before {
@@ -67,14 +60,11 @@
             }
         }
         &.actions {
-            // transform: translateY(-100%);
-            position: absolute;
             border-bottom-left-radius: 6px;
             border-bottom-right-radius: 6px;
             transition: 0.5s ease-in-out;
             margin-top: -33px;
             &.hide {
-                // transform: translateY(-100%) translateX(100%);
                 margin-left: 100%;
             }
             >*:not(:first-child) {

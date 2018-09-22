@@ -1,5 +1,6 @@
 import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
+import * as classname from 'classnames';
 import * as React from 'react';
 import { ILoadingProps } from './ILoadingProps';
 
@@ -11,9 +12,8 @@ export default class Loading extends React.Component<ILoadingProps> {
   };
 
   public render() {
-    const className = "Loading" + (this.props.center ? ' center':'');
     return (
-      <section className={className}>
+      <section className={classname('Loading', { 'center': this.props.center })}>
         <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSpinner} size={this.props.iconSize} spin={true} />
         <div className="text">{this.props.text}</div>
       </section>
