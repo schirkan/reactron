@@ -30,6 +30,9 @@ section.Admin {
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         user-select: none;
         white-space: nowrap;
+        svg {
+            margin-right: 3px;
+        }
     }
     .clickable {
         padding-left: 8px;
@@ -53,5 +56,9 @@ section.Admin {
     textarea,
     input {
         font-size: 16px;
+    }
+    svg {
+        // https://stackoverflow.com/questions/32142182/css-column-count-and-transition-weird-jump-on-chrome
+        backface-visibility: hidden;
     }
 }

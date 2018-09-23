@@ -1,0 +1,32 @@
+div.UiCardButtonRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+    width: 100%;
+    background: #fafafa;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    ~* {
+        border-top: 1px solid #ddd;
+    }
+    >* {
+        text-align: center;
+        padding: 6px;
+        position: relative;
+    }
+    &.UiCardButtonRowDividerFull {
+        >*:not(:first-child) {
+            border-left: 1px solid #ddd;
+        }
+    }
+    &.UiCardButtonRowDividerHalf {
+        >*:not(:first-child)::before {
+            border-left: 1px solid #ddd;
+            content: " ";
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            left: 0;
+        }
+    }
+}

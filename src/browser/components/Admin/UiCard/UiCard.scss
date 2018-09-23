@@ -7,4 +7,7 @@ section.UiCard {
     overflow: hidden;
     box-sizing: border-box;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+    a {
+        color: #555;
+    }
 }

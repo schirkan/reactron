@@ -1,21 +1,6 @@
-section.SystemPage .UiCard > * {
-  padding: 6px; }
-
-section.SystemPage .title {
-  padding-left: 10px;
-  border-bottom: 1px solid #ddd;
-  font-size: 16px; }
-
-section.SystemPage .clickable {
-  float: left;
-  width: 50%;
-  box-sizing: border-box; }
-  section.SystemPage .clickable svg {
-    margin: 0 6px; }
-
 section.SystemPage .danger {
   border: 1px solid red; }
-  section.SystemPage .danger .title {
+  section.SystemPage .danger .UiCardTitle {
     color: red; }
 
 section.SystemPage .information {
@@ -24,7 +9,8 @@ section.SystemPage .information {
     margin-top: 20px; }
   section.SystemPage .information ul {
     list-style: none;
-    margin: 0; }
+    margin: 0;
+    padding: 0; }
     section.SystemPage .information ul span:first-child {
       width: 100px;
       display: inline-block; }

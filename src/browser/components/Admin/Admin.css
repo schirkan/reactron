@@ -26,6 +26,9 @@ section.Admin {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     user-select: none;
     white-space: nowrap; }
+    section.Admin a svg,
+    section.Admin .clickable svg {
+      margin-right: 3px; }
   section.Admin .clickable {
     padding-left: 8px;
     padding-right: 8px; }
@@ -43,3 +46,5 @@ section.Admin {
   section.Admin textarea,
   section.Admin input {
     font-size: 16px; }
+  section.Admin svg {
+    backface-visibility: hidden; }

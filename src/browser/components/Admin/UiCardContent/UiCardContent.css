@@ -1,0 +1,4 @@
+div.UiCardContent {
+  padding: 6px; }
+  div.UiCardContent ~ * {
+    border-top: 1px solid #ddd; }

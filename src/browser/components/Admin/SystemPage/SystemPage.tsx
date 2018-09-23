@@ -4,7 +4,11 @@ import * as React from 'react';
 import { IServerInfo } from '../../../../interfaces/IServerInfo';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
+import UiButton from '../UiButton/UiButton';
 import UiCard from '../UiCard/UiCard';
+import UiCardButtonRow from '../UiCardButtonRow/UiCardButtonRow';
+import UiCardContent from '../UiCardContent/UiCardContent';
+import UiCardTitle from '../UiCardTitle/UiCardTitle';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
 
 import './SystemPage.css';
@@ -26,10 +30,10 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
   }
 
   public componentDidMount() {
-    apiClient.getServerInfo().then(info => {
-      this.setState({ info });
-    });
+    apiClient.getServerInfo().then(info => this.setState({ info }));
   }
+
+  // TODO: confirm dialog
 
   public exitApplication() {
     apiClient.exitApplication();
@@ -86,8 +90,8 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
 
     return (
       <UiCard className="information">
-        <div className="title">Information</div>
-        {content}
+        <UiCardTitle>Information</UiCardTitle>
+        <UiCardContent>{content}</UiCardContent>
       </UiCard>
     );
   }
@@ -95,15 +99,15 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
   public renderApplicationCard() {
     return (
       <UiCard>
-        <div className="title">Application</div>
-        <div className="clickable" onClick={this.exitApplication}>
-          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSignOutAlt} />
-          Exit
-        </div>
-        <div className="clickable" onClick={this.restartApplication}>
-          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
-          Restart
-        </div>
+        <UiCardTitle>Application</UiCardTitle>
+        <UiCardButtonRow divider="half">
+          <UiButton onClick={this.exitApplication}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSignOutAlt} /> Exit
+          </UiButton>
+          <UiButton onClick={this.restartApplication}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} /> Restart
+          </UiButton>
+        </UiCardButtonRow>
       </UiCard>
     );
   }
@@ -111,15 +115,15 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
   public renderSystemCard() {
     return (
       <UiCard>
-        <div className="title">System</div>
-        <div className="clickable" onClick={this.shutdownSystem}>
-          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faPowerOff} />
-          Shutdown
-        </div>
-        <div className="clickable" onClick={this.rebootSystem}>
-          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} />
-          Reboot
-        </div>
+        <UiCardTitle>System</UiCardTitle>
+        <UiCardButtonRow divider="half">
+          <UiButton onClick={this.shutdownSystem}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faPowerOff} /> Shutdown
+          </UiButton>
+          <UiButton onClick={this.rebootSystem}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faRedo} /> Reboot
+          </UiButton>
+        </UiCardButtonRow>
       </UiCard>
     );
   }
@@ -127,11 +131,12 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
   public renderDangerCard() {
     return (
       <UiCard className="danger">
-        <div className="title">Danger Zone</div>
-        <div className="clickable" onClick={this.resetApplication}>
-          <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationTriangle} />
-          Reset Application
-        </div>
+        <UiCardTitle>Danger Zone</UiCardTitle>
+        <UiCardButtonRow>
+          <UiButton onClick={this.resetApplication}>
+            <FontAwesome.FontAwesomeIcon icon={SvgIcons.faExclamationTriangle} /> Reset Application
+          </UiButton>
+        </UiCardButtonRow>
       </UiCard>
     );
   }

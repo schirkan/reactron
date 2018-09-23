@@ -1,8 +1,13 @@
 import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as classname from 'classnames';
 import * as React from 'react';
+import UiButton from '../../UiButton/UiButton';
 import UiCard from '../../UiCard/UiCard';
+import UiCardButtonRow from '../../UiCardButtonRow/UiCardButtonRow';
+import UiCardContent from '../../UiCardContent/UiCardContent';
+import UiCardTitle from '../../UiCardTitle/UiCardTitle';
 import { IModuleCardProps } from './IModuleCardProps';
 
 import './ModuleCard.css';
@@ -18,77 +23,35 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
     this.state = {
       showActions: false
     };
+
+    this.showActions = this.showActions.bind(this);
+    this.hideActions = this.hideActions.bind(this);
+    this.onUpdate = this.onUpdate.bind(this);
+    this.onRebuild = this.onRebuild.bind(this);
+    this.onRemove = this.onRemove.bind(this);
   }
 
-  public renderActions() {
-    const hideActions = () => this.setState({ showActions: false });
-
-    let updateButton: JSX.Element;
-    if (this.props.module.hasUpdate) {
-      const onUpdate = () => {
-        hideActions();
-        this.props.onUpdate(this.props.module);
-      };
-      updateButton = <div className="clickable enabled" onClick={onUpdate}>Update</div>;
-    } else {
-      updateButton = <div className="clickable disabled">Update</div>;
-    }
-
-    let rebuildButton: JSX.Element;
-    if (this.props.module.canBuild) {
-      const onRebuild = () => {
-        hideActions();
-        this.props.onRebuild(this.props.module);
-      };
-      rebuildButton = <div className="clickable enabled" onClick={onRebuild}>Rebuild</div>;
-    } else {
-      rebuildButton = <div className="clickable disabled">Rebuild</div>;
-    }
-
-    let removeButton: JSX.Element;
-    if (this.props.module.canRemove) {
-      const onRemove = () => {
-        hideActions();
-        this.props.onRemove(this.props.module);
-      };
-      removeButton = <div className="clickable enabled" onClick={onRemove}>Remove</div>;
-    } else {
-      removeButton = <div className="clickable disabled">Remove</div>;
-    }
-
-    const className = 'footer actions ' + (this.state.showActions ? 'show' : 'hide');
-
-    return (
-      <div className={className}>
-        {updateButton}
-        {rebuildButton}
-        {removeButton}
-        <div className="clickable" onClick={hideActions}><FontAwesomeIcon icon={SolidIcons.faTimes} /></div>
-      </div>
-    );
+  private showActions() {
+    this.setState({ showActions: true });
   }
 
-  public renderFooter() {
-    let repoLink = <div />;
-    if (this.props.module.repository) {
-      repoLink = (
-      <a className="clickable" href={this.props.module.repository} target="_blank">
-        <FontAwesomeIcon icon={BrandIcons.faGithub} /> GitHub
-      </a>
-      );
-    }
+  private hideActions() {
+    this.setState({ showActions: false });
+  }
 
-    const showActions = () => this.setState({ showActions: true });
+  private onUpdate() {
+    this.hideActions();
+    this.props.onUpdate(this.props.module);
+  }
 
-    const className = 'footer default ' + (this.state.showActions ? 'hide' : 'show');
+  private onRebuild() {
+    this.hideActions();
+    this.props.onRebuild(this.props.module);
+  }
 
-    return (
-      <div className={className}>
-        <div className="version">{this.props.module.version}</div>
-        {repoLink}
-        <div className="clickable" onClick={showActions}><FontAwesomeIcon icon={SolidIcons.faCog} /> Modify</div>
-      </div>
-    );
+  private onRemove() {
+    this.hideActions();
+    this.props.onRemove(this.props.module);
   }
 
   public renderTitle() {
@@ -98,19 +61,19 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
     }
 
     return (
-      <div className="title">
+      <UiCardTitle>
         <FontAwesomeIcon icon={SolidIcons.faCube} />
         <span className="name">{this.props.module.name}</span>
         {updateIcon}
-      </div>
+      </UiCardTitle>
     );
   }
 
   public renderDescription() {
-    const text = this.props.module.description ? this.props.module.description : 'no description';
-
     return (
-      <div className="description">{text}</div>
+      <UiCardContent className="description">
+        {this.props.module.description || 'no description'}
+      </UiCardContent>
     );
   }
 
@@ -125,7 +88,45 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
     }
     const author = (authorMail) ? (<a href={'mailto://' + authorMail}>{authorName}</a>) : authorName;
 
-    return <div className="author">by {author} </div>;
+    return (
+      <UiCardContent className="author">
+        by {author}
+      </UiCardContent>
+    );
+  }
+
+  public renderFooter() {
+    let repoLink = <div />;
+    if (this.props.module.repository) {
+      repoLink = (
+        <a className="clickable" href={this.props.module.repository} target="_blank">
+          <FontAwesomeIcon icon={BrandIcons.faGithub} /> GitHub
+        </a>
+      );
+    }
+
+    const className = classname('footer', 'default', { 'hide': this.state.showActions });
+
+    return (
+      <UiCardButtonRow className={className} divider="half">
+        <div className="version">{this.props.module.version}</div>
+        {repoLink}
+        <UiButton onClick={this.showActions}><FontAwesomeIcon icon={SolidIcons.faCog} /> Modify</UiButton>
+      </UiCardButtonRow>
+    );
+  }
+
+  public renderActions() {
+    const className = classname('footer', 'actions', { 'hide': !this.state.showActions });
+
+    return (
+      <UiCardButtonRow className={className} divider="full">
+        <UiButton disabled={!this.props.module.hasUpdate} onClick={this.onUpdate}>Update</UiButton>
+        <UiButton disabled={!this.props.module.canBuild} onClick={this.onRebuild}>Rebuild</UiButton>
+        <UiButton disabled={!this.props.module.canRemove} onClick={this.onRemove}>Remove</UiButton>
+        <UiButton onClick={this.hideActions}><FontAwesomeIcon icon={SolidIcons.faTimes} /></UiButton>
+      </UiCardButtonRow>
+    );
   }
 
   public render() {
