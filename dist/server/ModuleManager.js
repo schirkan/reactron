@@ -68,7 +68,7 @@ var ModuleManager = /** @class */ (function () {
     };
     ModuleManager.prototype.add = function (repository) {
         var _this = this;
-        return commandResultWrapper_1.command('install', repository, function (result) { return __awaiter(_this, void 0, void 0, function () {
+        return commandResultWrapper_1.command('add', repository, function (result) { return __awaiter(_this, void 0, void 0, function () {
             var existingModule, parts, folderName, fullModulePath, resultGitClone, moduleDefinition;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -87,7 +87,7 @@ var ModuleManager = /** @class */ (function () {
                         }
                         existingModule = this.getAll().find(function (x) { return x.repository === repository; });
                         if (existingModule) {
-                            throw new Error('Module already exists');
+                            throw new Error('Module already exists :' + repository);
                         }
                         parts = repository.split('/');
                         folderName = parts[parts.length - 1];

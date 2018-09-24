@@ -4,6 +4,7 @@ import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
 import UiOverlay from '../UiOverlay/UiOverlay';
+import PageCard from './PageCard/PageCard';
 
 import './PageManagerPage.css';
 
@@ -48,7 +49,9 @@ export default class PageManagerPage extends React.Component<any, IModuleManager
         )}
         {this.state.pages && (
           <UiFlowLayout>
-            pages
+            {this.state.pages.map((item, index) =>
+              <PageCard key={index} page={item} />
+            )}
           </UiFlowLayout>
         )}
       </section>

@@ -33,7 +33,7 @@ export class ModuleManager {
     }
 
     public add(repository: string): Promise<ICommandResultWithData<IModuleRepositoryItem | undefined>> {
-        return command<IModuleRepositoryItem | undefined>('install', repository, async (result) => {
+        return command<IModuleRepositoryItem | undefined>('add', repository, async (result) => {
             repository = (repository || '').trim();
 
             // remove / from end
@@ -50,7 +50,7 @@ export class ModuleManager {
 
             const existingModule = this.getAll().find(x => x.repository === repository);
             if (existingModule) {
-                throw new Error('Module already exists');
+                throw new Error('Module already exists :' + repository);
             }
 
             const parts = repository.split('/');

@@ -34,8 +34,8 @@ export default class CommandResult extends React.Component<ICommandResultProps> 
     }
 
     return (
-      <React.Fragment>
-        <div className="result" key={key}>
+      <React.Fragment key={key}>
+        <div className="result">
           <div className="commandTitle">{icon} {title}</div>
           {log}
         </div>
