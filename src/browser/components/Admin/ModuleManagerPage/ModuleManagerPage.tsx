@@ -5,12 +5,13 @@ import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryI
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
+import UiOverlay from '../UiOverlay/UiOverlay';
 import AddModuleCard from './AddModuleCard/AddModuleCard';
 import CommandResult from './CommandResult/CommandResult';
 import ModuleCard from './ModuleCard/ModuleCard';
+import UpdateModulesCard from './UpdateModulesCard/UpdateModulesCard';
 
 import './ModuleManagerPage.css';
-import UpdateModulesCard from './UpdateModulesCard/UpdateModulesCard';
 
 export interface IModuleManagerPageState {
   loading: boolean;
@@ -32,11 +33,12 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
       modules: []
     };
 
+    this.loadModules = this.loadModules.bind(this);
     this.checkUpdates = this.checkUpdates.bind(this);
     this.updateAll = this.updateAll.bind(this);
     this.updateModule = this.updateModule.bind(this);
-    this.remove = this.remove.bind(this);
-    this.rebuild = this.rebuild.bind(this);
+    this.removeModule = this.removeModule.bind(this);
+    this.rebuildModule = this.rebuildModule.bind(this);
     this.hideResult = this.hideResult.bind(this);
   }
 
@@ -44,108 +46,127 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     this.loadModules();
   }
 
-  public loadModules() {
-    return apiClient.getModules().then(modules => this.setState({ modules }));
+  public loadModules(): Promise<void> {
+    return apiClient.getModules()
+      .then(modules => this.setState({ modules }))
+      .catch(); // TODO
   }
 
-  public checkUpdates() {
-    this.setState({ checkingUpdates: true }, () => {
-      apiClient.checkUpdates().then(() => {
-        this.setState({ checkingUpdates: false });
-        apiClient.getModules.clearCache();
-        this.loadModules();
+  public checkUpdates(): Promise<void> {
+    return new Promise<void>(resolve => {
+      this.setState({ checkingUpdates: true }, () => {
+        apiClient.checkUpdates().then(async () => {
+          this.setState({ checkingUpdates: false });
+          apiClient.getModules.clearCache();
+          await this.loadModules();
+          resolve();
+        });
       });
     });
   }
 
-  public updateAll() {
+  public updateAll(): Promise<void> {
     const modulesWithUpdates = this.state.modules.filter(x => x.hasUpdate);
     if (!modulesWithUpdates.length) {
-      return;
+      return Promise.resolve();
     }
 
-    const results: ICommandResult[] = [];
-
-    this.setState({ loading: true }, async () => {
-      try {
-        for (const module of modulesWithUpdates) {
-          const result = await apiClient.updateModule({ moduleName: module.name });
-          results.push(...result);
+    return new Promise<void>(resolve => {
+      const results: ICommandResult[] = [];
+      this.setState({ loading: true }, async () => {
+        try {
+          for (const module of modulesWithUpdates) {
+            const result = await apiClient.updateModule({ moduleName: module.name });
+            results.push(...result);
+          }
+          this.showResult(results);
+        } catch (error) {
+          this.showError(error);
         }
-        this.showResult(results);
-      } catch (error) {
-        this.showError(error);
-      }
-      apiClient.getModules.clearCache();
-      this.loadModules();
+        apiClient.getModules.clearCache();
+        await this.loadModules();
+        resolve();
+      });
     });
   }
 
   public async updateModule(module: IModuleRepositoryItem): Promise<void> {
     if (!module.hasUpdate) {
-      return
+      return Promise.resolve();
     };
 
-    this.setState({ loading: true }, async () => {
-      try {
-        const result = await apiClient.updateModule({ moduleName: module.name });
-        this.showResult(result);
-      } catch (error) {
-        this.showError(error);
-      }
-      apiClient.getModules.clearCache();
-      this.loadModules();
+    return new Promise<void>(resolve => {
+      this.setState({ loading: true }, async () => {
+        try {
+          const result = await apiClient.updateModule({ moduleName: module.name });
+          this.showResult(result);
+        } catch (error) {
+          this.showError(error);
+        }
+        apiClient.getModules.clearCache();
+        await this.loadModules();
+        resolve();
+      });
     });
   }
 
-  public async rebuild(module: IModuleRepositoryItem): Promise<void> {
+  public async rebuildModule(module: IModuleRepositoryItem): Promise<void> {
     if (!module.canBuild) {
-      return;
+      return Promise.resolve();
     };
 
-    this.setState({ loading: true }, async () => {
-      try {
-        const result = await apiClient.rebuildModule({ moduleName: module.name });
-        this.showResult(result);
-      } catch (error) {
-        this.showError(error);
-      }
-      apiClient.getModules.clearCache();
-      this.loadModules();
+    return new Promise<void>(resolve => {
+      this.setState({ loading: true }, async () => {
+        try {
+          const result = await apiClient.rebuildModule({ moduleName: module.name });
+          this.showResult(result);
+        } catch (error) {
+          this.showError(error);
+        }
+        apiClient.getModules.clearCache();
+        await this.loadModules();
+        resolve();
+      });
     });
   }
 
-  public async remove(module: IModuleRepositoryItem): Promise<void> {
+  public async removeModule(module: IModuleRepositoryItem): Promise<void> {
     if (!module.canRemove) {
-      return;
+      return Promise.resolve();
     };
 
-    this.setState({ loading: true }, async () => {
-      try {
-        const result = await apiClient.deleteModule({ moduleName: module.name });
-        this.showResult(result);
-      } catch (error) {
-        this.showError(error);
-      }
-      apiClient.getModules.clearCache();
-      this.loadModules();
+    return new Promise<void>(resolve => {
+      this.setState({ loading: true }, async () => {
+        try {
+          const result = await apiClient.deleteModule({ moduleName: module.name });
+          this.showResult(result);
+        } catch (error) {
+          this.showError(error);
+        }
+        apiClient.getModules.clearCache();
+        await this.loadModules();
+        resolve();
+      });
     });
   }
 
-  public async add(repository: string | null): Promise<void> {
+  public add(repository: string | null): Promise<void> {
     if (!repository || !repository.trim()) {
-      return;
+      return Promise.resolve();
     };
 
-    this.setState({ loading: true }, async () => {
-      try {
-        const result = await apiClient.addModule(undefined, { repository });
-        this.showResult(result);
-      } catch (error) {
-        this.showError(error);
-      }
-      apiClient.getModules.clearCache();
-      this.loadModules();
+    return new Promise<void>(resolve => {
+      this.setState({ loading: true }, async () => {
+        try {
+          const result = await apiClient.addModule(undefined, { repository });
+          this.showResult(result);
+        } catch (error) {
+          this.showError(error);
+        }
+        apiClient.getModules.clearCache();
+        await this.loadModules();
+        resolve();
+      });
     });
   }
 
@@ -163,33 +184,17 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
     this.setState({ showResult: false });
   }
 
-  public renderLoading() {
-    if (!this.state.loading) {
-      return;
-    }
-    return (
-      <div className="overlay">
-        <Loading center={true} />
-      </div>
-    );
-  }
-
-  public renderResult() {
-    if (!this.state.showResult) {
-      return;
-    }
-    return (
-      <div className="overlay">
-        <CommandResult results={this.state.results} onClose={this.hideResult} />
-      </div>
-    );
-  }
-
   public render() {
     return (
       <section className="ModuleManagerPage">
-        {this.renderLoading()}
-        {this.renderResult()}
+        {this.state.loading && (
+          <UiOverlay><Loading center={true} /></UiOverlay>
+        )}
+        {this.state.showResult && (
+          <UiOverlay>
+            <CommandResult results={this.state.results} onClose={this.hideResult} />
+          </UiOverlay>
+        )}
         <UiFlowLayout>
           <AddModuleCard onAdd={this.add} />
           <UpdateModulesCard
@@ -203,8 +208,8 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
           {this.state.modules.map(item =>
             <ModuleCard key={item.name}
               module={item}
-              onRemove={this.remove}
-              onRebuild={this.rebuild}
+              onRemove={this.removeModule}
+              onRebuild={this.rebuildModule}
               onUpdate={this.updateModule} />)}
         </UiFlowLayout>
       </section>

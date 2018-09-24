@@ -1,4 +1,5 @@
-export interface IUiCardButtonRowProps {
-  className?: string;
+import { IUiComponentProps } from '../IUiComponentProps';
+
+export interface IUiCardButtonRowProps extends IUiComponentProps {
   divider?: 'full' | 'half';
 }

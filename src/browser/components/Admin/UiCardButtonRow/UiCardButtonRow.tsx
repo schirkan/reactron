@@ -12,7 +12,7 @@ export default class UiCardButtonRow extends React.Component<IUiCardButtonRowPro
     });
 
     return (
-      <div className={className}>
+      <div className={className} style={this.props.style}>
         {this.props.children}
       </div>
     );

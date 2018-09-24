@@ -1,20 +1,18 @@
-.ModuleCard {
-  position: relative; }
-  .ModuleCard .UiCardTitle > * {
-    margin-right: 6px; }
-  .ModuleCard .UiCardTitle > .hasUpdate {
-    font-size: 10px;
-    color: #59aaff;
-    vertical-align: text-top; }
-  .ModuleCard .UiCardButtonRow {
-    transition: 0.5s ease-in-out;
-    margin: 0; }
-    .ModuleCard .UiCardButtonRow.default.hide {
-      margin-left: -100%; }
-    .ModuleCard .UiCardButtonRow.actions {
-      margin-top: -34px; }
-      .ModuleCard .UiCardButtonRow.actions.hide {
-        margin-left: 100%; }
-    .ModuleCard .UiCardButtonRow a {
-      color: #222;
-      text-decoration: none; }
+.ModuleCard .UiCardTitle .hasUpdate {
+  margin-left: 6px;
+  font-size: 10px;
+  color: #59aaff;
+  vertical-align: text-top; }
+
+.ModuleCard .UiCardButtonRow {
+  transition: 0.5s ease-in-out;
+  margin: 0; }
+  .ModuleCard .UiCardButtonRow.default.hide {
+    margin-left: -100%; }
+  .ModuleCard .UiCardButtonRow.actions {
+    margin-top: -34px; }
+    .ModuleCard .UiCardButtonRow.actions.hide {
+      margin-left: 100%; }
+  .ModuleCard .UiCardButtonRow a {
+    color: #222;
+    text-decoration: none; }

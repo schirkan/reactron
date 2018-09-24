@@ -1,14 +1,9 @@
 .ModuleCard {
-    position: relative;
-    .UiCardTitle {
-        >* {
-            margin-right: 6px;
-        }
-        >.hasUpdate {
-            font-size: 10px;
-            color: rgb(89, 170, 255);
-            vertical-align: text-top;
-        }
+    .UiCardTitle .hasUpdate {
+        margin-left: 6px;
+        font-size: 10px;
+        color: rgb(89, 170, 255);
+        vertical-align: text-top;
     }
     .UiCardButtonRow {
         transition: 0.5s ease-in-out;

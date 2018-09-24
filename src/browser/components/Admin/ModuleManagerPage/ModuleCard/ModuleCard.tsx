@@ -62,8 +62,7 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
 
     return (
       <UiCardTitle>
-        <FontAwesomeIcon icon={SolidIcons.faCube} />
-        <span className="name">{this.props.module.name}</span>
+        <FontAwesomeIcon icon={SolidIcons.faCube} /> {this.props.module.name}
         {updateIcon}
       </UiCardTitle>
     );
@@ -89,9 +88,7 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
     const author = (authorMail) ? (<a href={'mailto://' + authorMail}>{authorName}</a>) : authorName;
 
     return (
-      <UiCardContent className="author">
-        by {author}
-      </UiCardContent>
+      <UiCardContent className="author">by {author}</UiCardContent>
     );
   }
 

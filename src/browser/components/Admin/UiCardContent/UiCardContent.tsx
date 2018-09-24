@@ -1,13 +1,13 @@
 import * as classname from 'classnames';
 import * as React from 'react';
-import { IUiCardContentProps } from './IUiCardContentProps';
+import { IUiComponentProps } from '../IUiComponentProps';
 
 import './UiCardContent.css';
 
-export default class UiCardContent extends React.Component<IUiCardContentProps> {
+export default class UiCardContent extends React.Component<IUiComponentProps> {
   public render() {
     return (
-      <div className={classname('UiCardContent', this.props.className)}>
+      <div className={classname('UiCardContent', this.props.className)} style={this.props.style}>
         {this.props.children}
       </div>
     );

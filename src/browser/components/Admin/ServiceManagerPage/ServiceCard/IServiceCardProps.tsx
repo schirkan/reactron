@@ -2,4 +2,6 @@ import { IServiceRepositoryItem } from '../../../../../interfaces/IServiceReposi
 
 export interface IServiceCardProps {
   service: IServiceRepositoryItem;
+  onShowLog: (service: IServiceRepositoryItem) => void;
+  onShowOptions: (service: IServiceRepositoryItem) => void;
 }

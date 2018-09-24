@@ -1,13 +1,13 @@
 import * as classname from 'classnames';
 import * as React from 'react';
-import { IUiGridLayoutProps } from './IUiGridLayoutProps';
+import { IUiComponentProps } from '../IUiComponentProps';
 
 import './UiGridLayout.css';
 
-export default class UiGridLayout extends React.Component<IUiGridLayoutProps> {
+export default class UiGridLayout extends React.Component<IUiComponentProps> {
   public render() {
     return (
-      <section className={classname('UiGridLayout', this.props.className)}>
+      <section className={classname('UiGridLayout', this.props.className)} style={this.props.style}>
         {this.props.children}
       </section>
     );

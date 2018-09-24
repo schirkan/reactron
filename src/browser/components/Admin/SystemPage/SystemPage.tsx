@@ -36,23 +36,23 @@ export default class SystemPage extends React.Component<any, ISystemPageState> {
   // TODO: confirm dialog
 
   public exitApplication() {
-    apiClient.exitApplication();
+    return apiClient.exitApplication();
   }
 
   public restartApplication() {
-    apiClient.restartApplication();
+    return apiClient.restartApplication();
   }
 
   public shutdownSystem() {
-    apiClient.shutdownSystem();
+    return apiClient.shutdownSystem();
   }
 
   public rebootSystem() {
-    apiClient.rebootSystem();
+    return apiClient.rebootSystem();
   }
 
   public resetApplication() {
-    apiClient.resetApplication();
+    return apiClient.resetApplication();
   }
 
   public renderInformationCard() {

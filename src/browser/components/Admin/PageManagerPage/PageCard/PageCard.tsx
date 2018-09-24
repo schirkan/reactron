@@ -6,38 +6,33 @@ import UiCard from '../../UiCard/UiCard';
 import UiCardButtonRow from '../../UiCardButtonRow/UiCardButtonRow';
 import UiCardContent from '../../UiCardContent/UiCardContent';
 import UiCardTitle from '../../UiCardTitle/UiCardTitle';
-import { IServiceCardProps } from './IServiceCardProps';
+import { IPageCardProps } from './IPageCardProps';
 
-import './ServiceCard.css';
+import './PageCard.css';
 
-export default class ServiceCard extends React.Component<IServiceCardProps> {
-  constructor(props: IServiceCardProps) {
+export default class PageCard extends React.Component<IPageCardProps> {
+  constructor(props: IPageCardProps) {
     super(props);
 
     this.showOptions = this.showOptions.bind(this);
-    this.showLog = this.showLog.bind(this);
   }
 
   private showOptions() {
-    return this.props.onShowOptions(this.props.service);
-  }
-
-  private showLog() {
-    return this.props.onShowLog(this.props.service);
+    return;
   }
 
   public renderTitle() {
     return (
       <UiCardTitle>
-        <FontAwesomeIcon icon={SolidIcons.faCogs} /> {this.props.service.name}
+        <FontAwesomeIcon icon={SolidIcons.faPaperclip} /> {this.props.page.title}
       </UiCardTitle>
     );
   }
 
-  public renderDescription() {
+  public renderPath() {
     return (
-      <UiCardContent className="description">
-        {this.props.service.description || 'no description'}
+      <UiCardContent className="path">
+        {this.props.page.path}
       </UiCardContent>
     );
   }
@@ -45,9 +40,6 @@ export default class ServiceCard extends React.Component<IServiceCardProps> {
   public renderFooter() {
     return (
       <UiCardButtonRow divider="half">
-        <UiButton onClick={this.showLog}>
-          <FontAwesomeIcon icon={SolidIcons.faCog} /> Log
-        </UiButton>
         <UiButton onClick={this.showOptions}>
           <FontAwesomeIcon icon={SolidIcons.faCog} /> Options
         </UiButton>
@@ -57,9 +49,9 @@ export default class ServiceCard extends React.Component<IServiceCardProps> {
 
   public render() {
     return (
-      <UiCard className="ServiceCard">
+      <UiCard className="PageCard">
         {this.renderTitle()}
-        {this.renderDescription()}
+        {this.renderPath()}
         {this.renderFooter()}
       </UiCard>
     );

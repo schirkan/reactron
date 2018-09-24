@@ -20,27 +20,35 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
       services: []
     };
 
-    // this.checkUpdates = this.checkUpdates.bind(this);
-    // this.updateAll = this.updateAll.bind(this);
-    // this.updateModule = this.updateModule.bind(this);
-    // this.remove = this.remove.bind(this);
-    // this.rebuild = this.rebuild.bind(this);
-    // this.hideResult = this.hideResult.bind(this);
+    this.showLog = this.showLog.bind(this);
+    this.showOptions = this.showOptions.bind(this);
   }
-  
+
   public componentDidMount() {
     this.loadServices();
   }
 
   public loadServices() {
-    return apiClient.getAllServices().then(services => this.setState({ services }));
+    return apiClient.getAllServices()
+      .then(services => this.setState({ services }))
+      .catch(); // TODO
+  }
+
+  private showLog(service: IServiceRepositoryItem) {
+    return alert('TODO: log ' + service.name);
+  }
+
+  private showOptions(service: IServiceRepositoryItem) {
+    return alert('TODO: options ' + service.name);
   }
 
   public render() {
     return (
       <section className="ServiceManagerPage">
         <UiFlowLayout>
-          {this.state.services.map(item => <ServiceCard key={item.name} service={item} />)}
+          {this.state.services.map(item =>
+            <ServiceCard key={item.name} service={item} onShowLog={this.showLog} onShowOptions={this.showOptions} />
+          )}
         </UiFlowLayout>
       </section>
     );
