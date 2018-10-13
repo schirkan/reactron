@@ -8,18 +8,30 @@ import { apiClient } from './ApiClient';
 import { BrowserModuleHelper } from './BrowserModuleHelper';
 import { components as internalComponents } from "./internalModule";
 
-const inernalModuleHelper = new BrowserModuleHelper('reactron');
+const inernalModuleHelper = new BrowserModuleHelper('reactron'); // internal module
+const SystemJS = (window as any).System as SystemJSLoader.System;
 
-const SystemJS = (window as any).SystemJS as SystemJSLoader.System;
-SystemJS.config({ baseURL: '/' });
+const oldResolve = SystemJS.resolve;
+SystemJS.resolve = async (dep: string, id: string) => {
+    let result: string;
+    try {
+        result = await oldResolve.call(SystemJS, dep, id);
+    } catch (error) {
+        result = 'bundle:' + dep;
+    }
+    console.log('SystemJS.resolve', dep, id, result);
+    return result;
+};
+
 if (inernalModuleHelper.electron) {
-    SystemJS.set('electron', SystemJS.newModule(inernalModuleHelper.electron));
+    SystemJS.register('electron', [], exports => ({ execute: () => exports(inernalModuleHelper.electron) }));
 }
-SystemJS.set('react', SystemJS.newModule(React));
-SystemJS.set('react-dom', SystemJS.newModule(ReactDom));
-SystemJS.set('@fortawesome/fontawesome-svg-core', SystemJS.newModule(SvgCore));
-SystemJS.set('@fortawesome/free-solid-svg-icons', SystemJS.newModule(SvgIcons));
-SystemJS.set('@fortawesome/react-fontawesome', SystemJS.newModule(FontAwesome));
+
+SystemJS.register('react', [], exports => ({ execute: () => exports(React) }));
+SystemJS.register('react-dom', [], exports => ({ execute: () => exports(ReactDom) }));
+SystemJS.register('@fortawesome/fontawesome-svg-core', [], exports => ({ execute: () => exports(SvgCore) }));
+SystemJS.register('@fortawesome/free-solid-svg-icons', [], exports => ({ execute: () => exports(SvgIcons) }));
+SystemJS.register('@fortawesome/react-fontawesome', [], exports => ({ execute: () => exports(FontAwesome) }));
 
 export class ComponentLoader {
     private moduleComponents: { [moduleName: string]: IComponentDefinition[] } = {
@@ -42,7 +54,12 @@ export class ComponentLoader {
             }
 
             try {
-                const browserFileContent = await SystemJS.import(m.browserFile);
+                console.log(m.browserFile);
+
+                // const url = await SystemJS.get(m.browserFile);
+                // console.log(url);
+
+                const browserFileContent = await SystemJS.import('\\' + m.browserFile);
                 // tslint:disable-next-line:no-string-literal
                 const components = browserFileContent['components'];
 
@@ -51,7 +68,7 @@ export class ComponentLoader {
                 }
                 console.log('Components loaded for module: ' + moduleName);
             } catch (error) {
-                console.log('Error loading components for module: ' + moduleName);
+                console.log('Error loading components for module: ' + moduleName, error);
             }
         }
 
