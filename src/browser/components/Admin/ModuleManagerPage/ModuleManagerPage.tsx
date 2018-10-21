@@ -1,10 +1,10 @@
-
 import * as React from 'react';
 import { ICommandResult } from '../../../../interfaces/ICommandResult';
 import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryItem';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
+import UiLoadingCard from '../UiLoadingCard/UiLoadingCard';
 import UiOverlay from '../UiOverlay/UiOverlay';
 import AddModuleCard from './AddModuleCard/AddModuleCard';
 import CommandResult from './CommandResult/CommandResult';
@@ -180,6 +180,11 @@ export default class ModuleManagerPage extends React.Component<any, IModuleManag
             onUpdateAll={this.updateAll}
             onUpdateModule={this.updateModule} />
         </UiFlowLayout>
+        {!this.state.modules.length && (
+          <UiFlowLayout>
+            <UiLoadingCard />
+          </UiFlowLayout>
+        )}
         <UiFlowLayout>
           {this.state.modules.map(item =>
             <ModuleCard key={item.name}

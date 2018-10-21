@@ -282,6 +282,11 @@ var ServiceManager = /** @class */ (function () {
                         }
                         serviceInstance = new serviceDefinition.service();
                         serviceOptions = this.optionsRepository.get(moduleName, serviceName);
+                        if (!serviceOptions) {
+                            serviceOptions = this.getDefaultObjectOptions(serviceDefinition.options);
+                            this.optionsRepository.set(moduleName, serviceName, serviceOptions);
+                            console.log('Initializing Service Options for ' + serviceKey, serviceOptions);
+                        }
                         serviceRepositoryItem = __assign({}, serviceDefinition, { moduleName: moduleName, instance: serviceInstance, log: [], state: 'stopped' });
                         this.serviceRepository.add(serviceRepositoryItem);
                         _b = (_a = result.children).push;
@@ -296,6 +301,26 @@ var ServiceManager = /** @class */ (function () {
                 }
             });
         }); });
+    };
+    ServiceManager.prototype.getDefaultObjectOptions = function (fields) {
+        var _this = this;
+        var result = {};
+        if (fields) {
+            fields.forEach(function (field) {
+                result[field.name] = _this.getDefaultFieldOptions(field);
+            });
+        }
+        return result;
+    };
+    ServiceManager.prototype.getDefaultFieldOptions = function (fieldDefinition) {
+        var result = fieldDefinition.defaultValue;
+        if (fieldDefinition.isArray) {
+            result = result || [];
+        }
+        else if (fieldDefinition.valueType === 'object') {
+            result = result || this.getDefaultObjectOptions(fieldDefinition.fields);
+        }
+        return result;
     };
     return ServiceManager;
 }());

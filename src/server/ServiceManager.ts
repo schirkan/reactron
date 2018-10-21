@@ -1,3 +1,4 @@
+import { IFieldDefinition } from "src/interfaces/IObjectDefinition";
 import { ICommandResult } from "../interfaces/ICommandResult";
 import { IExternalService } from "../interfaces/IExternalService";
 import { IServiceDefinition } from "../interfaces/IServiceDefinition";
@@ -154,7 +155,14 @@ export class ServiceManager {
                 throw new Error('Service not found: ' + serviceName);
             }
             const serviceInstance = new serviceDefinition.service() as IExternalService;
-            const serviceOptions = this.optionsRepository.get(moduleName, serviceName);
+
+            // get / init service options
+            let serviceOptions = this.optionsRepository.get(moduleName, serviceName);
+            if (!serviceOptions) {
+                serviceOptions = this.getDefaultObjectOptions(serviceDefinition.options);
+                this.optionsRepository.set(moduleName, serviceName, serviceOptions);
+                console.log('Initializing Service Options for ' + serviceKey, serviceOptions);
+            }
 
             const serviceRepositoryItem: IServiceRepositoryItem = {
                 ...serviceDefinition,
@@ -169,5 +177,25 @@ export class ServiceManager {
             result.children.push(await this.setOptionsInternal(serviceRepositoryItem, serviceOptions));
             result.children.push(await this.startService(serviceRepositoryItem));
         });
+    }
+
+    private getDefaultObjectOptions(fields?: IFieldDefinition[]): any {
+        const result = {};
+        if (fields) {
+            fields.forEach(field => {
+                result[field.name] = this.getDefaultFieldOptions(field);
+            });
+        }
+        return result;
+    }
+
+    private getDefaultFieldOptions(fieldDefinition: IFieldDefinition): any {
+        let result: any = fieldDefinition.defaultValue;
+        if (fieldDefinition.isArray) {
+            result = result || [];
+        } else if (fieldDefinition.valueType === 'object') {
+            result = result || this.getDefaultObjectOptions(fieldDefinition.fields);
+        }
+        return result;
     }
 }

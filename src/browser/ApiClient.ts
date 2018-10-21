@@ -73,12 +73,17 @@ const apiCall = <TParams, TBody, TResponse>(
             }
         })
             .then(async response => {
+                const text = await response.text();
+
                 if (response.status.toString().startsWith('2')) {
-                    return response.json();
+                    if (!text) {
+                        return undefined;
+                    }
+                    return JSON.parse(text);
                 }
-                const error = await response.text();
-                console.log(error);
-                throw Error(error);
+
+                console.log(text);
+                throw Error(text);
             })
             .then(response => {
                 if (cacheResponse) {

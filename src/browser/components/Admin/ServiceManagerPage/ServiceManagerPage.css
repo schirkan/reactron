@@ -1,0 +1,4 @@
+section.ServiceManagerPage .ServiceOptionsCard > :nth-child(2),
+section.ServiceManagerPage .ServiceLogCard > :nth-child(2) {
+  height: calc(100% - 70px);
+  box-sizing: border-box; }

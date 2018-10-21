@@ -1,1 +1,9 @@
-section.ServiceManagerPage {}
+section.ServiceManagerPage {
+    .ServiceOptionsCard,
+    .ServiceLogCard {
+        &>:nth-child(2) {
+            height: calc(100% - 70px);
+            box-sizing: border-box;
+        }
+    }
+}

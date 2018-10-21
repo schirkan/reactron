@@ -15,7 +15,9 @@ export default class Loading extends React.Component<ILoadingProps> {
     return (
       <section className={classname('Loading', { 'center': this.props.center })}>
         <FontAwesome.FontAwesomeIcon icon={SvgIcons.faSpinner} size={this.props.iconSize} spin={true} />
-        <div className="text">{this.props.text}</div>
+        {this.props.text && (
+          <div className="text">{this.props.text}</div>
+        )}
       </section>
     );
   }

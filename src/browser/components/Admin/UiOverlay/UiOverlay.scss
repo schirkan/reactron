@@ -21,3 +21,16 @@ div.UiOverlay {
         width: auto;
     }
 }
+
+@media screen and (min-width: 601px) {
+    div.UiOverlay>.UiCard {
+        position: absolute;
+        margin: 20px 0;
+        top: 118px;
+        bottom: 0;
+        left: 50%;
+        right: auto;
+        width: 560px;
+        transform: translateX(-50%);
+    }
+}

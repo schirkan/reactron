@@ -9,6 +9,8 @@ interface IUiButtonState {
 }
 
 export default class UiButton extends React.Component<IUiButtonProps, IUiButtonState> {
+  private disposed = false;
+
   constructor(props: IUiButtonProps) {
     super(props);
 
@@ -16,7 +18,7 @@ export default class UiButton extends React.Component<IUiButtonProps, IUiButtonS
 
     this.onClick = this.onClick.bind(this);
   }
-  
+
   private onClick() {
     if (this.props.disabled || this.state.running || !this.props.onClick) {
       return;
@@ -25,9 +27,15 @@ export default class UiButton extends React.Component<IUiButtonProps, IUiButtonS
       Promise.resolve(this.props.onClick())
         .catch()
         .then(() => {
-          this.setState({ running: false });
+          if (!this.disposed) {
+            this.setState({ running: false });
+          }
         });
     });
+  }
+
+  public componentWillUnmount() {
+    this.disposed = true;
   }
 
   public render() {
