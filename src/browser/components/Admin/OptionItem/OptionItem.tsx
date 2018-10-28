@@ -13,25 +13,18 @@ interface IOptionItemProps {
   valueChange: (definition: IFieldDefinition, newValue: any) => void
 }
 
-// tslint:disable-next-line:no-empty-interface
-interface IOptionItemState {
-}
-
-export default class OptionItem extends React.Component<IOptionItemProps, IOptionItemState> {
+export default class OptionItem extends React.Component<IOptionItemProps> {
   private uniqueId = 'ID' + counter;
 
   constructor(props: IOptionItemProps) {
     super(props);
 
-    this.state = {
-      value: this.props.definition.defaultValue
-    };
-
-    // this.arrayItemChange = this.arrayItemChange.bind(this);
     this.triggerValueChange = this.triggerValueChange.bind(this);
     this.arrayItemAdd = this.arrayItemAdd.bind(this);
     this.arrayItemRemove = this.arrayItemRemove.bind(this);
-    this.onInputValueChange = this.onInputValueChange.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onCheckboxChange = this.onCheckboxChange.bind(this);
+    this.onSelectValueChange = this.onSelectValueChange.bind(this);
 
     counter++;
   }
@@ -84,7 +77,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   private arrayItemAdd() {
     let array = this.props.value as any[] || [];
     array = array.slice();
-    array.push();
+    array.push(this.getDefaultValue(this.props.definition));
     this.props.valueChange(this.props.definition, array);
   }
 
@@ -93,9 +86,11 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
 
     return (
       <React.Fragment>
-        <div>Array {this.props.definition.displayName} ({array.length} items)</div>
+        <div>
+          <span>Array {this.props.definition.displayName} ({array.length} items)</span>
+          <UiButton onClick={this.arrayItemAdd}>+</UiButton>
+        </div>        
         {array.map((value, index) => this.renderArrayItem(value, index))}
-        <UiButton onClick={this.arrayItemAdd}>+</UiButton>
       </React.Fragment>
     );
   }
@@ -106,8 +101,8 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     definition.displayName = index.toString();
 
     return (
-      <React.Fragment>
-        <OptionItem key={index} definition={definition} value={value} valueChange={this.arrayItemChange.bind(this, index)} />
+      <React.Fragment key={index}>
+        <OptionItem definition={definition} value={value} valueChange={this.arrayItemChange.bind(this, index)} />
         <UiButton onClick={this.arrayItemRemove.bind(this, index)}>-</UiButton>
       </React.Fragment>
     );
@@ -120,33 +115,63 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     return (
       <React.Fragment>
         <div>Object {this.props.definition.displayName}</div>
-        <OptionList definitions={this.props.definition.fields} value={this.props.value} valueChange={this.triggerValueChange} />;
+        <OptionList definitions={this.props.definition.fields} value={this.props.value} valueChange={this.triggerValueChange} />
       </React.Fragment>
     );
   }
 
-  private onInputValueChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private onInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.triggerValueChange(e.currentTarget.value);
   }
 
+  private onSelectValueChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    this.triggerValueChange(e.currentTarget.value);
+  }
+
+  private onCheckboxChange(e: React.ChangeEvent<HTMLInputElement>) {
+    this.triggerValueChange(e.currentTarget.checked);
+  }
+
   private renderTextInput() {
+    let inputControl;
+    if (this.props.definition.values) {
+      const options = this.props.definition.values.map((item, index) =>
+        <option key={index} value={item.value}>{item.text}</option>
+      );
+      inputControl = (
+        <select id={this.uniqueId} value={this.props.value} onChange={this.onSelectValueChange}>
+          {options}
+        </select>
+      );
+    } else {
+      inputControl = <input type="text" id={this.uniqueId} value={this.props.value} onChange={this.onInputChange} />;
+    }
+
     return (
       <React.Fragment>
         <label htmlFor={this.uniqueId}>{this.props.definition.displayName}</label>
-        <input type="text" id={this.uniqueId} value={this.props.value} onChange={this.onInputValueChange} />
+        {inputControl}
       </React.Fragment>
     );
   }
 
   private renderNumberInput() {
     return (
-      <input type="number" />
+      <React.Fragment>
+        <label htmlFor={this.uniqueId}>{this.props.definition.displayName}</label>
+        <input type="number" id={this.uniqueId} value={this.props.value} onChange={this.onInputChange}
+          min={this.props.definition.minValue} max={this.props.definition.maxValue} step={this.props.definition.stepSize}
+        />
+      </React.Fragment>
     );
   }
 
   private renderBooleanInput() {
     return (
-      <input type="checkbox" />
+      <React.Fragment>
+        <label htmlFor={this.uniqueId}>{this.props.definition.displayName}</label>
+        <input type="checkbox" id={this.uniqueId} value={this.props.value} onChange={this.onCheckboxChange} />
+      </React.Fragment>
     );
   }
 
@@ -185,7 +210,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
 
   public render() {
     return (
-      <div className="OptionItem">
+      <div className="OptionItem" data-valuetype={this.props.definition.valueType}>
         {this.renderInput()}
       </div>
     );

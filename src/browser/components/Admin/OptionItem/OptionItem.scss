@@ -1,1 +1,26 @@
-div.OptionItem {}
+div.OptionItem {
+    &[data-valuetype='boolean'] {
+        display: flex;
+    }
+    // width: 100%;
+    margin-left: 6px;
+    line-height: 32px;
+    &>div.OptionList,
+    ~div.OptionItem {
+        border-top: 1px solid #eee;
+    }
+    label {
+        display: inline-block;
+        width: 50%;
+    }
+    input,
+    select {
+        height: 32px;
+        width: 50%;
+        border: none;
+        padding-left: 6px;
+        background: lightcyan;
+        box-sizing: border-box;
+        margin: 0;
+    }
+}

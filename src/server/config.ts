@@ -8,7 +8,7 @@ export const createConfig = (root: string): IBackendServiceConfig => {
         frontendPort: 3000,
         backendPort: isDev ? 5000 : 3000,
         defaultSystemSettings: {
-            lang: 'de',
+            lang: 'en',
             location: '',
             theme: 'default',
             timezone: 'Europe/Berlin',

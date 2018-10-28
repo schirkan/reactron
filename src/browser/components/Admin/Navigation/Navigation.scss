@@ -6,14 +6,16 @@ section.Navigation {
     a {
         padding-bottom: 8px;
         padding-top: 11px;
-        color: white;
+        color: #ddd;
         text-decoration: none;
         border-bottom: 3px solid transparent;
         text-align: center;
         transition: 0.5s;
         &:hover,
-        &:active {
+        &:active,
+        &.active {
             background: transparent;
+            color: white;
         }
         &:nth-child(1) {
             &.active {

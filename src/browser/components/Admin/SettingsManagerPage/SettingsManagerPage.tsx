@@ -17,7 +17,7 @@ export default class SettingsManagerPage extends React.Component<any, IModuleMan
   constructor(props: any) {
     super(props);
 
-    this.state = { loading: false };
+    this.state = { loading: true };
 
     this.loadSettings = this.loadSettings.bind(this);
     this.saveSettings = this.saveSettings.bind(this);
@@ -29,7 +29,7 @@ export default class SettingsManagerPage extends React.Component<any, IModuleMan
 
   public loadSettings(): Promise<void> {
     return apiClient.getSettings()
-      .then(settings => this.setState({ settings }))
+      .then(settings => this.setState({ settings, loading: false }))
       .catch(); // TODO
   }
 
