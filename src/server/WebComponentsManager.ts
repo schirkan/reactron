@@ -4,6 +4,9 @@ import { IWebComponentOptions } from "../interfaces/IWebComponentOptions";
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
 
+// tslint:disable-next-line:no-var-requires
+const uuidv4 = require('uuid/v4');
+
 export class WebComponentsManager {
     private repository: ElectronStore<{ list: IWebComponentOptions[] }>
 
@@ -18,14 +21,15 @@ export class WebComponentsManager {
         return this.repository.store.list;
     }
 
-    public createOrUpdate(page: IWebComponentOptions): void {
+    public createOrUpdate(item: IWebComponentOptions): void {
         const items = this.repository.store.list;
-        const index = items.findIndex(x => x.id === page.id);
+        const index = item.id ? items.findIndex(x => x.id === item.id) : -1;
 
         if (index >= 0) {
-            items[index] = page;
+            items[index] = item;
         } else {
-            items.push(page);
+            item.id = uuidv4(); // generate new ID
+            items.push(item);
         }
 
         this.repository.store =  { list: items };

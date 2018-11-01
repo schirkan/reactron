@@ -15,6 +15,7 @@ export const createConfig = (root: string): IBackendServiceConfig => {
             startupPath: '/'
         },
         defaultWebPageOptions: [{
+            id: 'homepage',
             title: 'Home',
             path: '/',
             webComponentId: 'mylist',

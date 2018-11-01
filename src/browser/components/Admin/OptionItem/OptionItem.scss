@@ -15,7 +15,7 @@ div.OptionItem {
     }
     margin-left: 6px;
     line-height: 32px;
-    ~div.OptionItem {
+    +div.OptionItem {
         border-top: 1px solid #eee;
     }
     label,
@@ -39,6 +39,7 @@ div.OptionItem {
     }
     .item-header {
         display: flex;
+        padding: 0 !important;
         .header-text {
             width: 100%;
         }
@@ -56,7 +57,7 @@ div.OptionItem {
                 grid-column: 2;
                 text-align: center;
             }
-            >div.OptionItem~.arrayItemAddButton {
+            >div.OptionItem+.arrayItemAddButton {
                 border-top: 1px solid #eee;
             }
         }

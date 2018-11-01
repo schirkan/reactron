@@ -1,10 +1,11 @@
+import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
 import { ISystemSettings } from '../../../../interfaces/ISystemSettings';
 import { apiClient } from '../../../ApiClient';
-import Loading from '../../Loading/Loading';
+import OptionCard from '../OptionCard/OptionCard';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
-import UiOverlay from '../UiOverlay/UiOverlay';
-import SettingsCard from './SettingsCard/SettingsCard';
+import UiLoadingCard from '../UiLoadingCard/UiLoadingCard';
+import { systemSettingsFields } from './systemSettingsFields';
 
 import './SettingsManagerPage.css';
 
@@ -35,6 +36,7 @@ export default class SettingsManagerPage extends React.Component<any, IModuleMan
 
   public saveSettings(newSettings: ISystemSettings): Promise<void> {
     return apiClient.setSettings(undefined, newSettings)
+      .then(apiClient.getSettings.clearCache)
       .catch(); // TODO
   }
 
@@ -42,11 +44,16 @@ export default class SettingsManagerPage extends React.Component<any, IModuleMan
     return (
       <section className="SettingsManagerPage">
         {this.state.loading && (
-          <UiOverlay><Loading center={true} /></UiOverlay>
+          <UiFlowLayout>
+            <UiLoadingCard />
+          </UiFlowLayout>
         )}
         {this.state.settings && (
           <UiFlowLayout>
-            <SettingsCard settings={this.state.settings} onSave={this.saveSettings} />
+            <OptionCard options={this.state.settings} onSave={this.saveSettings}
+              fields={systemSettingsFields} icon={SolidIcons.faCogs}
+              title="Settings"
+            />
           </UiFlowLayout>
         )}
       </section>

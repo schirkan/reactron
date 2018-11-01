@@ -1,6 +1,9 @@
 section.ComponentNotFound {
-  text-align: center; }
+  padding: 20px;
+  text-align: center;
+  background: #ce5454;
+  color: white; }
   section.ComponentNotFound .text {
     margin-top: 10px; }
-    section.ComponentNotFound .text span ~ span {
+    section.ComponentNotFound .text span + span {
       margin-left: 6px; }

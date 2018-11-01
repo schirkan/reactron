@@ -14,11 +14,16 @@ export default class PageCard extends React.Component<IPageCardProps> {
   constructor(props: IPageCardProps) {
     super(props);
 
-    this.showOptions = this.showOptions.bind(this);
+    this.onEdit = this.onEdit.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
-  private showOptions() {
-    return;
+  private onEdit() {
+    return this.props.onEdit(this.props.page);
+  }
+
+  private onDelete() {
+    return this.props.onDelete(this.props.page);
   }
 
   public renderTitle() {
@@ -40,8 +45,11 @@ export default class PageCard extends React.Component<IPageCardProps> {
   public renderFooter() {
     return (
       <UiCardButtonRow divider="half">
-        <UiButton onClick={this.showOptions}>
-          <FontAwesomeIcon icon={SolidIcons.faCog} /> Options
+        <UiButton onClick={this.onEdit}>
+          <FontAwesomeIcon icon={SolidIcons.faCog} /> Edit
+        </UiButton>
+        <UiButton onClick={this.onDelete}>
+          <FontAwesomeIcon icon={SolidIcons.faTimes} /> Delete
         </UiButton>
       </UiCardButtonRow>
     );

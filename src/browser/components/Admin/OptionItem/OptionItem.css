@@ -12,7 +12,7 @@ div.OptionItem {
     margin-bottom: 6px; }
     div.OptionItem[data-hasdetails='true'][data-detailsvisible='true'] .item-header {
       border-bottom: 1px solid #88c5dd; }
-  div.OptionItem ~ div.OptionItem {
+  div.OptionItem + div.OptionItem {
     border-top: 1px solid #eee; }
   div.OptionItem label,
   div.OptionItem .header-text,
@@ -32,7 +32,8 @@ div.OptionItem {
     box-sizing: border-box;
     margin: 0; }
   div.OptionItem .item-header {
-    display: flex; }
+    display: flex;
+    padding: 0 !important; }
     div.OptionItem .item-header .header-text {
       width: 100%; }
   div.OptionItem .item-details {
@@ -45,7 +46,7 @@ div.OptionItem {
       div.OptionItem .item-details[data-isarray='true'] > .arrayItemAddButton {
         grid-column: 2;
         text-align: center; }
-      div.OptionItem .item-details[data-isarray='true'] > div.OptionItem ~ .arrayItemAddButton {
+      div.OptionItem .item-details[data-isarray='true'] > div.OptionItem + .arrayItemAddButton {
         border-top: 1px solid #eee; }
   div.OptionItem .UiButton {
     padding-top: 0;

@@ -12,7 +12,7 @@ a.RoundButton {
   text-align: center; }
   a.RoundButton:hover {
     background: rgba(255, 255, 255, 0.178); }
-  a.RoundButton ~ a.RoundButton {
+  a.RoundButton + a.RoundButton {
     transform: translateX(-100%);
     margin-right: 10px; }
   a.RoundButton svg {

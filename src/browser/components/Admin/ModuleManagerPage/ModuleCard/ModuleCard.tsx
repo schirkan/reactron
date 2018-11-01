@@ -57,7 +57,7 @@ export default class ModuleCard extends React.Component<IModuleCardProps, IModul
   public renderTitle() {
     let updateIcon: JSX.Element | undefined;
     if (this.props.module.hasUpdate) {
-      updateIcon = <span className="hasUpdates"><FontAwesomeIcon icon={SolidIcons.faStarOfLife} /></span>;
+      updateIcon = <span className="hasUpdate"><FontAwesomeIcon icon={SolidIcons.faStarOfLife} /></span>;
     }
 
     return (

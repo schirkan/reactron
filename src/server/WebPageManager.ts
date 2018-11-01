@@ -4,6 +4,9 @@ import { IWebPageOptions } from "../interfaces/IWebPageOptions";
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
 
+// tslint:disable-next-line:no-var-requires
+const uuidv4 = require('uuid/v4');
+
 export class WebPageManager {
     private repository: ElectronStore<{ list: IWebPageOptions[] }>
 
@@ -18,26 +21,27 @@ export class WebPageManager {
         return this.repository.store.list;
     }
 
-    public createOrUpdate(page: IWebPageOptions): void {
+    public createOrUpdate(item: IWebPageOptions): void {
         const items = this.repository.store.list;
-        const id = items.findIndex(x => x.path === page.path);
+        const index = item.id ? items.findIndex(x => x.id === item.id) : -1;
 
-        if (id >= 0) {
-            items[id] = page;
+        if (index >= 0) {
+            items[index] = item;
         } else {
-            items.push(page);
+            item.id = uuidv4(); // generate new ID
+            items.push(item);
         }
 
         this.repository.store = { list: items };
         this.topics.publish('pages-updated', this.repository.store);
     }
 
-    public remove(path: string): void {
+    public remove(id: string): void {
         const items = this.repository.store.list;
-        const id = items.findIndex(x => x.path === path);
+        const index = items.findIndex(x => x.id === id);
 
-        if (id >= 0) {
-            items.splice(id);
+        if (index >= 0) {
+            items.splice(index);
         }
 
         this.repository.store = { list: items };

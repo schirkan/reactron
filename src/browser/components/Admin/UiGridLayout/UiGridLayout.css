@@ -1,19 +1,19 @@
-section.UiGridLayout {
+.UiGridLayout {
   padding-right: 20px; }
-  section.UiGridLayout > * {
+  .UiGridLayout > * {
     width: calc(25% - 20px);
     float: left;
     margin-top: 20px;
     margin-left: 20px; }
 
 @media screen and (max-width: 1200px) {
-  section.UiGridLayout > * {
+  .UiGridLayout > * {
     width: calc(33.3% - 20px); } }
 
 @media screen and (max-width: 900px) {
-  section.UiGridLayout > * {
+  .UiGridLayout > * {
     width: calc(50% - 20px); } }
 
 @media screen and (max-width: 600px) {
-  section.UiGridLayout > * {
+  .UiGridLayout > * {
     width: calc(100% - 20px); } }

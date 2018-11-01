@@ -21,7 +21,7 @@ export class WebPageController implements IExternalService {
         
         registerRoute(helper.moduleApiRouter, routes.deleteWebPage, async (req, res) => {
             console.log('WebPageController.remove');
-            helper.backendService.webPageManager.remove(req.params.path);
+            helper.backendService.webPageManager.remove(req.params.id);
             res.sendStatus(204);
         });
     }

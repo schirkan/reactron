@@ -20,7 +20,7 @@ exports.routes = {
     checkUpdates: new ApiRoute('/modules/checkUpdates/update', 'get'),
     getWebPages: new ApiRoute('/pages/', 'get'),
     setWebPage: new ApiRoute('/pages/', 'post'),
-    deleteWebPage: new ApiRoute('/pages/:path', 'delete'),
+    deleteWebPage: new ApiRoute('/pages/:id', 'delete'),
     getServerInfo: new ApiRoute('/app/', 'get'),
     exitApplication: new ApiRoute('/app/exitApplication', 'post'),
     restartApplication: new ApiRoute('/app/restartApplication', 'post'),

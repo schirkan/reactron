@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
+// tslint:disable-next-line:no-var-requires
+var uuidv4 = require('uuid/v4');
 var WebPageManager = /** @class */ (function () {
     function WebPageManager(topics, defaultOptions) {
         this.topics = topics;
@@ -13,23 +15,24 @@ var WebPageManager = /** @class */ (function () {
     WebPageManager.prototype.getAll = function () {
         return this.repository.store.list;
     };
-    WebPageManager.prototype.createOrUpdate = function (page) {
+    WebPageManager.prototype.createOrUpdate = function (item) {
         var items = this.repository.store.list;
-        var id = items.findIndex(function (x) { return x.path === page.path; });
-        if (id >= 0) {
-            items[id] = page;
+        var index = item.id ? items.findIndex(function (x) { return x.id === item.id; }) : -1;
+        if (index >= 0) {
+            items[index] = item;
         }
         else {
-            items.push(page);
+            item.id = uuidv4(); // generate new ID
+            items.push(item);
         }
         this.repository.store = { list: items };
         this.topics.publish('pages-updated', this.repository.store);
     };
-    WebPageManager.prototype.remove = function (path) {
+    WebPageManager.prototype.remove = function (id) {
         var items = this.repository.store.list;
-        var id = items.findIndex(function (x) { return x.path === path; });
-        if (id >= 0) {
-            items.splice(id);
+        var index = items.findIndex(function (x) { return x.id === id; });
+        if (index >= 0) {
+            items.splice(index);
         }
         this.repository.store = { list: items };
         this.topics.publish('pages-updated', this.repository.store);

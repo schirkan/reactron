@@ -1,23 +1,23 @@
-section.UiFlowLayout {
+.UiFlowLayout {
   padding: 10px;
   column-count: 4;
   column-gap: 0; }
-  section.UiFlowLayout > * {
+  .UiFlowLayout > * {
     width: calc(100% - 20px);
     padding: 10px;
     break-inside: avoid; }
-  section.UiFlowLayout ~ section.UiFlowLayout {
+  .UiFlowLayout + .UiFlowLayout {
     padding-top: 0px;
     margin-top: -10px; }
 
 @media screen and (max-width: 1200px) {
-  section.UiFlowLayout {
+  .UiFlowLayout {
     column-count: 3; } }
 
 @media screen and (max-width: 900px) {
-  section.UiFlowLayout {
+  .UiFlowLayout {
     column-count: 2; } }
 
 @media screen and (max-width: 600px) {
-  section.UiFlowLayout {
+  .UiFlowLayout {
     column-count: 1; } }

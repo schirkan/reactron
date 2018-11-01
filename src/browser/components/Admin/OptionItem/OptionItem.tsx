@@ -1,6 +1,7 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
+import { getDefaultFieldValue } from '../../../../common/getDefaultFieldValue';
 import { IFieldDefinition } from '../../../../interfaces/IObjectDefinition';
 import OptionList from '../OptionList/OptionList';
 import UiButton from '../UiButton/UiButton';
@@ -50,32 +51,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     this.toggleItemDetails = this.toggleItemDetails.bind(this);
   }
 
-  private getDefaultValue(field: IFieldDefinition) {
-    const value = field.defaultValue;
-
-    if (field.isArray) {
-      if (value && Array.isArray(value)) {
-        return value;
-      }
-      return [];
-    }
-
-    switch (field.valueType) {
-      case 'object':
-        return value || {};
-      case 'number':
-        return value || 0;
-      case 'boolean':
-        return value || false;
-      case 'string':
-        return value || '';
-      case 'style':
-        return value || {};
-      case 'webComponent':
-        return null;
-    }
-    return null;
-  }
+  
 
   private triggerValueChange(newValue: any) {
     this.props.valueChange(this.props.definition, newValue);
@@ -101,7 +77,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
 
     let array = this.props.value as any[] || [];
     array = array.slice();
-    array.push(this.getDefaultValue(arrayItemDefinition));
+    array.push(getDefaultFieldValue(arrayItemDefinition));
     this.props.valueChange(this.props.definition, array);
   }
 

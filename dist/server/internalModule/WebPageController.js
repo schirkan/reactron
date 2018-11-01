@@ -65,7 +65,7 @@ var WebPageController = /** @class */ (function () {
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.deleteWebPage, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('WebPageController.remove');
-                        helper.backendService.webPageManager.remove(req.params.path);
+                        helper.backendService.webPageManager.remove(req.params.id);
                         res.sendStatus(204);
                         return [2 /*return*/];
                     });

@@ -15,6 +15,7 @@ exports.createConfig = function (root) {
             startupPath: '/'
         },
         defaultWebPageOptions: [{
+                id: 'homepage',
                 title: 'Home',
                 path: '/',
                 webComponentId: 'mylist',

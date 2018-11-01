@@ -27,7 +27,7 @@ export const routes = {
 
     getWebPages: new ApiRoute<undefined, undefined, IWebPageOptions[]>('/pages/', 'get'),
     setWebPage: new ApiRoute<undefined, IWebPageOptions>('/pages/', 'post'),
-    deleteWebPage: new ApiRoute<{ path: string }, undefined>('/pages/:path', 'delete'),
+    deleteWebPage: new ApiRoute<{ id: string }, undefined>('/pages/:id', 'delete'),
 
     getServerInfo: new ApiRoute<undefined, undefined, IServerInfo>('/app/', 'get'),
     exitApplication: new ApiRoute<undefined, undefined>('/app/exitApplication', 'post'),

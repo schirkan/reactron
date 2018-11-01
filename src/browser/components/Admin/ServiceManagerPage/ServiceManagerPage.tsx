@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IServiceRepositoryItem } from '../../../../interfaces/IServiceRepositoryItem';
 import { apiClient } from '../../../ApiClient';
-import OptionList from '../OptionList/OptionList';
+import OptionCard from '../OptionCard/OptionCard';
 import UiButton from '../UiButton/UiButton';
 import UiCard from '../UiCard/UiCard';
 import UiCardButtonRow from '../UiCardButtonRow/UiCardButtonRow';
@@ -56,7 +56,7 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
   public loadServices() {
     return apiClient.getAllServices()
       .then(services => this.setState({ services, loadingServices: false }))
-      .catch(); // TODO
+      .catch(err => this.setState({ loadingServices: false })); // TODO
   }
 
   private showLog(service: IServiceRepositoryItem) {
@@ -114,67 +114,90 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
     this.closeOptions();
   }
 
+  private renderServiceOptionsDialog() {
+    if (!this.state.showOptions || !this.state.selectedService) {
+      return null;
+    }
+    if (this.state.loadingServiceOptions) {
+      return <UiOverlay><UiLoadingCard /></UiOverlay>;
+    }
+
+    const title = 'Options for ' + this.state.selectedService.displayName;
+
+    return (
+      <UiOverlay>
+        <OptionCard icon={SolidIcons.faCogs}
+          title={title} fields={this.state.selectedService.options || []}
+          options={this.state.selectedServiceOptions}
+          onSave={this.saveOptions} onCancel={this.closeOptions}
+        />
+      </UiOverlay>
+    );
+  }
+
+  private renderServiceLogDialog() {
+    if (!this.state.showLog || !this.state.selectedService) {
+      return null;
+    }
+
+    return (
+      <UiOverlay>
+        <UiCard className="ServiceLogCard">
+          <UiCardTitle>
+            Log for {this.state.selectedService.displayName}
+          </UiCardTitle>
+          <UiCardContent>
+            <ul>
+              {this.state.selectedService.log.map(item => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </UiCardContent>
+          <UiCardButtonRow divider="full">
+            <UiButton onClick={this.closeLog}>
+              <FontAwesomeIcon icon={SolidIcons.faTimes} /> Close
+            </UiButton>
+          </UiCardButtonRow>
+        </UiCard>
+      </UiOverlay>
+    );
+  }
+
+  private renderServiceGroups() {
+    if (this.state.loadingServices) {
+      return <UiFlowLayout><UiLoadingCard /></UiFlowLayout>;
+    }
+
+    const groups = this.state.services.map(x => x.moduleName).filter(onlyUnique);
+    return groups.map(moduleName => this.renderServiceGroup(moduleName));
+  }
+
+  private renderServiceGroup(moduleName: string) {
+    const services = this.state.services.filter(x => x.moduleName === moduleName); // TODO: .sort((a, b) => a.displayName > b.displayName)
+
+    return (
+      <React.Fragment key={moduleName}>
+        <div className="group-header"><FontAwesomeIcon icon={SolidIcons.faCube} /> {moduleName}</div>
+        <UiFlowLayout>
+          {services.map(item =>
+            <ServiceCard key={item.name} service={item} onShowLog={this.showLog} onShowOptions={this.showOptions} />
+          )}
+        </UiFlowLayout>
+      </React.Fragment>
+    );
+  }
+
   public render() {
     return (
       <section className="ServiceManagerPage">
-        {this.state.loadingServices && (
-          <UiFlowLayout>
-            <UiLoadingCard />
-          </UiFlowLayout>
-        )}
-        {this.state.services && (
-          <UiFlowLayout>
-            {this.state.services.map(item =>
-              <ServiceCard key={item.name} service={item} onShowLog={this.showLog} onShowOptions={this.showOptions} />
-            )}
-          </UiFlowLayout>
-        )}
-        {this.state.showOptions && this.state.selectedService && (
-          <UiOverlay>
-            {this.state.loadingServiceOptions && <UiLoadingCard />}
-            {!this.state.loadingServiceOptions && (
-              <UiCard className="ServiceOptionsCard">
-                <UiCardTitle>
-                  Options for {this.state.selectedService.displayName}
-                </UiCardTitle>
-                <OptionList definitions={this.state.selectedService.options}
-                  value={this.state.selectedServiceOptions}
-                  valueChange={this.optionsChange}
-                />
-                <UiCardButtonRow divider="full">
-                  <UiButton onClick={this.closeOptions}>
-                    <FontAwesomeIcon icon={SolidIcons.faTimes} /> Cancel
-                  </UiButton>
-                  <UiButton onClick={this.saveOptions}>
-                    <FontAwesomeIcon icon={SolidIcons.faSave} /> Save
-                  </UiButton>
-                </UiCardButtonRow>
-              </UiCard>
-            )}
-          </UiOverlay>
-        )}
-        {this.state.showLog && this.state.selectedService && (
-          <UiOverlay>
-            <UiCard className="ServiceLogCard">
-              <UiCardTitle>
-                Log for {this.state.selectedService.displayName}
-              </UiCardTitle>
-              <UiCardContent>
-                <ul>
-                  {this.state.selectedService.log.map(item => (
-                    <li>{item}</li>
-                  ))}
-                </ul>
-              </UiCardContent>
-              <UiCardButtonRow divider="full">
-                <UiButton onClick={this.closeLog}>
-                  <FontAwesomeIcon icon={SolidIcons.faTimes} /> Close
-                </UiButton>
-              </UiCardButtonRow>
-            </UiCard>
-          </UiOverlay>
-        )}
+        {this.renderServiceGroups()}
+        {this.renderServiceOptionsDialog()}
+        {this.renderServiceLogDialog()}
       </section>
     );
   }
+}
+
+function onlyUnique(value: any, index: number, self: any[]) {
+  return self.indexOf(value) === index;
 }

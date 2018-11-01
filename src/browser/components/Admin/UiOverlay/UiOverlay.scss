@@ -1,4 +1,4 @@
-div.UiOverlay {
+.UiOverlay {
     position: fixed;
     z-index: 1;
     background: rgba(99, 99, 99, 0.47);
@@ -19,11 +19,20 @@ div.UiOverlay {
         left: 0;
         right: 0;
         width: auto;
+        max-height: fit-content;
+        .UiCardTitle {
+            position: sticky;
+            top: 0;
+        }
+        .UiCardButtonRow {
+            position: sticky;
+            bottom: 0;
+        }
     }
 }
 
 @media screen and (min-width: 601px) {
-    div.UiOverlay>.UiCard {
+    .UiOverlay>.UiCard {
         position: absolute;
         margin: 20px 0;
         top: 118px;
