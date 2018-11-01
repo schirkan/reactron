@@ -20,11 +20,11 @@ export default class UiButton extends React.Component<IUiButtonProps, IUiButtonS
   }
 
   private onClick() {
-    if (this.props.disabled || this.state.running || !this.props.onClick) {
+    if (!this.props.onClick || this.props.disabled || this.state.running) {
       return;
     }
     this.setState({ running: true }, () => {
-      Promise.resolve(this.props.onClick())
+      Promise.resolve(this.props.onClick && this.props.onClick())
         .catch()
         .then(() => {
           if (!this.disposed) {

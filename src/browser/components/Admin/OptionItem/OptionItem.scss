@@ -1,17 +1,31 @@
 div.OptionItem {
-    &[data-valuetype='boolean'] {
+    &[data-hasdetails='false'] {
         display: flex;
     }
-    // width: 100%;
+    &[data-hasdetails='true'][data-detailsvisible='true'] {
+        border-left: 3px solid #88c5dd;
+        border-top: 1px solid #88c5dd;
+        border-bottom: 1px solid #88c5dd;
+        margin-left: 0px;
+        padding-left: 3px;
+        margin-bottom: 6px;
+        .item-header {
+            border-bottom: 1px solid #88c5dd;
+        }
+    }
     margin-left: 6px;
     line-height: 32px;
-    &>div.OptionList,
     ~div.OptionItem {
         border-top: 1px solid #eee;
     }
-    label {
+    label,
+    .header-text,
+    .sub-header-text {
         display: inline-block;
         width: 50%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     input,
     select {
@@ -19,8 +33,36 @@ div.OptionItem {
         width: 50%;
         border: none;
         padding-left: 6px;
-        background: lightcyan;
+        background: white;
         box-sizing: border-box;
         margin: 0;
+    }
+    .item-header {
+        display: flex;
+        .header-text {
+            width: 100%;
+        }
+    }
+    .item-details {
+        &[hidden] {
+            display: none !important;
+        }
+        overflow: hidden;
+        // array
+        &[data-isarray='true'] {
+            display: grid;
+            grid-template: auto / 33px auto;
+            >.arrayItemAddButton {
+                grid-column: 2;
+                text-align: center;
+            }
+            >div.OptionItem~.arrayItemAddButton {
+                border-top: 1px solid #eee;
+            }
+        }
+    }
+    .UiButton {
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }

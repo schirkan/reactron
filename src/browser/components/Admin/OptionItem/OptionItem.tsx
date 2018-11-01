@@ -1,3 +1,5 @@
+import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IFieldDefinition } from '../../../../interfaces/IObjectDefinition';
 import OptionList from '../OptionList/OptionList';
@@ -8,16 +10,36 @@ import './OptionItem.css';
 let counter = 0;
 
 interface IOptionItemProps {
-  definition: IFieldDefinition,
-  value: any,
-  valueChange: (definition: IFieldDefinition, newValue: any) => void
+  definition: IFieldDefinition;
+  value: any;
+  valueChange: (definition: IFieldDefinition, newValue: any) => void;
 }
 
-export default class OptionItem extends React.Component<IOptionItemProps> {
-  private uniqueId = 'ID' + counter;
+interface IOptionItemState {
+  uniqueId: string;
+  hasDetails: boolean;
+  detailsVisible: boolean;
+}
 
+export default class OptionItem extends React.Component<IOptionItemProps, IOptionItemState> {
   constructor(props: IOptionItemProps) {
     super(props);
+
+    let hasDetails = !!props.definition.isArray;
+
+    switch (props.definition.valueType) {
+      case 'object':
+      case 'style':
+      case 'webComponent':
+        hasDetails = true;
+        break;
+    }
+
+    this.state = {
+      uniqueId: 'ID' + (counter++),
+      hasDetails,
+      detailsVisible: false
+    };
 
     this.triggerValueChange = this.triggerValueChange.bind(this);
     this.arrayItemAdd = this.arrayItemAdd.bind(this);
@@ -25,8 +47,7 @@ export default class OptionItem extends React.Component<IOptionItemProps> {
     this.onInputChange = this.onInputChange.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
     this.onSelectValueChange = this.onSelectValueChange.bind(this);
-
-    counter++;
+    this.toggleItemDetails = this.toggleItemDetails.bind(this);
   }
 
   private getDefaultValue(field: IFieldDefinition) {
@@ -60,7 +81,7 @@ export default class OptionItem extends React.Component<IOptionItemProps> {
     this.props.valueChange(this.props.definition, newValue);
   }
 
-  private arrayItemChange(index: number, newValue: any) {
+  private arrayItemChange(index: number, definition: IFieldDefinition, newValue: any) {
     let array = this.props.value as any[] || [];
     array = array.slice();
     array[index] = newValue;
@@ -75,35 +96,38 @@ export default class OptionItem extends React.Component<IOptionItemProps> {
   }
 
   private arrayItemAdd() {
+    const arrayItemDefinition = { ...this.props.definition };
+    arrayItemDefinition.isArray = false;
+
     let array = this.props.value as any[] || [];
     array = array.slice();
-    array.push(this.getDefaultValue(this.props.definition));
+    array.push(this.getDefaultValue(arrayItemDefinition));
     this.props.valueChange(this.props.definition, array);
   }
 
   private renderArray() {
     const array = this.props.value as any[] || [];
-
     return (
       <React.Fragment>
-        <div>
-          <span>Array {this.props.definition.displayName} ({array.length} items)</span>
-          <UiButton onClick={this.arrayItemAdd}>+</UiButton>
-        </div>        
         {array.map((value, index) => this.renderArrayItem(value, index))}
+        <UiButton onClick={this.arrayItemAdd} className="arrayItemAddButton">
+          <FontAwesomeIcon icon={SolidIcons.faPlus} /> Add item
+        </UiButton>
       </React.Fragment>
     );
   }
 
   private renderArrayItem(value: any, index: number) {
-    const definition = { ...this.props.definition };
-    definition.isArray = false;
-    definition.displayName = index.toString();
+    const arrayItemDefinition = { ...this.props.definition };
+    arrayItemDefinition.isArray = false;
+    arrayItemDefinition.displayName = (index + 1).toString();
 
     return (
       <React.Fragment key={index}>
-        <OptionItem definition={definition} value={value} valueChange={this.arrayItemChange.bind(this, index)} />
-        <UiButton onClick={this.arrayItemRemove.bind(this, index)}>-</UiButton>
+        <UiButton onClick={this.arrayItemRemove.bind(this, index)}>
+          <FontAwesomeIcon icon={SolidIcons.faMinus} />
+        </UiButton>
+        <OptionItem definition={arrayItemDefinition} value={value} valueChange={this.arrayItemChange.bind(this, index)} />
       </React.Fragment>
     );
   }
@@ -113,10 +137,7 @@ export default class OptionItem extends React.Component<IOptionItemProps> {
       return <span>Not itemDefinition</span>;
     }
     return (
-      <React.Fragment>
-        <div>Object {this.props.definition.displayName}</div>
-        <OptionList definitions={this.props.definition.fields} value={this.props.value} valueChange={this.triggerValueChange} />
-      </React.Fragment>
+      <OptionList definitions={this.props.definition.fields} value={this.props.value} valueChange={this.triggerValueChange} />
     );
   }
 
@@ -132,85 +153,128 @@ export default class OptionItem extends React.Component<IOptionItemProps> {
     this.triggerValueChange(e.currentTarget.checked);
   }
 
-  private renderTextInput() {
-    let inputControl;
-    if (this.props.definition.values) {
-      const options = this.props.definition.values.map((item, index) =>
-        <option key={index} value={item.value}>{item.text}</option>
-      );
-      inputControl = (
-        <select id={this.uniqueId} value={this.props.value} onChange={this.onSelectValueChange}>
-          {options}
-        </select>
-      );
-    } else {
-      inputControl = <input type="text" id={this.uniqueId} value={this.props.value} onChange={this.onInputChange} />;
-    }
+  private renderDropDown() {
+    const values = this.props.definition.values || [];
+    const options = values.map((item, index) =>
+      <option key={index} value={item.value}>{item.text}</option>
+    );
 
     return (
-      <React.Fragment>
-        <label htmlFor={this.uniqueId}>{this.props.definition.displayName}</label>
-        {inputControl}
-      </React.Fragment>
+      <select id={this.state.uniqueId} value={this.props.value} onChange={this.onSelectValueChange}>
+        {options}
+      </select>
+    );
+  }
+
+  private renderTextInput() {
+    return (
+      <input type="text" id={this.state.uniqueId} value={this.props.value} onChange={this.onInputChange} />
     );
   }
 
   private renderNumberInput() {
     return (
-      <React.Fragment>
-        <label htmlFor={this.uniqueId}>{this.props.definition.displayName}</label>
-        <input type="number" id={this.uniqueId} value={this.props.value} onChange={this.onInputChange}
-          min={this.props.definition.minValue} max={this.props.definition.maxValue} step={this.props.definition.stepSize}
-        />
-      </React.Fragment>
+      <input type="number" id={this.state.uniqueId} value={this.props.value} onChange={this.onInputChange}
+        min={this.props.definition.minValue} max={this.props.definition.maxValue} step={this.props.definition.stepSize}
+      />
     );
   }
 
   private renderBooleanInput() {
     return (
-      <React.Fragment>
-        <label htmlFor={this.uniqueId}>{this.props.definition.displayName}</label>
-        <input type="checkbox" id={this.uniqueId} value={this.props.value} onChange={this.onCheckboxChange} />
-      </React.Fragment>
+      <input type="checkbox" id={this.state.uniqueId} value={this.props.value} onChange={this.onCheckboxChange} />
     );
   }
 
   private renderStyleInput() {
     return (
-      <input type="text" />
+      <React.Fragment>
+        TODO: STYLE
+      </React.Fragment>
     );
   }
 
   private renderWebComponentInput() {
     return (
-      <input type="text" />
+      <React.Fragment>
+        <input type="text" id={this.state.uniqueId} value={this.props.value} onChange={this.onInputChange} />
+      </React.Fragment>
     );
   }
 
-  public renderInput() {
+  private toggleItemDetails() {
+    this.setState(state => ({ detailsVisible: !state.detailsVisible }));
+  }
+
+  private renderItemHeader() {
+    let subHeaderText = null;
+
+    if (this.props.definition.isArray) {
+      const array = this.props.value as any[] || [];
+      subHeaderText = '(' + array.length + ' items)';
+    }
+
+    return (
+      <UiButton className="item-header" onClick={this.toggleItemDetails}>
+        <span className="header-text">{this.props.definition.displayName}</span>
+        {subHeaderText && <span className="sub-header-text">{subHeaderText}</span>}
+        <UiButton>
+          <FontAwesomeIcon icon={this.state.detailsVisible ? SolidIcons.faArrowDown : SolidIcons.faArrowRight} />
+        </UiButton>
+      </UiButton>
+    );
+  }
+
+  private renderLabel() {
+    if (this.state.hasDetails) {
+      return this.renderItemHeader();
+    }
+    return <label htmlFor={this.state.uniqueId}>{this.props.definition.displayName}</label>;
+  }
+
+  private renderInput() {
+    if (this.state.hasDetails) {
+      return (
+        <div className="item-details" hidden={!this.state.detailsVisible} data-isarray={this.props.definition.isArray ? 'true' : 'false'}>
+          {this.renderInputInternal()}
+        </div>
+      );
+    }
+    return this.renderInputInternal();
+  }
+
+  private renderInputInternal() {
     if (this.props.definition.isArray) {
       return this.renderArray();
     }
+
+    if (this.props.definition.values && this.props.definition.values.length) {
+      return this.renderDropDown();
+    }
+
     switch (this.props.definition.valueType) {
-      case 'object':
-        return this.renderObject();
       case 'number':
         return this.renderNumberInput();
       case 'boolean':
         return this.renderBooleanInput();
       case 'string':
         return this.renderTextInput();
+      case 'object':
+        return this.renderObject();
       case 'style':
         return this.renderStyleInput();
       case 'webComponent':
         return this.renderWebComponentInput();
     }
+
     return null;
   }
 
   public render() {
+
     return (
-      <div className="OptionItem" data-valuetype={this.props.definition.valueType}>
+      <div className="OptionItem" data-hasdetails={this.state.hasDetails ? 'true' : 'false'} data-detailsvisible={this.state.detailsVisible ? 'true' : 'false'}>
+        {this.renderLabel()}
         {this.renderInput()}
       </div>
     );
