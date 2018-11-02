@@ -6,7 +6,7 @@ export const iFrameDefinition: IComponentDefinition = {
     description: 'IFrame Component',
     displayName: 'IFrame',
     name: 'IFrame',
-    options: [
+    fields: [
         { displayName: 'URL', name: 'url', valueType: 'string' }
     ]
 };

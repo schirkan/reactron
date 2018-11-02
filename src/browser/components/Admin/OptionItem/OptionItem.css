@@ -4,24 +4,25 @@ div.OptionItem {
   div.OptionItem[data-hasdetails='false'] {
     display: flex; }
   div.OptionItem[data-hasdetails='true'][data-detailsvisible='true'] {
-    border-left: 3px solid #88c5dd;
-    border-top: 1px solid #88c5dd;
-    border-bottom: 1px solid #88c5dd;
+    border-left: 3px solid #68a;
+    border-top: 1px solid #68a;
+    border-bottom: 1px solid #68a;
     margin-left: 0px;
     padding-left: 3px;
     margin-bottom: 6px; }
     div.OptionItem[data-hasdetails='true'][data-detailsvisible='true'] .item-header {
-      border-bottom: 1px solid #88c5dd; }
+      border-bottom: 1px solid #68a; }
   div.OptionItem + div.OptionItem {
     border-top: 1px solid #eee; }
   div.OptionItem label,
   div.OptionItem .header-text,
   div.OptionItem .sub-header-text {
     display: inline-block;
-    width: 50%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; }
+  div.OptionItem label {
+    width: 50%; }
   div.OptionItem input,
   div.OptionItem select {
     height: 32px;
@@ -31,8 +32,12 @@ div.OptionItem {
     background: white;
     box-sizing: border-box;
     margin: 0; }
+    div.OptionItem input[type='range'],
+    div.OptionItem select[type='range'] {
+      padding-left: 0; }
   div.OptionItem .item-header {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto 33px;
     padding: 0 !important; }
     div.OptionItem .item-header .header-text {
       width: 100%; }

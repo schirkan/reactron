@@ -22,11 +22,12 @@ var WebComponentsManager = /** @class */ (function () {
             items[index] = item;
         }
         else {
-            item.id = uuidv4(); // generate new ID
+            item.id = 'WebComponent_' + uuidv4(); // generate new ID
             items.push(item);
         }
         this.repository.store = { list: items };
         this.topics.publish('components-updated', this.repository.store);
+        return item;
     };
     WebComponentsManager.prototype.remove = function (id) {
         var items = this.repository.store.list;

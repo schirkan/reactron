@@ -26,7 +26,7 @@ export const routes = {
     checkUpdates: new ApiRoute<{ moduleName: string }, undefined, ICommandResult[]>('/modules/checkUpdates/update', 'get'),
 
     getWebPages: new ApiRoute<undefined, undefined, IWebPageOptions[]>('/pages/', 'get'),
-    setWebPage: new ApiRoute<undefined, IWebPageOptions>('/pages/', 'post'),
+    setWebPage: new ApiRoute<undefined, IWebPageOptions, IWebPageOptions>('/pages/', 'post'),
     deleteWebPage: new ApiRoute<{ id: string }, undefined>('/pages/:id', 'delete'),
 
     getServerInfo: new ApiRoute<undefined, undefined, IServerInfo>('/app/', 'get'),
@@ -40,6 +40,6 @@ export const routes = {
     setSettings: new ApiRoute<undefined, ISystemSettings>('/settings/', 'post'),
 
     getWebComponentOptions: new ApiRoute<undefined, undefined, IWebComponentOptions[]>('/components/', 'get'),
-    setWebComponentOptions: new ApiRoute<undefined, IWebComponentOptions>('/components/', 'post'),
+    setWebComponentOptions: new ApiRoute<undefined, IWebComponentOptions, IWebComponentOptions>('/components/', 'post'),
     deleteWebComponentOptions: new ApiRoute<{ id: string }, undefined>('/components/:id', 'delete'),
 };

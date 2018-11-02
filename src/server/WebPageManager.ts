@@ -21,19 +21,20 @@ export class WebPageManager {
         return this.repository.store.list;
     }
 
-    public createOrUpdate(item: IWebPageOptions): void {
+    public createOrUpdate(item: IWebPageOptions): IWebPageOptions {
         const items = this.repository.store.list;
         const index = item.id ? items.findIndex(x => x.id === item.id) : -1;
 
         if (index >= 0) {
             items[index] = item;
         } else {
-            item.id = uuidv4(); // generate new ID
+            item.id = 'WebPage_' + uuidv4(); // generate new ID
             items.push(item);
         }
 
         this.repository.store = { list: items };
         this.topics.publish('pages-updated', this.repository.store);
+        return item;
     }
 
     public remove(id: string): void {

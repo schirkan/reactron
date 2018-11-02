@@ -6,5 +6,5 @@ export const welcomeDefinition: IComponentDefinition = {
     description: 'Welcome Component',
     displayName: 'Welcome',
     name: 'Welcome',
-    options: []
+    fields: []
 };

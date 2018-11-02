@@ -23,5 +23,5 @@ export interface IObjectDefinition {
     name: string;
     displayName: string;
     description?: string;
-    options?: IFieldDefinition[];
+    fields?: IFieldDefinition[];
 }

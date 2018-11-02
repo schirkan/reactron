@@ -49,6 +49,9 @@ export const systemSettingsFields: IFieldDefinition[] = [{
     {
       description: 'Sample Number',
       displayName: 'Number',
+      minValue: 0,
+      maxValue: 50,
+      stepSize: 5,
       name: 'numericValue',
       valueType: 'number'
     },

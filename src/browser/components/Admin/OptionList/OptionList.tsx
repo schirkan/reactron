@@ -5,9 +5,9 @@ import OptionItem from '../OptionItem/OptionItem';
 import './OptionList.css';
 
 interface IOptionListProps {
-  definitions?: IFieldDefinition[],
-  value: object,
-  valueChange: (newValue: object) => void
+  definitions?: IFieldDefinition[];
+  value: object;
+  valueChange: (newValue: object) => void;
 }
 
 export default class OptionList extends React.Component<IOptionListProps> {

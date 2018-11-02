@@ -15,8 +15,8 @@ export class WebPageController implements IExternalService {
         
         registerRoute(helper.moduleApiRouter, routes.setWebPage, async (req, res) => {
             console.log('WebPageController.createOrUpdate');
-            helper.backendService.webPageManager.createOrUpdate(req.body);
-            res.sendStatus(204);
+            const item = helper.backendService.webPageManager.createOrUpdate(req.body);
+            res.send(item);
         });
         
         registerRoute(helper.moduleApiRouter, routes.deleteWebPage, async (req, res) => {

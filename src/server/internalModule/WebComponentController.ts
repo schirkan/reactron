@@ -15,8 +15,8 @@ export class WebComponentController implements IExternalService {
         
         registerRoute(helper.moduleApiRouter, routes.setWebComponentOptions, async (req, res) => {
             console.log('WebComponentController.createOrUpdate');
-            helper.backendService.webComponentsManager.createOrUpdate(req.body);
-            res.sendStatus(204);
+            const item = helper.backendService.webComponentsManager.createOrUpdate(req.body);
+            res.send(item);
         });
         
         registerRoute(helper.moduleApiRouter, routes.deleteWebComponentOptions, async (req, res) => {

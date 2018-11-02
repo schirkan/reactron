@@ -5,4 +5,5 @@ section.AddModuleCard {
     border: none;
     width: 100%; }
   section.AddModuleCard .addButton {
-    border-left: 1px solid #ddd; }
+    border-left: 1px solid #ddd;
+    overflow: visible; }

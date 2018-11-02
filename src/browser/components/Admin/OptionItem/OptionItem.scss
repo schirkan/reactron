@@ -3,14 +3,14 @@ div.OptionItem {
         display: flex;
     }
     &[data-hasdetails='true'][data-detailsvisible='true'] {
-        border-left: 3px solid #88c5dd;
-        border-top: 1px solid #88c5dd;
-        border-bottom: 1px solid #88c5dd;
+        border-left: 3px solid #68a;
+        border-top: 1px solid #68a;
+        border-bottom: 1px solid #68a;
         margin-left: 0px;
         padding-left: 3px;
         margin-bottom: 6px;
         .item-header {
-            border-bottom: 1px solid #88c5dd;
+            border-bottom: 1px solid #68a;
         }
     }
     margin-left: 6px;
@@ -22,10 +22,12 @@ div.OptionItem {
     .header-text,
     .sub-header-text {
         display: inline-block;
-        width: 50%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+    label {
+        width: 50%;
     }
     input,
     select {
@@ -36,9 +38,13 @@ div.OptionItem {
         background: white;
         box-sizing: border-box;
         margin: 0;
+        &[type='range'] {
+            padding-left: 0;
+        }
     }
     .item-header {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto auto 33px;
         padding: 0 !important;
         .header-text {
             width: 100%;

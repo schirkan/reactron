@@ -3,16 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IServiceRepositoryItem } from '../../../../interfaces/IServiceRepositoryItem';
 import { apiClient } from '../../../ApiClient';
+import Loading from '../../Loading/Loading';
 import OptionCard from '../OptionCard/OptionCard';
 import UiButton from '../UiButton/UiButton';
 import UiCard from '../UiCard/UiCard';
 import UiCardButtonRow from '../UiCardButtonRow/UiCardButtonRow';
 import UiCardContent from '../UiCardContent/UiCardContent';
 import UiCardTitle from '../UiCardTitle/UiCardTitle';
-import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';
 import UiLoadingCard from '../UiLoadingCard/UiLoadingCard';
 import UiOverlay from '../UiOverlay/UiOverlay';
-import ServiceCard from './ServiceCard/ServiceCard';
+import ServiceGroup from './ServiceGroup/ServiceGroup';
 
 import './ServiceManagerPage.css';
 
@@ -127,7 +127,7 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
     return (
       <UiOverlay>
         <OptionCard icon={SolidIcons.faCogs}
-          title={title} fields={this.state.selectedService.options || []}
+          title={title} fields={this.state.selectedService.fields || []}
           options={this.state.selectedServiceOptions}
           onSave={this.saveOptions} onCancel={this.closeOptions}
         />
@@ -165,26 +165,18 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
 
   private renderServiceGroups() {
     if (this.state.loadingServices) {
-      return <UiFlowLayout><UiLoadingCard /></UiFlowLayout>;
+      return <Loading center={true} />;
     }
 
     const groups = this.state.services.map(x => x.moduleName).filter(onlyUnique);
-    return groups.map(moduleName => this.renderServiceGroup(moduleName));
-  }
 
-  private renderServiceGroup(moduleName: string) {
-    const services = this.state.services.filter(x => x.moduleName === moduleName); // TODO: .sort((a, b) => a.displayName > b.displayName)
-
-    return (
-      <React.Fragment key={moduleName}>
-        <div className="group-header"><FontAwesomeIcon icon={SolidIcons.faCube} /> {moduleName}</div>
-        <UiFlowLayout>
-          {services.map(item =>
-            <ServiceCard key={item.name} service={item} onShowLog={this.showLog} onShowOptions={this.showOptions} />
-          )}
-        </UiFlowLayout>
-      </React.Fragment>
-    );
+    return groups.map(moduleName => {
+      const services = this.state.services.filter(x => x.moduleName === moduleName); // TODO: .sort((a, b) => a.displayName > b.displayName)
+      return (
+        <ServiceGroup key={moduleName} moduleName={moduleName} services={services}
+          onShowServiceLog={this.showLog} onShowServiceOptions={this.showOptions} />
+      );
+    });
   }
 
   public render() {

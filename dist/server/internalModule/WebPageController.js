@@ -55,10 +55,11 @@ var WebPageController = /** @class */ (function () {
                     });
                 }); });
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.setWebPage, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var item;
                     return __generator(this, function (_a) {
                         console.log('WebPageController.createOrUpdate');
-                        helper.backendService.webPageManager.createOrUpdate(req.body);
-                        res.sendStatus(204);
+                        item = helper.backendService.webPageManager.createOrUpdate(req.body);
+                        res.send(item);
                         return [2 /*return*/];
                     });
                 }); });

@@ -11,8 +11,8 @@ exports.createOptions = function (options, objectDefinition) {
                 if (i === parts.length - 1) {
                     var value = options[key];
                     // fix value Type
-                    if (objectDefinition && objectDefinition.options) {
-                        var optionDefinition = objectDefinition.options.find(function (x) { return x.name === key; });
+                    if (objectDefinition && objectDefinition.fields) {
+                        var optionDefinition = objectDefinition.fields.find(function (x) { return x.name === key; });
                         if (optionDefinition && optionDefinition.valueType === 'number') {
                             value = Number.parseFloat(value);
                         }

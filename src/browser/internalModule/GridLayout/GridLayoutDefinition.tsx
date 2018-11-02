@@ -6,7 +6,7 @@ export const gridLayoutDefinition: IComponentDefinition = {
     description: 'Grid Layout',
     displayName: 'Grid Layout',
     name: 'GridLayout',
-    options: [
+    fields: [
         { displayName: 'Rows', name: 'rows', valueType: 'number' },
         { displayName: 'Columns', name: 'cols', valueType: 'number' },
         { displayName: 'Grid Style', name: 'gridStyle', valueType: 'style' },

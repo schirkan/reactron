@@ -55,10 +55,11 @@ var WebComponentController = /** @class */ (function () {
                     });
                 }); });
                 registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.setWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var item;
                     return __generator(this, function (_a) {
                         console.log('WebComponentController.createOrUpdate');
-                        helper.backendService.webComponentsManager.createOrUpdate(req.body);
-                        res.sendStatus(204);
+                        item = helper.backendService.webComponentsManager.createOrUpdate(req.body);
+                        res.send(item);
                         return [2 /*return*/];
                     });
                 }); });

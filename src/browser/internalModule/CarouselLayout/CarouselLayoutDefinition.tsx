@@ -6,5 +6,5 @@ export const carouselLayoutDefinition: IComponentDefinition = {
     description: 'Carousel Layout',
     displayName: 'Carousel Layout',
     name: 'CarouselLayout',
-    options: []
+    fields: []
 };

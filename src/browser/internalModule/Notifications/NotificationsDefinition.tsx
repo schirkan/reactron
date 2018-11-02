@@ -6,5 +6,5 @@ export const notificationsDefinition: IComponentDefinition = {
     description: 'Notifications',
     displayName: 'Notifications',
     name: 'Notifications',
-    options: []
+    fields: []
 };

@@ -159,7 +159,7 @@ export class ServiceManager {
             // get / init service options
             let serviceOptions = this.optionsRepository.get(moduleName, serviceName);
             if (!serviceOptions) {
-                serviceOptions = this.getDefaultObjectOptions(serviceDefinition.options);
+                serviceOptions = this.getDefaultObjectOptions(serviceDefinition.fields);
                 this.optionsRepository.set(moduleName, serviceName, serviceOptions);
                 console.log('Initializing Service Options for ' + serviceKey, serviceOptions);
             }

@@ -5,6 +5,7 @@ import { getDefaultFieldValue } from '../../../../common/getDefaultFieldValue';
 import { IFieldDefinition } from '../../../../interfaces/IObjectDefinition';
 import OptionList from '../OptionList/OptionList';
 import UiButton from '../UiButton/UiButton';
+import SelectWebComponent from './SelectWebComponent/SelectWebComponent';
 
 import './OptionItem.css';
 
@@ -51,7 +52,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     this.toggleItemDetails = this.toggleItemDetails.bind(this);
   }
 
-  
+
 
   private triggerValueChange(newValue: any) {
     this.props.valueChange(this.props.definition, newValue);
@@ -149,10 +150,17 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   }
 
   private renderNumberInput() {
+    let inputType = 'number';
+
+    if (this.props.definition.minValue !== undefined &&
+      this.props.definition.maxValue !== undefined) {
+      inputType = 'range';
+    }
+
     return (
-      <input type="number" id={this.state.uniqueId} value={this.props.value} onChange={this.onInputChange}
-        min={this.props.definition.minValue} max={this.props.definition.maxValue} step={this.props.definition.stepSize}
-      />
+      <input type={inputType} id={this.state.uniqueId} value={this.props.value}
+        onChange={this.onInputChange} step={this.props.definition.stepSize}
+        min={this.props.definition.minValue} max={this.props.definition.maxValue} />
     );
   }
 
@@ -171,9 +179,11 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   }
 
   private renderWebComponentInput() {
+    // <input type="text" id={this.state.uniqueId} value={this.props.value} onChange={this.onInputChange} />
+
     return (
-      <React.Fragment>
-        <input type="text" id={this.state.uniqueId} value={this.props.value} onChange={this.onInputChange} />
+      <React.Fragment>        
+        <SelectWebComponent onChange={this.triggerValueChange} webComponentId={this.props.value} />
       </React.Fragment>
     );
   }
@@ -193,7 +203,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     return (
       <UiButton className="item-header" onClick={this.toggleItemDetails}>
         <span className="header-text">{this.props.definition.displayName}</span>
-        {subHeaderText && <span className="sub-header-text">{subHeaderText}</span>}
+        <span className="sub-header-text">{subHeaderText}</span>
         <UiButton>
           <FontAwesomeIcon icon={this.state.detailsVisible ? SolidIcons.faArrowDown : SolidIcons.faArrowRight} />
         </UiButton>

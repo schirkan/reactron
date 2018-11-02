@@ -1,3 +1,4 @@
+import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
@@ -49,7 +50,7 @@ export default class PageCard extends React.Component<IPageCardProps> {
           <FontAwesomeIcon icon={SolidIcons.faCog} /> Edit
         </UiButton>
         <UiButton onClick={this.onDelete}>
-          <FontAwesomeIcon icon={SolidIcons.faTimes} /> Delete
+          <FontAwesomeIcon icon={RegularIcons.faTrashAlt} /> Delete
         </UiButton>
       </UiCardButtonRow>
     );

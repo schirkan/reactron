@@ -1,3 +1,4 @@
+import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
@@ -46,7 +47,7 @@ export default class ServiceCard extends React.Component<IServiceCardProps> {
     return (
       <UiCardButtonRow divider="half">
         <UiButton onClick={this.showLog}>
-          <FontAwesomeIcon icon={SolidIcons.faCog} /> Log
+          <FontAwesomeIcon icon={RegularIcons.faFile} /> Log
         </UiButton>
         <UiButton onClick={this.showOptions}>
           <FontAwesomeIcon icon={SolidIcons.faCog} /> Options

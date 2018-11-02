@@ -6,7 +6,7 @@ export const listLayoutDefinition: IComponentDefinition = {
   description: 'List Layout',
   displayName: 'List Layout',
   name: 'ListLayout',
-  options: [
+  fields: [
     { displayName: 'List Style', name: 'listStyle', valueType: 'style' },
     { displayName: 'Item Style', name: 'itemStyle', valueType: 'style' },
     {
