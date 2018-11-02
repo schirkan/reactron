@@ -1,9 +1,9 @@
+import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IWebPageOptions } from '../../../../interfaces/IWebPageOptions';
 import { apiClient } from '../../../ApiClient';
-import Loading from '../../Loading/Loading';
 import OptionCard from '../OptionCard/OptionCard';
 import UiButton from '../UiButton/UiButton';
 import UiCard from '../UiCard/UiCard';
@@ -118,7 +118,7 @@ export default class PageManagerPage extends React.Component<any, IModuleManager
 
     return (
       <UiOverlay>
-        <OptionCard icon={SolidIcons.faCogs}
+        <OptionCard icon={RegularIcons.faFile}
           title={title} fields={pageOptionsFields}
           onSave={this.savePage} onCancel={this.hidePageDetailsDialog} options={page || {}}
         />
@@ -129,9 +129,6 @@ export default class PageManagerPage extends React.Component<any, IModuleManager
   public render() {
     return (
       <section className="PageManagerPage">
-        {/* {this.state.loading && (
-          <UiOverlay><Loading center={true} /></UiOverlay>
-        )} */}
         {this.renderPageAddCard()}
         {this.renderPageCards()}
         {this.renderPageDetailsDialog()}

@@ -30,7 +30,7 @@ export default class PageCard extends React.Component<IPageCardProps> {
   public renderTitle() {
     return (
       <UiCardTitle>
-        <FontAwesomeIcon icon={SolidIcons.faPaperclip} /> {this.props.page.title}
+        <FontAwesomeIcon icon={RegularIcons.faFile} /> {this.props.page.title} ({this.props.page.path})
       </UiCardTitle>
     );
   }
@@ -60,7 +60,7 @@ export default class PageCard extends React.Component<IPageCardProps> {
     return (
       <UiCard className="PageCard">
         {this.renderTitle()}
-        {this.renderPath()}
+        {/* {this.renderPath()} */}
         {this.renderFooter()}
       </UiCard>
     );

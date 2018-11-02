@@ -1,24 +1,37 @@
 import { IFieldDefinition } from '../interfaces/IObjectDefinition';
 
 export const getDefaultFieldValue = (field: IFieldDefinition) => {
-  const value = field.defaultValue;
+  const defaultValue = field.defaultValue;
+
   if (field.isArray) {
-    if (value && Array.isArray(value)) {
-      return value;
+    if (defaultValue && Array.isArray(defaultValue)) {
+      return defaultValue;
     }
     return [];
   }
+
   switch (field.valueType) {
     case 'object':
-      return value || {};
+      let result: any = defaultValue;
+
+      if (result === undefined) {
+        result = {};
+        if (field.fields) {
+          field.fields.forEach(f => {
+            result[f.name] = getDefaultFieldValue(f);
+          });
+        }
+      }
+
+      return result;
     case 'number':
-      return value || 0;
+      return defaultValue || 0;
     case 'boolean':
-      return value || false;
+      return defaultValue || false;
     case 'string':
-      return value || '';
+      return defaultValue || '';
     case 'style':
-      return value || {};
+      return defaultValue || {};
     case 'webComponent':
       return undefined;
   }

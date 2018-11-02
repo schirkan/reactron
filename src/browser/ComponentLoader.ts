@@ -3,6 +3,7 @@ import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
+import { IModuleRepositoryItem } from 'src/interfaces/IModuleRepositoryItem';
 import { IComponentDefinition } from '../interfaces/IComponentDefinition';
 import { apiClient } from './ApiClient';
 import { BrowserModuleHelper } from './BrowserModuleHelper';
@@ -34,6 +35,7 @@ SystemJS.register('@fortawesome/free-solid-svg-icons', [], exports => ({ execute
 SystemJS.register('@fortawesome/react-fontawesome', [], exports => ({ execute: () => exports(FontAwesome) }));
 
 export class ComponentLoader {
+    private allComponentsLoaded = false;
     private moduleComponents: { [moduleName: string]: IComponentDefinition[] } = {
         'reactron': internalComponents
     };
@@ -48,31 +50,48 @@ export class ComponentLoader {
                 return;
             }
 
-            if (!m.browserFile) {
-                console.log('Module has no browserFile: ' + moduleName);
-                return;
-            }
-
-            try {
-                console.log(m.browserFile);
-
-                // const url = await SystemJS.get(m.browserFile);
-                // console.log(url);
-
-                const browserFileContent = await SystemJS.import('\\' + m.browserFile);
-                // tslint:disable-next-line:no-string-literal
-                const components = browserFileContent['components'];
-
-                if (components && typeof components === 'object' && Array.isArray(components)) {
-                    this.moduleComponents[moduleName] = components;
-                }
-                console.log('Components loaded for module: ' + moduleName);
-            } catch (error) {
-                console.log('Error loading components for module: ' + moduleName, error);
-            }
+            await this.registerModuleComponents(m);
         }
 
         return this.moduleComponents[moduleName];
+    }
+
+    private async registerModuleComponents(m: IModuleRepositoryItem): Promise<void> {
+        if (!m.browserFile) {
+            console.log('Module has no browserFile: ' + m.name);
+            return;
+        }
+
+        if (this.moduleComponents[m.name]) {
+            return;
+        }
+
+        try {
+            console.log(m.browserFile);
+
+            const browserFileContent = await SystemJS.import('\\' + m.browserFile);
+            // tslint:disable-next-line:no-string-literal
+            const components = browserFileContent['components'];
+
+            if (components && typeof components === 'object' && Array.isArray(components)) {
+                this.moduleComponents[m.name] = components;
+            }
+            console.log('Components loaded for module: ' + m.name);
+        } catch (error) {
+            console.log('Error loading components for module: ' + m.name, error);
+        }
+    }
+
+    public async getAllComponents(): Promise<{ [moduleName: string]: IComponentDefinition[] }> {
+        if (this.allComponentsLoaded) {
+            return this.moduleComponents;
+        }
+        const modules = await apiClient.getModules();
+        for (const m of modules) {
+            await this.registerModuleComponents(m);
+        }
+        this.allComponentsLoaded = true;
+        return this.moduleComponents;
     }
 }
 

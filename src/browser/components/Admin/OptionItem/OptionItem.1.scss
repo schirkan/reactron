@@ -1,20 +1,23 @@
-.OptionItem {
-    border-top: 1px solid transparent;
+div.OptionItem {
     &[data-hasdetails='false'] {
         display: flex;
     }
-    &[data-hasdetails='true'][data-detailsvisible='true'] {
-        border-left: 3px solid #68a !important;
-        border-top: 1px solid #68a !important;
-        border-bottom: 1px solid #68a !important;
-        margin-left: 0px;
-        padding-left: 3px;
-        margin-bottom: 6px;
-        >.item-header {
-            border-bottom: 1px solid #eee;
-            // border-bottom: 1px solid #68a;
-        }
-    }
+    // &[data-detailsvisible='true'] {
+    // border-left: 3px solid #68a;
+    // border-top: 1px solid #68a;
+    // border-bottom: 1px solid #68a;
+    // margin-left: 0px;
+    // padding-left: 3px;
+    // margin-bottom: 6px;
+    // .item-header {
+    //     border-bottom: 1px solid #68a;
+    // }
+    // margin-bottom: 0px;
+    // border-bottom: none;
+    // .item-header {
+    //     border-bottom: none;
+    // }
+    // }
     margin-left: 6px;
     line-height: 32px;
     +div.OptionItem {
@@ -53,10 +56,21 @@
         }
     }
     .item-details {
-        &[hidden] {
-            display: none !important;
-        }
-        overflow: hidden;
+        position: absolute;
+        //overflow: auto;
+        // border: none;
+        background: white;
+        width: 100%;
+        height: 100%;
+        left: 100%;
+        // bottom: 0;
+        // right: 0;
+        left: 0;
+        top: 0;
+        transform: translateX(100%);
+        //margin: 0;
+        // z-index: 1;
+        // array
         .arrayContainer {
             display: grid;
             grid-template: auto / 33px auto;
@@ -64,8 +78,8 @@
                 grid-column: 2;
                 text-align: center;
             }
-            >.OptionItem {
-                border-bottom: 1px solid #eee;
+            >div.OptionItem+.arrayItemAddButton {
+                border-top: 1px solid #eee;
             }
         }
     }
@@ -75,12 +89,14 @@
     }
 }
 
-// .slideInRight {
-//     animation: slideInRight 0.5s forwards;
-// }
-// .slideOutRight {
-//     animation: slideOutRight 0.5s forwards;
-// }
+.slideInRight {
+    animation: slideInRight 0.5s forwards;
+}
+
+.slideOutRight {
+    animation: slideOutRight 0.5s forwards;
+}
+
 @keyframes slideInRight {
     0% {
         transform: translateX(100%);

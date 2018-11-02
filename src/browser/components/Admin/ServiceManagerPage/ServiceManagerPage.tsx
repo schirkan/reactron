@@ -1,3 +1,4 @@
+import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
@@ -144,7 +145,7 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
       <UiOverlay>
         <UiCard className="ServiceLogCard">
           <UiCardTitle>
-            Log for {this.state.selectedService.displayName}
+          <FontAwesomeIcon icon={RegularIcons.faFile} /> Log for {this.state.selectedService.displayName}
           </UiCardTitle>
           <UiCardContent>
             <ul>

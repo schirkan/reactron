@@ -1,0 +1,6 @@
+.OptionCard > .OptionList {
+  position: relative;
+  overflow-x: hidden; }
+
+.OptionCard .debug {
+  display: none; }

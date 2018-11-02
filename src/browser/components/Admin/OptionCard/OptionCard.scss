@@ -1,1 +1,10 @@
-.OptionCard {}
+.OptionCard {
+    >.OptionList {
+        position: relative;
+        // min-height: 300px;
+        overflow-x: hidden;
+    }
+    .debug {
+        display: none;
+    }
+}

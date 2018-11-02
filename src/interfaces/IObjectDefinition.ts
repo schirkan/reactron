@@ -10,7 +10,7 @@ export interface IFieldDefinition {
     displayName: string;
     description?: string;
     valueType: IOptionDefinitionValueType;
-    defaultValue?: number | boolean | string;
+    defaultValue?: number | boolean | string; // TODO: Object & array
     minValue?: number;
     maxValue?: number;
     stepSize?: number;
