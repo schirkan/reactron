@@ -1,11 +1,13 @@
+import * as Regularcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
-import { getDefaultFieldValue } from '../../../../common/getDefaultFieldValue';
+import * as uuidv4 from 'uuid/v4';
+import { getDefaultFieldValue } from '../../../../common/optionsHelper';
 import { IFieldDefinition } from '../../../../interfaces/IObjectDefinition';
 import OptionList from '../OptionList/OptionList';
 import UiButton from '../UiButton/UiButton';
-import SelectWebComponent from './SelectWebComponent/SelectWebComponent';
+import WebComponentForm from './WebComponentForm/WebComponentForm';
 
 import './OptionItem.css';
 
@@ -24,6 +26,8 @@ interface IOptionItemState {
 }
 
 export default class OptionItem extends React.Component<IOptionItemProps, IOptionItemState> {
+  private arrayKeys: string[] = [];
+
   constructor(props: IOptionItemProps) {
     super(props);
 
@@ -40,19 +44,18 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     this.state = {
       uniqueId: 'ID' + (counter++),
       hasDetails,
-      // detailsVisible: false
     };
 
     this.triggerValueChange = this.triggerValueChange.bind(this);
     this.arrayItemAdd = this.arrayItemAdd.bind(this);
     this.arrayItemRemove = this.arrayItemRemove.bind(this);
+    this.arrayItemMoveUp = this.arrayItemMoveUp.bind(this);
+    this.arrayItemMoveDown = this.arrayItemMoveDown.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
     this.onSelectValueChange = this.onSelectValueChange.bind(this);
     this.toggleItemDetails = this.toggleItemDetails.bind(this);
   }
-
-
 
   private triggerValueChange(newValue: any) {
     this.props.valueChange(this.props.definition, newValue);
@@ -62,14 +65,47 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     let array = this.props.value as any[] || [];
     array = array.slice();
     array[index] = newValue;
-    this.props.valueChange(this.props.definition, array);
+    this.triggerValueChange(array);
   }
 
   private arrayItemRemove(index: number) {
     let array = this.props.value as any[] || [];
     array = array.slice();
     array.splice(index, 1);
-    this.props.valueChange(this.props.definition, array);
+    this.arrayKeys.splice(index, 1);
+    this.triggerValueChange(array);
+  }
+
+  private arrayItemMoveUp(index: number) {
+    const array = this.props.value as any[] || [];
+
+    if (index === 0) {
+      return;
+    }
+
+    const item = array.splice(index, 1)[0];
+    array.splice(index - 1, 0, item);
+
+    const keyItem = this.arrayKeys.splice(index, 1)[0];
+    this.arrayKeys.splice(index - 1, 0, keyItem);
+
+    this.triggerValueChange(array);
+  }
+
+  private arrayItemMoveDown(index: number) {
+    const array = this.props.value as any[] || [];
+
+    if (index === array.length - 1) {
+      return;
+    }
+
+    const item = array.splice(index, 1)[0];
+    array.splice(index + 1, 0, item);
+
+    const keyItem = this.arrayKeys.splice(index, 1)[0];
+    this.arrayKeys.splice(index + 1, 0, keyItem);
+
+    this.triggerValueChange(array);
   }
 
   private arrayItemAdd() {
@@ -79,17 +115,15 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     let array = this.props.value as any[] || [];
     array = array.slice();
     array.push(getDefaultFieldValue(arrayItemDefinition));
-    this.props.valueChange(this.props.definition, array);
+    this.triggerValueChange(array);
   }
 
   private renderArray() {
     const array = this.props.value as any[] || [];
     return (
       <React.Fragment>
-        <div className="arrayContainer">
-          {array.map((value, index) => this.renderArrayItem(value, index))}
-        </div>
-        <UiButton onClick={this.arrayItemAdd} className="arrayItemAddButton">
+        {array.map((value, index) => this.renderArrayItem(value, index))}
+        <UiButton className="add-array-item" onClick={this.arrayItemAdd}>
           <FontAwesomeIcon icon={SolidIcons.faPlus} /> Add item
         </UiButton>
       </React.Fragment>
@@ -101,19 +135,40 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     arrayItemDefinition.isArray = false;
     arrayItemDefinition.displayName = (index + 1).toString();
 
+    let key = this.arrayKeys[index];
+    if (!key) {
+      key = this.arrayKeys[index] = uuidv4();
+    }
+
+    // let key: any = index;
+    // if (typeof value === 'object') {
+    //   if (!value.__id) {
+    //     value.__id = uuidv4();
+    //   }
+    //   key = value.__id;
+    // }
+
     return (
-      <React.Fragment key={index}>
-        <UiButton onClick={this.arrayItemRemove.bind(this, index)}>
-          <FontAwesomeIcon icon={SolidIcons.faMinus} />
-        </UiButton>
-        <OptionItem definition={arrayItemDefinition} value={value} valueChange={this.arrayItemChange.bind(this, index)} />
+      <React.Fragment key={key}>
+        <OptionItem definition={arrayItemDefinition} value={value}
+          valueChange={this.arrayItemChange.bind(this, index)} >
+          <UiButton onClick={this.arrayItemRemove.bind(this, index)}>
+            <FontAwesomeIcon icon={Regularcons.faTrashAlt} />
+          </UiButton>
+          <UiButton onClick={this.arrayItemMoveUp.bind(this, index)}>
+            <FontAwesomeIcon icon={Regularcons.faArrowAltCircleUp} />
+          </UiButton>
+          <UiButton onClick={this.arrayItemMoveDown.bind(this, index)}>
+            <FontAwesomeIcon icon={Regularcons.faArrowAltCircleDown} />
+          </UiButton>
+        </OptionItem>
       </React.Fragment>
     );
   }
 
   private renderObject() {
     if (!this.props.definition.fields) {
-      return <span>Not itemDefinition</span>;
+      return <span>No fields</span>;
     }
     return (
       <OptionList definitions={this.props.definition.fields} value={this.props.value} valueChange={this.triggerValueChange} />
@@ -181,22 +236,8 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   }
 
   private renderWebComponentInput() {
-    // <input type="text" id={this.state.uniqueId} value={this.props.value} onChange={this.onInputChange} />
-
     return (
-      <React.Fragment>
-        <SelectWebComponent onChange={this.triggerValueChange} webComponentId={this.props.value} />
-      </React.Fragment>
-    );
-  }
-
-  private renderDetailsHeader() {
-    return (
-      <UiButton className="item-header" onClick={this.toggleItemDetails}>
-        <UiButton>
-          <FontAwesomeIcon icon={SolidIcons.faArrowLeft} /> {this.props.definition.displayName}
-        </UiButton>
-      </UiButton>
+      <WebComponentForm onChange={this.triggerValueChange} webComponentId={this.props.value} />
     );
   }
 
@@ -214,7 +255,7 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
 
     return (
       <UiButton className="item-header" onClick={this.toggleItemDetails}>
-        <span className="header-text">{this.props.definition.displayName}</span>
+        <span className="header-text">{this.props.children} {this.props.definition.displayName}</span>
         <span className="sub-header-text">{subHeaderText}</span>
         <UiButton>
           <FontAwesomeIcon icon={this.state.detailsVisible ? SolidIcons.faArrowDown : SolidIcons.faArrowRight} />
@@ -227,20 +268,13 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     if (this.state.hasDetails) {
       return this.renderItemHeader();
     }
-    return <label htmlFor={this.state.uniqueId}>{this.props.definition.displayName}</label>;
+    return <label htmlFor={this.state.uniqueId}>{this.props.children} {this.props.definition.displayName}</label>;
   }
 
   private renderInput() {
     if (this.state.hasDetails) {
-      let className = 'item-details';
-      if (this.state.detailsVisible === true) {
-        className += ' slideInRight';
-      } else if (this.state.detailsVisible === false) {
-        className += ' slideOutRight';
-      }
-      return ( // hidden={!this.state.detailsVisible}
-        <div className={className} hidden={!this.state.detailsVisible} data-isarray={this.props.definition.isArray ? 'true' : 'false'}>
-          {/* {this.renderDetailsHeader()} */}
+      return (
+        <div className="item-details" hidden={!this.state.detailsVisible} data-isarray={this.props.definition.isArray ? 'true' : 'false'}>
           {this.renderInputControl()}
         </div>
       );

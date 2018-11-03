@@ -1,32 +1,60 @@
 .OptionItem {
+    margin-left: 6px;
+    line-height: 32px;
     border-top: 1px solid transparent;
+    +.OptionItem {
+        border-color: #eee;
+    }
     &[data-hasdetails='false'] {
         display: flex;
     }
-    &[data-hasdetails='true'][data-detailsvisible='true'] {
-        border-left: 3px solid #68a !important;
-        border-top: 1px solid #68a !important;
-        border-bottom: 1px solid #68a !important;
-        margin-left: 0px;
+    &[data-detailsvisible='true'] {
         padding-left: 3px;
+        margin-left: 0px;
         margin-bottom: 6px;
+        border-left-width: 3px;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-right-width: 0;
+        border-style: solid;
+        border-color: #68a;
+        [data-detailsvisible='true'] {
+            border-color: #964;
+            [data-detailsvisible='true'] {
+                border-color: #6a9;
+                [data-detailsvisible='true'] {
+                    border-color: #649;
+                    [data-detailsvisible='true'] {
+                        border-color: #496;
+                        [data-detailsvisible='true'] {
+                            border-color: #946;
+                            [data-detailsvisible='true'] {
+                                border-color: #649;
+                                [data-detailsvisible='true'] {
+                                    border-color: #68a;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         >.item-header {
             border-bottom: 1px solid #eee;
-            // border-bottom: 1px solid #68a;
         }
     }
-    margin-left: 6px;
-    line-height: 32px;
-    +div.OptionItem {
-        border-top: 1px solid #eee;
-    }
+    span,
     label,
     .header-text,
     .sub-header-text {
-        display: inline-block;
+        display: flex;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        // font-size: 16px;
+    }
+    .sub-header-text {
+        // font-size: 14px;
     }
     label {
         width: 50%;
@@ -46,55 +74,17 @@
     }
     .item-header {
         display: grid;
-        grid-template-columns: auto auto 33px;
+        grid-template-columns: 50% auto 33px;
         padding: 0 !important;
-        .header-text {
-            width: 100%;
-        }
     }
     .item-details {
-        &[hidden] {
-            display: none !important;
-        }
         overflow: hidden;
-        .arrayContainer {
-            display: grid;
-            grid-template: auto / 33px auto;
-            >.arrayItemAddButton {
-                grid-column: 2;
-                text-align: center;
-            }
-            >.OptionItem {
-                border-bottom: 1px solid #eee;
-            }
-        }
+    }
+    +.add-array-item {
+        border-top: 1px solid #eee;
     }
     .UiButton {
         padding-top: 0;
         padding-bottom: 0;
-    }
-}
-
-// .slideInRight {
-//     animation: slideInRight 0.5s forwards;
-// }
-// .slideOutRight {
-//     animation: slideOutRight 0.5s forwards;
-// }
-@keyframes slideInRight {
-    0% {
-        transform: translateX(100%);
-    }
-    100% {
-        transform: translateX(0%);
-    }
-}
-
-@keyframes slideOutRight {
-    0% {
-        transform: translateX(0%);
-    }
-    100% {
-        transform: translateX(100%);
     }
 }

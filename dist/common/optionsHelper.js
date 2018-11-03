@@ -1,31 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createOptions = function (options, objectDefinition) {
-    var result = {};
-    Object.keys(options).forEach(function (key) {
-        var parts = key.split('.');
-        var current = result;
-        for (var i = 0; i < parts.length; i++) {
-            var part = parts[i];
-            if (!current[part]) {
-                if (i === parts.length - 1) {
-                    var value = options[key];
-                    // fix value Type
-                    if (objectDefinition && objectDefinition.fields) {
-                        var optionDefinition = objectDefinition.fields.find(function (x) { return x.name === key; });
-                        if (optionDefinition && optionDefinition.valueType === 'number') {
-                            value = Number.parseFloat(value);
-                        }
-                    }
-                    current[part] = value;
-                }
-                else {
-                    current[part] = {};
-                }
-            }
-            current = current[part];
+exports.getDefaultFieldValue = function (field) {
+    var defaultValue = field.defaultValue;
+    if (field.isArray) {
+        if (defaultValue && Array.isArray(defaultValue)) {
+            return defaultValue;
         }
-    });
+        return [];
+    }
+    switch (field.valueType) {
+        case 'object':
+            var result = defaultValue;
+            if (result === undefined) {
+                result = exports.getDefaultObjectValue(field.fields);
+            }
+            return result;
+        case 'number':
+            return defaultValue || 0;
+        case 'boolean':
+            return defaultValue || false;
+        case 'string':
+            return defaultValue || '';
+        case 'style':
+            return defaultValue || {};
+        case 'webComponent':
+            return undefined;
+    }
+    return undefined;
+};
+exports.getDefaultObjectValue = function (fields) {
+    var result = {};
+    if (fields) {
+        fields.forEach(function (f) {
+            result[f.name] = exports.getDefaultFieldValue(f);
+        });
+    }
     return result;
 };
 //# sourceMappingURL=optionsHelper.js.map

@@ -19,10 +19,14 @@ export default class UiButton extends React.Component<IUiButtonProps, IUiButtonS
     this.onClick = this.onClick.bind(this);
   }
 
-  private onClick() {
+  private onClick(e: React.MouseEvent) {    
     if (!this.props.onClick || this.props.disabled || this.state.running) {
       return;
     }
+    e.preventDefault();
+    e.bubbles = false;
+    e.stopPropagation();
+    
     this.setState({ running: true }, () => {
       Promise.resolve(this.props.onClick && this.props.onClick())
         .catch()

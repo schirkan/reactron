@@ -39,39 +39,35 @@ export const systemSettingsFields: IFieldDefinition[] = [{
 }, {
   description: 'Sample Object',
   displayName: 'Object',
-  fields: [
-    {
-      description: 'Sample Text',
-      displayName: 'Text',
-      name: 'stringValue',
-      valueType: 'string'
-    },
-    {
-      description: 'Sample Number',
-      displayName: 'Number',
-      minValue: 0,
-      maxValue: 50,
-      stepSize: 5,
-      name: 'numericValue',
-      valueType: 'number'
-    },
-    {
-      description: 'Sample Checkbox',
-      displayName: 'Checkbox',
-      name: 'booleanValue',
-      valueType: 'boolean'
-    }, {
-      description: 'Sample DropDown',
-      displayName: 'DropDown',
-      name: 'value',
-      valueType: 'string',
-      values: [
-        { value: '111', text: '1st Item' },
-        { value: '222', text: '2nd Item' },
-        { value: '333', text: '3rd Item' },
-      ]
-    }
-  ],
+  fields: [{
+    description: 'Sample Text',
+    displayName: 'Text',
+    name: 'stringValue',
+    valueType: 'string'
+  }, {
+    description: 'Sample Number',
+    displayName: 'Number',
+    minValue: 0,
+    maxValue: 50,
+    stepSize: 5,
+    name: 'numericValue',
+    valueType: 'number'
+  }, {
+    description: 'Sample Checkbox',
+    displayName: 'Checkbox',
+    name: 'booleanValue',
+    valueType: 'boolean'
+  }, {
+    description: 'Sample DropDown',
+    displayName: 'DropDown',
+    name: 'value',
+    valueType: 'string',
+    values: [
+      { value: '111', text: '1st Item' },
+      { value: '222', text: '2nd Item' },
+      { value: '333', text: '3rd Item' },
+    ]
+  }],
   name: 'obj1',
   valueType: 'object'
 }, {
@@ -80,4 +76,26 @@ export const systemSettingsFields: IFieldDefinition[] = [{
   isArray: true,
   name: 'arr1',
   valueType: 'string'
+}, {
+  description: 'Sample Array',
+  displayName: 'Array',
+  isArray: true,
+  fields: [{
+    description: 'Sample Text',
+    displayName: 'Text',
+    name: 'stringValue',
+    valueType: 'string'
+  }, {
+    description: 'Sample Number',
+    displayName: 'Number',
+    name: 'numericValue',
+    valueType: 'number'
+  }, {
+    description: 'Sample Component',
+    displayName: 'Component',
+    name: 'content',
+    valueType: 'webComponent'
+  }],
+  name: 'arr2',
+  valueType: 'object'
 }];

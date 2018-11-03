@@ -1,32 +1,44 @@
-import { IObjectDefinition } from "../interfaces/IObjectDefinition";
+import { IFieldDefinition } from '../interfaces/IObjectDefinition';
 
-export const createOptions = (options: { [key: string]: any }, objectDefinition: IObjectDefinition) => {
-    const result = {};
+export const getDefaultFieldValue = (field: IFieldDefinition) => {
+  const defaultValue = field.defaultValue;
 
-    Object.keys(options).forEach(key => {
-        const parts = key.split('.');
-        let current = result;
+  if (field.isArray) {
+    if (defaultValue && Array.isArray(defaultValue)) {
+      return defaultValue;
+    }
+    return [];
+  }
 
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            if (!current[part]) {
-                if (i === parts.length - 1) {
-                    let value = options[key];
-                    // fix value Type
-                    if (objectDefinition && objectDefinition.fields) {
-                        const optionDefinition = objectDefinition.fields.find(x => x.name === key);
-                        if (optionDefinition && optionDefinition.valueType === 'number') {
-                            value = Number.parseFloat(value);
-                        }
-                    }
-                    current[part] = value;
-                } else {
-                    current[part] = {};
-                }
-            }
-            current = current[part];
-        }
+  switch (field.valueType) {
+    case 'object':
+      let result: any = defaultValue;
+
+      if (result === undefined) {
+        result = getDefaultObjectValue(field.fields);
+      }
+
+      return result;
+    case 'number':
+      return defaultValue || 0;
+    case 'boolean':
+      return defaultValue || false;
+    case 'string':
+      return defaultValue || '';
+    case 'style':
+      return defaultValue || {};
+    case 'webComponent':
+      return undefined;
+  }
+  return undefined;
+};
+
+export const getDefaultObjectValue = (fields?: IFieldDefinition[]) => {
+  const result = {};
+  if (fields) {
+    fields.forEach(f => {
+      result[f.name] = getDefaultFieldValue(f);
     });
-
-    return result;
-}
+  }
+  return result;
+};

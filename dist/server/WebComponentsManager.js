@@ -2,8 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
-// tslint:disable-next-line:no-var-requires
-var uuidv4 = require('uuid/v4');
+var uuidv4 = require("uuid/v4");
 var WebComponentsManager = /** @class */ (function () {
     function WebComponentsManager(topics, defaultOptions) {
         this.topics = topics;
@@ -22,7 +21,9 @@ var WebComponentsManager = /** @class */ (function () {
             items[index] = item;
         }
         else {
-            item.id = 'WebComponent_' + uuidv4(); // generate new ID
+            if (!item.id) {
+                item.id = 'WebComponent_' + uuidv4(); // generate new ID
+            }
             items.push(item);
         }
         this.repository.store = { list: items };

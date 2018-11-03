@@ -22,7 +22,9 @@ var WebPageManager = /** @class */ (function () {
             items[index] = item;
         }
         else {
-            item.id = 'WebPage_' + uuidv4(); // generate new ID
+            if (!item.id) {
+                item.id = 'WebPage_' + uuidv4(); // generate new ID
+            }
             items.push(item);
         }
         this.repository.store = { list: items };

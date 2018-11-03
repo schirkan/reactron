@@ -1,0 +1,10 @@
+.WebComponentForm .componentTitle {
+  display: grid;
+  grid-template-columns: 33px auto 33px;
+  border-bottom: 1px solid #eee; }
+
+.WebComponentForm .componentSelect {
+  width: 100%; }
+
+.WebComponentForm :last-child {
+  border-bottom: none; }

@@ -1,11 +1,9 @@
+import * as uuidv4 from 'uuid/v4';
 import { IPubSub } from "../interfaces/IPubSub";
 import { IWebPageOptions } from "../interfaces/IWebPageOptions";
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
-
-// tslint:disable-next-line:no-var-requires
-const uuidv4 = require('uuid/v4');
 
 export class WebPageManager {
     private repository: ElectronStore<{ list: IWebPageOptions[] }>
@@ -28,7 +26,9 @@ export class WebPageManager {
         if (index >= 0) {
             items[index] = item;
         } else {
-            item.id = 'WebPage_' + uuidv4(); // generate new ID
+            if (!item.id) {
+                item.id = 'WebPage_' + uuidv4(); // generate new ID
+            }
             items.push(item);
         }
 

@@ -24,9 +24,13 @@ export default class OptionList extends React.Component<IOptionListProps> {
   }
 
   public render() {
+    if (!this.props.definitions || !this.props.definitions.length) {
+      return null;
+    }
+
     return (
       <div className="OptionList">
-        {this.props.definitions && this.props.definitions.map(field => {
+        {this.props.definitions.map(field => {
           const value = this.props.value && this.props.value[field.name];
           return <OptionItem key={field.name} definition={field} value={value} valueChange={this.valueChange} />;
         })}

@@ -1,7 +1,7 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
-import { getDefaultFieldValue } from '../../../../common/getDefaultFieldValue';
+import { getDefaultFieldValue } from '../../../../common/optionsHelper';
 import OptionList from '../OptionList/OptionList';
 import UiButton from '../UiButton/UiButton';
 import UiCard from '../UiCard/UiCard';
@@ -9,11 +9,13 @@ import UiCardButtonRow from '../UiCardButtonRow/UiCardButtonRow';
 import UiCardContent from '../UiCardContent/UiCardContent';
 import UiCardTitle from '../UiCardTitle/UiCardTitle';
 import { IOptionCardProps } from './IOptionCardProps';
+import { OptionCardContext, OptionsCardContextData } from './OptionCardContext';
 
 import './OptionCard.css';
 
 interface IOptionCardState {
   newOptions: any;
+  formContext: OptionsCardContextData;
 }
 
 export default class OptionCard extends React.Component<IOptionCardProps, IOptionCardState> {
@@ -22,7 +24,10 @@ export default class OptionCard extends React.Component<IOptionCardProps, IOptio
 
     const newOptions = this.setDefaultValues(props.options || {});
 
-    this.state = { newOptions };
+    this.state = {
+      newOptions,
+      formContext: new OptionsCardContextData()
+    };
 
     this.cancel = this.cancel.bind(this);
     this.save = this.save.bind(this);
@@ -50,7 +55,8 @@ export default class OptionCard extends React.Component<IOptionCardProps, IOptio
     this.setState({ newOptions });
   }
 
-  private save() {
+  private async save() {
+    await this.state.formContext.onSave.publish();
     return this.props.onSave(this.state.newOptions);
   }
 
@@ -72,10 +78,12 @@ export default class OptionCard extends React.Component<IOptionCardProps, IOptio
 
   public renderContent() {
     return (
-      <OptionList definitions={this.props.fields}
-        value={this.state.newOptions}
-        valueChange={this.optionsChange}
-      />
+      <OptionCardContext.Provider value={this.state.formContext}>
+        <OptionList definitions={this.props.fields}
+          value={this.state.newOptions}
+          valueChange={this.optionsChange}
+        />
+      </OptionCardContext.Provider>
     );
   }
 
