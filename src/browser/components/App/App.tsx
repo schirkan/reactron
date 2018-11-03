@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { inernalModuleHelper } from 'src/browser/inernalModuleHelper';
 import { IWebPageOptions } from '../../../interfaces/IWebPageOptions';
 import { apiClient } from '../../ApiClient';
 import Admin from '../Admin/Admin';
@@ -14,15 +15,42 @@ export interface IAppState {
 }
 
 export default class App extends React.Component<{}, IAppState> {
+  private reloadTimer: number;
+  private reloadWait: number = 2000;
+
   constructor(props: any) {
     super(props);
     this.state = {};
+    this.reload = this.reload.bind(this);
+    this.triggerReload = this.triggerReload.bind(this);
   }
 
   public componentDidMount() {
-    apiClient.getWebPages().then(pages => this.setState({ pages }));
+    this.loadPages();
 
-    // TODO: register page/component change event
+    // register page/component change event
+    if (inernalModuleHelper.topics) {
+      inernalModuleHelper.topics.subscribe('pages-updated', this.triggerReload);
+      inernalModuleHelper.topics.subscribe('components-updated', this.triggerReload);
+      inernalModuleHelper.topics.subscribe('system-settings-updated', this.triggerReload);
+    }
+  }
+
+  private async loadPages() {
+    const pages = await apiClient.getWebPages();
+    return this.setState({ pages });
+  }
+
+  private triggerReload() {
+    console.log('triggerReload', arguments);
+    window.clearTimeout(this.reloadTimer);
+    this.reloadTimer = window.setTimeout(this.reload, this.reloadWait);
+  }
+
+  private reload() {
+    apiClient.getWebPages.clearCache();
+    apiClient.getWebComponentOptions.clearCache();
+    this.loadPages();
   }
 
   public renderPage(id: string, style: any) {

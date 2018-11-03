@@ -5,7 +5,6 @@ import { IWebComponentOptions } from "../interfaces/IWebComponentOptions";
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
 
-
 export class WebComponentsManager {
     private repository: ElectronStore<{ list: IWebComponentOptions[] }>
 

@@ -6,10 +6,9 @@ import * as ReactDom from 'react-dom';
 import { IModuleRepositoryItem } from 'src/interfaces/IModuleRepositoryItem';
 import { IComponentDefinition } from '../interfaces/IComponentDefinition';
 import { apiClient } from './ApiClient';
-import { BrowserModuleHelper } from './BrowserModuleHelper';
+import { inernalModuleHelper } from './inernalModuleHelper';
 import { components as internalComponents } from "./internalModule";
 
-const inernalModuleHelper = new BrowserModuleHelper('reactron'); // internal module
 const SystemJS = (window as any).System as SystemJSLoader.System;
 
 const oldResolve = SystemJS.resolve;
