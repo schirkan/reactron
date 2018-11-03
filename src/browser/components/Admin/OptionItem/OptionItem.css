@@ -5,34 +5,42 @@
   .OptionItem + .OptionItem {
     border-color: #eee; }
   .OptionItem[data-hasdetails='false'] {
-    display: flex; }
+    display: grid;
+    grid-template-columns: 50% 50%; }
+  .OptionItem[data-detailsvisible='false'] + .add-array-item {
+    border-top: 1px solid #eee; }
   .OptionItem[data-detailsvisible='true'] {
     padding-left: 3px;
     margin-left: 0px;
-    margin-bottom: 6px;
     border-left-width: 3px;
     border-top-width: 1px;
     border-bottom-width: 1px;
+    border-bottom-color: #eee;
     border-right-width: 0;
     border-style: solid;
-    border-color: #68a; }
+    border-left-color: #68a; }
     .OptionItem[data-detailsvisible='true'] [data-detailsvisible='true'] {
-      border-color: #964; }
+      border-left-color: #964; }
       .OptionItem[data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] {
-        border-color: #6a9; }
+        border-left-color: #6a9; }
         .OptionItem[data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] {
-          border-color: #649; }
+          border-left-color: #649; }
           .OptionItem[data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] {
-            border-color: #496; }
+            border-left-color: #496; }
             .OptionItem[data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] {
-              border-color: #946; }
+              border-left-color: #946; }
               .OptionItem[data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] {
-                border-color: #649; }
+                border-left-color: #649; }
                 .OptionItem[data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] [data-detailsvisible='true'] {
-                  border-color: #68a; }
+                  border-left-color: #68a; }
     .OptionItem[data-detailsvisible='true'] > .item-header {
       border-bottom: 1px solid #eee; }
-  .OptionItem span,
+    .OptionItem[data-detailsvisible='true'] + [data-detailsvisible='true'] {
+      margin-top: 6px; }
+    .OptionItem[data-detailsvisible='true'] + [data-detailsvisible='false'] {
+      border-top-width: 0; }
+    .OptionItem[data-detailsvisible='true'] :last-child {
+      border-bottom-width: 0; }
   .OptionItem label,
   .OptionItem .header-text,
   .OptionItem .sub-header-text {
@@ -40,12 +48,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; }
-  .OptionItem label {
-    width: 50%; }
   .OptionItem input,
   .OptionItem select {
     height: 32px;
-    width: 50%;
     border: none;
     padding-left: 6px;
     background: white;
@@ -58,10 +63,6 @@
     display: grid;
     grid-template-columns: 50% auto 33px;
     padding: 0 !important; }
-  .OptionItem .item-details {
-    overflow: hidden; }
-  .OptionItem + .add-array-item {
-    border-top: 1px solid #eee; }
   .OptionItem .UiButton {
     padding-top: 0;
     padding-bottom: 0; }

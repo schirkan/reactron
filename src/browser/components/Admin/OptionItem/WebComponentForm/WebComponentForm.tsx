@@ -179,9 +179,9 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
           <UiButton>
             <FontAwesomeIcon icon={SolidIcons.faCube} />
           </UiButton>
-          <span>
+          <label>
             {this.state.selectedComponentDefinition.definition.displayName} ({this.state.selectedComponentDefinition.moduleName})
-          </span>
+          </label>
           <UiButton onClick={this.removeWebComponent}>
             <FontAwesomeIcon icon={Regularcons.faTrashAlt} />
           </UiButton>
