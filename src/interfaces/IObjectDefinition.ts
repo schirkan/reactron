@@ -10,13 +10,14 @@ export interface IFieldDefinition {
     displayName: string;
     description?: string;
     valueType: IOptionDefinitionValueType;
-    defaultValue?: number | boolean | string; // TODO: Object & array
+    defaultValue?: any; // TODO: changed
     minValue?: number;
     maxValue?: number;
     stepSize?: number;
     values?: IOptionDefinitionValue[];
     fields?: IFieldDefinition[];
     isArray?: boolean;
+    textRows?: number; // TODO: new
 }
 
 export interface IObjectDefinition {

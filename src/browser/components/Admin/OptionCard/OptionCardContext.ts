@@ -67,7 +67,7 @@ export class OptionsCardContextData {
             this.changedWebComponents.push(item);
         } else {
             // remove previously changed items
-            this.createdWebComponents = this.createdWebComponents.filter(x => x.id !== item.id);
+            this.changedWebComponents = this.changedWebComponents.filter(x => x.id !== item.id);
             // add to changedWebComponents
             this.changedWebComponents.push(item);
         }

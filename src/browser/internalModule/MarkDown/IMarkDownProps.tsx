@@ -1,3 +1,3 @@
-export interface IMarkDownProps {
+export interface IMarkDownOptions {
   text: string;
 }
