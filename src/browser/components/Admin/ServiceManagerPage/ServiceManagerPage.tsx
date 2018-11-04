@@ -127,7 +127,7 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
 
     return (
       <UiOverlay>
-        <OptionCard icon={SolidIcons.faCogs}
+        <OptionCard icon={SolidIcons.faCogs} showReset={true}
           title={title} fields={this.state.selectedService.fields || []}
           options={this.state.selectedServiceOptions}
           onSave={this.saveOptions} onCancel={this.closeOptions}

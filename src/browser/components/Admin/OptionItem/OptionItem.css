@@ -44,10 +44,11 @@
   .OptionItem label,
   .OptionItem .header-text,
   .OptionItem .sub-header-text {
-    display: flex;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; }
+  .OptionItem label {
+    display: flex; }
   .OptionItem input,
   .OptionItem select {
     height: 32px;
@@ -59,6 +60,12 @@
     .OptionItem input[type='range'],
     .OptionItem select[type='range'] {
       padding-left: 0; }
+  .OptionItem textarea {
+    border: none;
+    width: 100%;
+    padding: 6px;
+    display: flex;
+    box-sizing: border-box; }
   .OptionItem .item-header {
     display: grid;
     grid-template-columns: 50% auto 33px;

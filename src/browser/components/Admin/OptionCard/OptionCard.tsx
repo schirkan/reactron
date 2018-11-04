@@ -89,15 +89,17 @@ export default class OptionCard extends React.Component<IOptionCardProps, IOptio
 
   public renderFooter() {
     return (
-      <UiCardButtonRow divider="full">
+      <UiCardButtonRow divider="half">
         {this.props.onCancel && (
           <UiButton onClick={this.cancel}>
             <FontAwesomeIcon icon={SolidIcons.faTimes} /> Cancel
           </UiButton>
         )}
+        {this.props.showReset && (
         <UiButton onClick={this.reset}>
           <FontAwesomeIcon icon={SolidIcons.faUndo} /> Reset
         </UiButton>
+        )}
         <UiButton onClick={this.save}>
           <FontAwesomeIcon icon={SolidIcons.faSave} /> Save
         </UiButton>

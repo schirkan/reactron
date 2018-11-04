@@ -1,8 +1,10 @@
 .OptionCard {
     >.OptionList {
         position: relative;
-        // min-height: 300px;
         overflow-x: hidden;
+         :last-child {
+            border-bottom: none;
+        }
     }
     .debug {
         display: none;

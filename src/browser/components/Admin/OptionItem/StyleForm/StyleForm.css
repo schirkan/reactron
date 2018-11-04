@@ -1,0 +1,6 @@
+.StyleForm .newPropertyRow {
+  display: flex; }
+  .StyleForm .newPropertyRow select {
+    width: 100%; }
+  .StyleForm .newPropertyRow .UiButton {
+    overflow: initial; }

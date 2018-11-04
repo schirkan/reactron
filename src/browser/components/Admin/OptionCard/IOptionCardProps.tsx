@@ -9,4 +9,5 @@ export interface IOptionCardProps {
   fields: IFieldDefinition[];
   onSave: (newOptions: object) => any;
   onCancel?: () => any;
+  showReset?: boolean;
 }

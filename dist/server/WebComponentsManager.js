@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var uuidv4 = require("uuid/v4");
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
-var uuidv4 = require("uuid/v4");
 var WebComponentsManager = /** @class */ (function () {
     function WebComponentsManager(topics, defaultOptions) {
         this.topics = topics;

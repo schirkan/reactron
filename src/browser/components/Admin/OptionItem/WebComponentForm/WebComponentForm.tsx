@@ -1,4 +1,4 @@
-import * as Regularcons from '@fortawesome/free-regular-svg-icons';
+import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
@@ -119,7 +119,7 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
     let newWebComponentOptions: IWebComponentOptions | undefined;
 
     if (selectedComponentDefinition) {
-      const id = currentWebComponentOptions && currentWebComponentOptions.id || 'WebComponent_' + uuidv4();
+      const id = currentWebComponentOptions && currentWebComponentOptions.id || newKey + '_' + uuidv4();
 
       newWebComponentOptions = {
         id,
@@ -150,6 +150,7 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
     if (this.state.selectedWebComponentOptions) {
       // notify component remove
       this.formEvents.webComponentRemoved(this.state.selectedWebComponentOptions);
+      this.props.onChange(undefined);
       this.setState({ selectedWebComponentOptions: undefined, selectedComponentDefinition: undefined });
     }
   }
@@ -183,7 +184,7 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
             {this.state.selectedComponentDefinition.definition.displayName} ({this.state.selectedComponentDefinition.moduleName})
           </label>
           <UiButton onClick={this.removeWebComponent}>
-            <FontAwesomeIcon icon={Regularcons.faTrashAlt} />
+            <FontAwesomeIcon icon={RegularIcons.faTrashAlt} />
           </UiButton>
         </div>
       );

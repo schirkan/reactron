@@ -47,7 +47,7 @@ export default class PageCard extends React.Component<IPageCardProps> {
     return (
       <UiCardButtonRow divider="half">
         <UiButton onClick={this.onEdit}>
-          <FontAwesomeIcon icon={SolidIcons.faCog} /> Edit
+          <FontAwesomeIcon icon={RegularIcons.faEdit} /> Edit
         </UiButton>
         <UiButton onClick={this.onDelete}>
           <FontAwesomeIcon icon={RegularIcons.faTrashAlt} /> Delete

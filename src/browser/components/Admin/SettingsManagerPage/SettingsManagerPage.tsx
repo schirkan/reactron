@@ -52,7 +52,7 @@ export default class SettingsManagerPage extends React.Component<any, IModuleMan
           <UiFlowLayout>
             <OptionCard options={this.state.settings} onSave={this.saveSettings}
               fields={systemSettingsFields} icon={SolidIcons.faCogs}
-              title="Settings"
+              title="Settings" showReset={true}
             />
           </UiFlowLayout>
         )}

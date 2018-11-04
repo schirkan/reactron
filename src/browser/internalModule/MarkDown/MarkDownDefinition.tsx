@@ -7,6 +7,6 @@ export const markDownDefinition: IComponentDefinition = {
   displayName: 'MarkDown',
   name: 'MarkDown',
   fields: [
-    { displayName: 'Text', name: 'text', valueType: 'string' }
+    { displayName: 'Text', name: 'text', valueType: 'string', textRows: 10 }
   ]
 };
