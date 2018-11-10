@@ -1,9 +1,8 @@
+import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
-import * as uuidv4 from 'uuid/v4';
-import { getDefaultFieldValue } from '../../../../common/optionsHelper';
 import { IFieldDefinition } from '../../../../interfaces/IObjectDefinition';
 import OptionList from '../OptionList/OptionList';
 import UiButton from '../UiButton/UiButton';
@@ -28,8 +27,6 @@ interface IOptionItemState {
 }
 
 export default class OptionItem extends React.Component<IOptionItemProps, IOptionItemState> {
-  private arrayKeys: string[] = [];
-
   constructor(props: IOptionItemProps) {
     super(props);
 
@@ -67,11 +64,8 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
   }
 
   private renderObject() {
-    if (!this.props.definition.fields) {
-      return <span>No fields</span>;
-    }
     return (
-      <OptionList definitions={this.props.definition.fields} value={this.props.value} valueChange={this.triggerValueChange} />
+      <OptionList fields={this.props.definition.fields} value={this.props.value} valueChange={this.triggerValueChange} />
     );
   }
 
@@ -155,24 +149,32 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
 
   private renderItemHeader() {
     let subHeaderText = null;
+    let icon = null;
 
     if (this.props.definition.isArray) {
       const array = this.props.value as any[] || [];
       subHeaderText = '(' + array.length + ' items)';
+      icon = SolidIcons.faList;
     } else if (this.props.definition.valueType === 'string') {
       subHeaderText = this.props.value;
     } else if (this.props.definition.valueType === 'style') {
       subHeaderText = JSON.stringify(this.props.value);
+      icon = BrandIcons.faCss3;
     } else if (this.props.definition.valueType === 'webComponent') {
       subHeaderText = this.props.value || 'Component';
+      icon = RegularIcons.faFile;
     }
 
     return (
       <UiButton className="item-header" onClick={this.toggleItemDetails}>
-        <label>{this.props.children} <span className="header-text">{this.props.definition.displayName}</span></label>
+        <label>
+          {this.props.children}
+          {icon && (<UiButton><FontAwesomeIcon icon={icon} /></UiButton>)}
+          <span className="header-text">{this.props.definition.displayName}</span>
+        </label>
         <span className="sub-header-text">{subHeaderText}</span>
         <UiButton>
-          <FontAwesomeIcon icon={this.state.detailsVisible ? SolidIcons.faArrowDown : SolidIcons.faArrowRight} />
+          <FontAwesomeIcon icon={this.state.detailsVisible ? SolidIcons.faCaretDown : SolidIcons.faCaretRight} />
         </UiButton>
       </UiButton>
     );
@@ -182,7 +184,12 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
     if (this.state.hasDetails) {
       return this.renderItemHeader();
     }
-    return <label htmlFor={this.state.uniqueId}>{this.props.children} {this.props.definition.displayName}</label>;
+    return (
+      <label htmlFor={this.state.uniqueId}>
+        {this.props.children}
+        <span className="header-text">{this.props.definition.displayName}</span>
+      </label>
+    );
   }
 
   private renderInput() {

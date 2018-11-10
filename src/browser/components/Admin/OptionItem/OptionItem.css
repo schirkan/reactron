@@ -49,6 +49,8 @@
     text-overflow: ellipsis; }
   .OptionItem label {
     display: flex; }
+    .OptionItem label :first-child.header-text {
+      padding-left: 4px; }
   .OptionItem input,
   .OptionItem select {
     height: 32px;

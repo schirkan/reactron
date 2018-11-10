@@ -79,7 +79,7 @@ export default class OptionCard extends React.Component<IOptionCardProps, IOptio
   public renderContent() {
     return (
       <OptionCardContext.Provider value={this.state.formContext}>
-        <OptionList definitions={this.props.fields}
+        <OptionList fields={this.props.fields}
           value={this.state.newOptions}
           valueChange={this.optionsChange}
         />

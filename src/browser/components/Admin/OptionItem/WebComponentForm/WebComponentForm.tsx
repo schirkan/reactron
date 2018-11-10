@@ -54,7 +54,7 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
   }
 
   private get formEvents(): OptionsCardContextData {
-    return this.context as OptionsCardContextData;
+    return (this as any).context as OptionsCardContextData;
   }
 
   public componentDidMount() {
@@ -176,7 +176,7 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
 
     if (this.state.selectedComponentDefinition) {
       return (
-        <div className="componentTitle" >
+        <div className="componentTitle">
           <UiButton>
             <FontAwesomeIcon icon={SolidIcons.faCube} />
           </UiButton>
@@ -207,7 +207,7 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
         {this.state.selectedWebComponentOptions &&
           this.state.selectedComponentDefinition && (
             <OptionList value={this.state.selectedWebComponentOptions.options}
-              definitions={this.state.selectedComponentDefinition.definition.fields}
+              fields={this.state.selectedComponentDefinition.definition.fields}
               valueChange={this.onOptionsChange} />
           )}
       </div>

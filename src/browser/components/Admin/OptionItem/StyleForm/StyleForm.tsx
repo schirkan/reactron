@@ -92,7 +92,7 @@ export default class StyleForm extends React.Component<IStyleFormProps, IStyleFo
 
     const fieldName = this.newPropertySelect.value;
 
-    if (!fieldName || this.props.value.hasOwnProperty(fieldName)) {
+    if (!fieldName || this.props.value && this.props.value.hasOwnProperty(fieldName)) {
       return;
     }
 

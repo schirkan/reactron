@@ -5,7 +5,7 @@ import OptionItem from '../OptionItem/OptionItem';
 import './OptionList.css';
 
 interface IOptionListProps {
-  definitions?: IFieldDefinition[];
+  fields?: IFieldDefinition[];
   value: object;
   valueChange: (newValue: object) => void;
 }
@@ -24,13 +24,14 @@ export default class OptionList extends React.Component<IOptionListProps> {
   }
 
   public render() {
-    if (!this.props.definitions || !this.props.definitions.length) {
+    if (!this.props.fields || !this.props.fields.length) {
       return null;
+      // return <span>No options / fields defined</span>;
     }
 
     return (
       <div className="OptionList">
-        {this.props.definitions.map(field => {
+        {this.props.fields.map(field => {
           const value = this.props.value && this.props.value[field.name];
           return <OptionItem key={field.name} definition={field} value={value} valueChange={this.valueChange} />;
         })}

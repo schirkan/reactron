@@ -71,6 +71,9 @@
     }
     label {
         display: flex;
+         :first-child.header-text {
+            padding-left: 4px;
+        }
     }
     input,
     select {
