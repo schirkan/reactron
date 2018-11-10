@@ -119,7 +119,8 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
     let newWebComponentOptions: IWebComponentOptions | undefined;
 
     if (selectedComponentDefinition) {
-      const id = currentWebComponentOptions && currentWebComponentOptions.id || newKey + '_' + uuidv4();
+      const id = currentWebComponentOptions && currentWebComponentOptions.id ||
+        selectedComponentDefinition.definition.name + '_' + uuidv4();
 
       newWebComponentOptions = {
         id,

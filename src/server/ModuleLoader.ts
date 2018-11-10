@@ -72,7 +72,7 @@ export class ModuleLoader {
         moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
         moduleDefinition.canInstall = !!(
             (p.dependencies && Object.keys(p.dependencies).length) ||
-            (p.devDependencies && Object.keys(p.devDependencies.length))
+            (p.devDependencies && Object.keys(p.devDependencies).length)
         );
         moduleDefinition.canRemove = true;
         moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));

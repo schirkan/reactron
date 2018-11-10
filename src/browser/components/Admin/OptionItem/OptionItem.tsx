@@ -159,6 +159,9 @@ export default class OptionItem extends React.Component<IOptionItemProps, IOptio
       subHeaderText = this.props.value;
     } else if (this.props.definition.valueType === 'style') {
       subHeaderText = JSON.stringify(this.props.value);
+      if(subHeaderText === '{}'){
+        subHeaderText = '';
+      }
       icon = BrandIcons.faCss3;
     } else if (this.props.definition.valueType === 'webComponent') {
       subHeaderText = this.props.value || 'Component';

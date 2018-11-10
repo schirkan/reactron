@@ -7,8 +7,8 @@ export const gridLayoutDefinition: IComponentDefinition = {
     displayName: 'Grid Layout',
     name: 'GridLayout',
     fields: [
-        { displayName: 'Rows', name: 'rows', valueType: 'number' },
-        { displayName: 'Columns', name: 'cols', valueType: 'number' },
+        // { displayName: 'Rows', name: 'rows', valueType: 'number', minValue: 0 },
+        // { displayName: 'Columns', name: 'cols', valueType: 'number', minValue: 0 },
         { displayName: 'Grid Style', name: 'gridStyle', valueType: 'style' },
         { displayName: 'Tile Style', name: 'tileStyle', valueType: 'style' },
         {
@@ -17,10 +17,10 @@ export const gridLayoutDefinition: IComponentDefinition = {
             valueType: 'object',
             isArray: true,
             fields: [
-                { displayName: 'Row', name: 'row', valueType: 'number' },
-                { displayName: 'Column', name: 'col', valueType: 'number' },
-                { displayName: 'Row span', name: 'rowspan', valueType: 'number' },
-                { displayName: 'Column span', name: 'colspan', valueType: 'number' },
+                { displayName: 'Row', name: 'row', valueType: 'number', minValue: 1, defaultValue: 1 },
+                { displayName: 'Column', name: 'col', valueType: 'number', minValue: 1, defaultValue: 1 },
+                { displayName: 'Row span', name: 'rowspan', valueType: 'number', minValue: 1, defaultValue: 1 },
+                { displayName: 'Column span', name: 'colspan', valueType: 'number', minValue: 1, defaultValue: 1 },
                 { displayName: 'Content', name: 'content', valueType: 'webComponent' },
                 { displayName: 'Style', name: 'style', valueType: 'style' }
             ]

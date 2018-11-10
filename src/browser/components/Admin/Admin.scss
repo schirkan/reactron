@@ -35,6 +35,9 @@ section.Admin {
             margin-right: 3px;
         }
     }
+    label {
+        cursor: unset;
+    }
     .clickable {
         padding-left: 8px;
         padding-right: 8px;

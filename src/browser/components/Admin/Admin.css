@@ -31,6 +31,8 @@ section.Admin {
     section.Admin label svg,
     section.Admin .clickable svg {
       margin-right: 3px; }
+  section.Admin label {
+    cursor: unset; }
   section.Admin .clickable {
     padding-left: 8px;
     padding-right: 8px; }

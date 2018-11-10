@@ -1,5 +1,7 @@
 import * as SvgCore from '@fortawesome/fontawesome-svg-core';
-import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
+import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
+import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
+import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
@@ -9,29 +11,32 @@ import { apiClient } from './ApiClient';
 import { inernalModuleHelper } from './inernalModuleHelper';
 import { components as internalComponents } from "./internalModule";
 
+// tslint:disable:no-string-literal
+// tslint:disable:no-var-requires
+
+const moment = require('moment');
+const momentTimezone = require('moment-timezone');
 const SystemJS = (window as any).System as SystemJSLoader.System;
 
-const oldResolve = SystemJS.resolve;
-SystemJS.resolve = async (dep: string, id: string) => {
-    let result: string;
-    try {
-        result = await oldResolve.call(SystemJS, dep, id);
-    } catch (error) {
-        result = 'bundle:' + dep;
-    }
-    console.log('SystemJS.resolve', dep, id, result);
-    return result;
-};
+const externalModules = {};
+externalModules['react'] = React;
+externalModules['react-dom'] = ReactDom;
+externalModules['moment'] = moment;
+externalModules['moment-timezone'] = momentTimezone;
+externalModules['@fortawesome/fontawesome-svg-core'] = SvgCore;
+externalModules['@fortawesome/free-solid-svg-icons'] = SolidIcons;
+externalModules['@fortawesome/free-regular-svg-icons'] = RegularIcons;
+externalModules['@fortawesome/free-brands-svg-icons'] = BrandIcons;
+externalModules['@fortawesome/react-fontawesome'] = FontAwesome;
 
 if (inernalModuleHelper.electron) {
-    SystemJS.register('electron', [], exports => ({ execute: () => exports(inernalModuleHelper.electron) }));
+    externalModules['electron'] = inernalModuleHelper.electron;
 }
 
-SystemJS.register('react', [], exports => ({ execute: () => exports(React) }));
-SystemJS.register('react-dom', [], exports => ({ execute: () => exports(ReactDom) }));
-SystemJS.register('@fortawesome/fontawesome-svg-core', [], exports => ({ execute: () => exports(SvgCore) }));
-SystemJS.register('@fortawesome/free-solid-svg-icons', [], exports => ({ execute: () => exports(SvgIcons) }));
-SystemJS.register('@fortawesome/react-fontawesome', [], exports => ({ execute: () => exports(FontAwesome) }));
+Object.keys(externalModules).forEach(key => {
+    const moduleExport = externalModules[key];
+    SystemJS.register(key, [], exports => ({ execute: () => exports(moduleExport) }));
+});
 
 export class ComponentLoader {
     private allComponentsLoaded = false;
