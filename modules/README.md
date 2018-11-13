@@ -5,9 +5,3 @@ example:
 cd modules
 git clone https://github.com/schirkan/reactron-hello-world
 ```
-
-and build all modules:
-```
-cd ..
-npm run build-modules
-```
