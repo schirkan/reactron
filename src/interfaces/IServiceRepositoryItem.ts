@@ -1,9 +1,8 @@
-import { IExternalService } from "./IExternalService";
-import { IServiceDefinition } from "./IServiceDefinition";
+import { IReactronService, IReactronServiceDefinition } from "@schirkan/reactron-interfaces";
 
-export interface IServiceRepositoryItem extends IServiceDefinition {
+export interface IServiceRepositoryItem extends IReactronServiceDefinition {
     moduleName: string;
-    instance: IExternalService;
+    instance: IReactronService;
     state: 'starting' | 'running' | 'stopped' | 'error';
     log: string[];
 }

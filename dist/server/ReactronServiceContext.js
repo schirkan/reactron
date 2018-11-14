@@ -35,47 +35,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var apiRoutes_1 = require("../../common/apiRoutes");
-var registerRoute_1 = require("./registerRoute");
-var WebComponentController = /** @class */ (function () {
-    function WebComponentController() {
+var express_1 = require("express");
+var BackendService_1 = require("./BackendService");
+// tslint:disable-next-line:no-var-requires
+var Store = require('electron-store');
+var ReactronServiceContext = /** @class */ (function () {
+    function ReactronServiceContext(moduleName) {
+        this.moduleName = moduleName;
+        this.backendService = BackendService_1.BackendService.instance;
+        this.moduleStorage = new Store({ name: 'module.' + moduleName });
+        this.moduleApiRouter = express_1.Router();
+        var escapedModuleName = moduleName.replace('/', '@');
+        var moduleApiPath = '/modules/' + escapedModuleName;
+        console.log('Module Api Path: ' + moduleApiPath);
+        this.backendService.expressApp.apiRouter.use(moduleApiPath, this.moduleApiRouter);
     }
-    WebComponentController.prototype.start = function (context) {
+    ReactronServiceContext.prototype.getService = function (serviceName, moduleName) {
+        return this.backendService.serviceManager.get(moduleName || this.moduleName, serviceName);
+    };
+    ReactronServiceContext.prototype.getServiceAsync = function (serviceName, moduleName) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             return __generator(this, function (_a) {
-                console.log('WebComponentController.start');
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
-                    return __generator(this, function (_a) {
-                        console.log('WebComponentController.getAll');
-                        result = context.backendService.webComponentsManager.getAll();
-                        res.send(result);
-                        return [2 /*return*/];
-                    });
-                }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.setWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var item;
-                    return __generator(this, function (_a) {
-                        console.log('WebComponentController.createOrUpdate');
-                        item = context.backendService.webComponentsManager.createOrUpdate(req.body);
-                        res.send(item);
-                        return [2 /*return*/];
-                    });
-                }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.deleteWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('WebComponentController.remove');
-                        context.backendService.webComponentsManager.remove(req.params.id);
-                        res.sendStatus(204);
-                        return [2 /*return*/];
-                    });
-                }); });
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.backendService.serviceManager.getAsync(moduleName || this.moduleName, serviceName)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };
-    return WebComponentController;
+    ReactronServiceContext.getServiceContext = function (moduleName) {
+        var context = ReactronServiceContext.serviceContexts.find(function (x) { return x.moduleName === moduleName; });
+        if (!context) {
+            context = new ReactronServiceContext(moduleName);
+            ReactronServiceContext.serviceContexts.push(context);
+        }
+        return context;
+    };
+    ReactronServiceContext.serviceContexts = [];
+    return ReactronServiceContext;
 }());
-exports.WebComponentController = WebComponentController;
-//# sourceMappingURL=WebComponentController.js.map
+exports.ReactronServiceContext = ReactronServiceContext;
+//# sourceMappingURL=ReactronServiceContext.js.map

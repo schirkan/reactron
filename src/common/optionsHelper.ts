@@ -1,4 +1,4 @@
-import { IFieldDefinition } from '../interfaces/IObjectDefinition';
+import { IFieldDefinition } from "@schirkan/reactron-interfaces";
 
 export const getDefaultFieldValue = (field: IFieldDefinition) => {
   const defaultValue = field.defaultValue;

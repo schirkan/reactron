@@ -1,12 +1,11 @@
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IReactronComponentDefinition, IWebComponentOptions } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import { apiClient } from 'src/browser/ApiClient';
 import { componentLoader } from 'src/browser/ComponentLoader';
 import { getDefaultObjectValue } from 'src/common/optionsHelper';
-import { IComponentDefinition } from 'src/interfaces/IComponentDefinition';
-import { IWebComponentOptions } from 'src/interfaces/IWebComponentOptions';
 import * as uuidv4 from 'uuid/v4';
 import { OptionCardContext, OptionsCardContextData } from '../../OptionCard/OptionCardContext';
 import OptionList from '../../OptionList/OptionList';
@@ -14,10 +13,10 @@ import UiButton from '../../UiButton/UiButton';
 
 import './WebComponentForm.css';
 
-interface IComponentDefinitionItem {
+interface IReactronComponentDefinitionItem {
   key: string;
   moduleName: string;
-  definition: IComponentDefinition;
+  definition: IReactronComponentDefinition;
 }
 
 interface IWebComponentFormProps {
@@ -29,8 +28,8 @@ interface IWebComponentFormState {
   loadingWebComponents: boolean
   loadingComponentDefinitions: boolean
   webComponents: IWebComponentOptions[];
-  componentDefinitions: IComponentDefinitionItem[];
-  selectedComponentDefinition?: IComponentDefinitionItem;
+  componentDefinitions: IReactronComponentDefinitionItem[];
+  selectedComponentDefinition?: IReactronComponentDefinitionItem;
   selectedWebComponentOptions?: IWebComponentOptions;
 }
 
@@ -71,7 +70,7 @@ export default class WebComponentForm extends React.Component<IWebComponentFormP
   private loadComponentDefinitions() {
     return componentLoader.getAllComponents()
       .then(result => {
-        const componentDefinitions: IComponentDefinitionItem[] = [];
+        const componentDefinitions: IReactronComponentDefinitionItem[] = [];
         Object.keys(result).forEach(moduleName => {
           const components = result[moduleName];
           components.forEach(definition => {

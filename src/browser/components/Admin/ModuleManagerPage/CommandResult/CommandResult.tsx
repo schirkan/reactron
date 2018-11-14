@@ -1,7 +1,7 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
-import { ICommandResult } from '../../../../../interfaces/ICommandResult';
+import { ICommandResult } from 'src/interfaces/ICommandResult';
 import UiCard from '../../UiCard/UiCard';
 import { ICommandResultProps } from './ICommandResultProps';
 

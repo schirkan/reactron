@@ -1,21 +1,21 @@
+import { IReactronService } from '@schirkan/reactron-interfaces';
 import { routes } from '../../common/apiRoutes';
-import { IExternalService } from '../../interfaces/IExternalService';
-import { ServerModuleHelper } from '../ServerModuleHelper';
+import { ReactronServiceContext } from '../ReactronServiceContext';
 import { registerRoute } from './registerRoute';
 
-export class SettingsController implements IExternalService {
-    public async start(helper: ServerModuleHelper): Promise<void> {
+export class SettingsController implements IReactronService {
+    public async start(context: ReactronServiceContext): Promise<void> {
         console.log('SettingsController.start');
 
-        registerRoute(helper.moduleApiRouter, routes.getSettings, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.getSettings, async (req, res) => {
             console.log('SettingsController.get');
-            const result = await helper.backendService.settings.get();
+            const result = await context.backendService.settings.get();
             res.send(result);
         });
         
-        registerRoute(helper.moduleApiRouter, routes.setSettings, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.setSettings, async (req, res) => {
             console.log('SettingsController.set');
-            helper.backendService.settings.set(req.body);
+            context.backendService.settings.set(req.body);
             res.sendStatus(204);
             // TODO: ex handling
         });

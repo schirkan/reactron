@@ -1,16 +1,16 @@
+import { IBackendServiceConfig, IExpressApp } from '@schirkan/reactron-interfaces';
 import * as express from 'express';
 import * as http from 'http';
 import * as path from 'path';
-import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
 
-export class ExpressApp {
+export class ExpressApp implements IExpressApp {
     public express: express.Application;
     public server: http.Server;
     public apiRouter: express.Router;
 
     constructor(private config: IBackendServiceConfig) { }
 
-    public start() {
+    public start(): Promise<void> {
         console.log('ExpressApp is starting');
         return new Promise<void>((resolve) => {
             this.express = express();

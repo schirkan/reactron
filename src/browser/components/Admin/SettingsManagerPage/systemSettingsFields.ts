@@ -1,4 +1,4 @@
-import { IFieldDefinition } from 'src/interfaces/IObjectDefinition';
+import { IFieldDefinition } from '@schirkan/reactron-interfaces';
 
 export const systemSettingsFields: IFieldDefinition[] = [{
   description: 'Language',

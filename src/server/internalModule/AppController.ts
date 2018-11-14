@@ -1,8 +1,8 @@
+import { IReactronService } from '@schirkan/reactron-interfaces';
 import * as os from 'os';
 import { routes } from '../../common/apiRoutes';
-import { IExternalService } from '../../interfaces/IExternalService';
 import { IServerInfo } from '../../interfaces/IServerInfo';
-import { ServerModuleHelper } from '../ServerModuleHelper';
+import { ReactronServiceContext } from '../ReactronServiceContext';
 import { registerRoute } from './registerRoute';
 
 // tslint:disable-next-line:no-var-requires
@@ -40,14 +40,14 @@ const getMemoryInfo = () => {
     return { free: os.freemem(), total: os.totalmem() };
 };
 
-export class AppController implements IExternalService {
-    public async start(helper: ServerModuleHelper): Promise<void> {
+export class AppController implements IReactronService {
+    public async start(context: ReactronServiceContext): Promise<void> {
         console.log('AppController.start');
 
-        registerRoute(helper.moduleApiRouter, routes.getServerInfo, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.getServerInfo, async (req, res) => {
             console.log('AppController.getServerInfo');
 
-            const moduleInfo = helper.backendService.moduleRepository.get('reactron');
+            const moduleInfo = context.backendService.moduleRepository.get('reactron');
 
             const result: IServerInfo = {
                 hostname: os.hostname(),
@@ -59,36 +59,36 @@ export class AppController implements IExternalService {
             res.send(result);
         });
 
-        registerRoute(helper.moduleApiRouter, routes.exitApplication, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.exitApplication, async (req, res) => {
             console.log('AppController.exitApplication');
             res.sendStatus(204);
-            helper.backendService.exit();
+            context.backendService.exit();
         });
 
-        registerRoute(helper.moduleApiRouter, routes.restartApplication, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.restartApplication, async (req, res) => {
             console.log('AppController.restartApplication');
             res.sendStatus(204);
-            helper.backendService.restart();
+            context.backendService.restart();
         });
 
-        registerRoute(helper.moduleApiRouter, routes.shutdownSystem, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.shutdownSystem, async (req, res) => {
             console.log('AppController.shutdownSystem');
             res.sendStatus(204);
             osCommand.shutdown();
-            helper.backendService.exit();
+            context.backendService.exit();
         });
 
-        registerRoute(helper.moduleApiRouter, routes.rebootSystem, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.rebootSystem, async (req, res) => {
             console.log('AppController.rebootSystem');
             res.sendStatus(204);
             osCommand.reboot();
-            helper.backendService.exit();
+            context.backendService.exit();
         });
 
-        registerRoute(helper.moduleApiRouter, routes.resetApplication, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.resetApplication, async (req, res) => {
             console.log('AppController.resetApplication');
             res.sendStatus(204);
-            helper.backendService.reset();
+            context.backendService.reset();
         });
     }
 }

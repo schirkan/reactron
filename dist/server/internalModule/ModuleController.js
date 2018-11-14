@@ -40,27 +40,27 @@ var registerRoute_1 = require("./registerRoute");
 var ModuleController = /** @class */ (function () {
     function ModuleController() {
     }
-    ModuleController.prototype.start = function (helper) {
+    ModuleController.prototype.start = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 console.log('ModuleController.start');
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getModules, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getModules, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var modules;
                     return __generator(this, function (_a) {
                         console.log('ModuleController.getAll');
-                        modules = helper.backendService.moduleManager.getAll();
+                        modules = context.backendService.moduleManager.getAll();
                         res.send(modules);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.checkUpdates, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.checkUpdates, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var resultCheckUpdates;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.checkUpdates');
-                                return [4 /*yield*/, helper.backendService.moduleManager.checkUpdates()];
+                                return [4 /*yield*/, context.backendService.moduleManager.checkUpdates()];
                             case 1:
                                 resultCheckUpdates = _a.sent();
                                 res.send([resultCheckUpdates]);
@@ -68,25 +68,25 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var results, resultAdd, moduleRepositoryItem, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.add');
                                 results = [];
-                                return [4 /*yield*/, helper.backendService.moduleManager.add(req.body.repository)];
+                                return [4 /*yield*/, context.backendService.moduleManager.add(req.body.repository)];
                             case 1:
                                 resultAdd = _a.sent();
                                 results.push(resultAdd);
                                 if (!(resultAdd.success && resultAdd.data)) return [3 /*break*/, 4];
                                 moduleRepositoryItem = resultAdd.data;
-                                return [4 /*yield*/, helper.backendService.moduleManager.install(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem)];
                             case 2:
                                 resultInstall = _a.sent();
                                 results.push(resultInstall);
                                 if (!!resultAdd.data.isBuilded) return [3 /*break*/, 4];
-                                return [4 /*yield*/, helper.backendService.moduleManager.build(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.build(moduleRepositoryItem)];
                             case 3:
                                 resultBuild = _a.sent();
                                 results.push(resultBuild);
@@ -97,15 +97,15 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.deleteModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.deleteModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var moduleRepositoryItem, result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.remove');
-                                moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+                                moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 2];
-                                return [4 /*yield*/, helper.backendService.moduleManager.remove(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.remove(moduleRepositoryItem)];
                             case 1:
                                 result = _a.sent();
                                 res.send([result]);
@@ -117,18 +117,18 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.rebuildModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.rebuildModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var moduleRepositoryItem, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.rebuild');
-                                moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+                                moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 3];
-                                return [4 /*yield*/, helper.backendService.moduleManager.install(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem)];
                             case 1:
                                 resultInstall = _a.sent();
-                                return [4 /*yield*/, helper.backendService.moduleManager.build(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.build(moduleRepositoryItem)];
                             case 2:
                                 resultBuild = _a.sent();
                                 res.send([resultInstall, resultBuild]);
@@ -140,25 +140,25 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.updateModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.updateModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var moduleRepositoryItem, results, resultUpdate, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.update');
-                                moduleRepositoryItem = helper.backendService.moduleManager.get(req.params.moduleName);
+                                moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 5];
                                 results = [];
                                 if (!moduleRepositoryItem.hasUpdate) return [3 /*break*/, 4];
-                                return [4 /*yield*/, helper.backendService.moduleManager.update(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.update(moduleRepositoryItem)];
                             case 1:
                                 resultUpdate = _a.sent();
                                 results.push(resultUpdate);
-                                return [4 /*yield*/, helper.backendService.moduleManager.install(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem)];
                             case 2:
                                 resultInstall = _a.sent();
                                 results.push(resultInstall);
-                                return [4 /*yield*/, helper.backendService.moduleManager.build(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.build(moduleRepositoryItem)];
                             case 3:
                                 resultBuild = _a.sent();
                                 results.push(resultBuild);

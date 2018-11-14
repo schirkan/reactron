@@ -1,7 +1,7 @@
-import { IComponentDefinition } from "../../../interfaces/IComponentDefinition";
+import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
 import GridLayout from "./GridLayout";
 
-export const gridLayoutDefinition: IComponentDefinition = {
+export const gridLayoutDefinition: IReactronComponentDefinition = {
     component: GridLayout,
     description: 'Grid Layout',
     displayName: 'Grid Layout',

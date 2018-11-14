@@ -1,7 +1,6 @@
+import { IBackendService, IBackendServiceConfig } from '@schirkan/reactron-interfaces';
 import { app } from 'electron';
 import * as path from 'path';
-import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
-import { ISystemSettings } from '../interfaces/ISystemSettings';
 import { ElectronApp } from './ElectronApp';
 import { ExpressApp } from './ExpressApp';
 import { ModuleLoader } from './ModuleLoader';
@@ -16,7 +15,7 @@ import { SystemSettingsManager } from './SystemSettingsManager';
 import { WebComponentsManager } from './WebComponentsManager';
 import { WebPageManager } from './WebPageManager';
 
-export class BackendService {
+export class BackendService implements IBackendService {
     public static instance: BackendService;
 
     public readonly topics = new PubSub();
@@ -30,7 +29,7 @@ export class BackendService {
     public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository, this.moduleLoader);
     public readonly webPageManager = new WebPageManager(this.topics, this.config.defaultWebPageOptions);
     public readonly webComponentsManager = new WebComponentsManager(this.topics, this.config.defaultWebComponentOptions);
-    public readonly settings = new SystemSettingsManager<ISystemSettings>(this.topics, this.config.defaultSystemSettings);
+    public readonly settings = new SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
 
     public constructor(public readonly config: IBackendServiceConfig) { }
 

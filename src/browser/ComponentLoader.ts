@@ -3,12 +3,12 @@ import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
+import { IReactronComponentDefinition } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { IModuleRepositoryItem } from 'src/interfaces/IModuleRepositoryItem';
-import { IComponentDefinition } from '../interfaces/IComponentDefinition';
 import { apiClient } from './ApiClient';
-import { inernalModuleHelper } from './inernalModuleHelper';
+import { inernalModuleContext } from './inernalModuleContext';
 import { components as internalComponents } from "./internalModule";
 
 // tslint:disable:no-string-literal
@@ -29,8 +29,8 @@ externalModules['@fortawesome/free-regular-svg-icons'] = RegularIcons;
 externalModules['@fortawesome/free-brands-svg-icons'] = BrandIcons;
 externalModules['@fortawesome/react-fontawesome'] = FontAwesome;
 
-if (inernalModuleHelper.electron) {
-    externalModules['electron'] = inernalModuleHelper.electron;
+if (inernalModuleContext.electron) {
+    externalModules['electron'] = inernalModuleContext.electron;
 }
 
 Object.keys(externalModules).forEach(key => {
@@ -40,11 +40,11 @@ Object.keys(externalModules).forEach(key => {
 
 export class ComponentLoader {
     private allComponentsLoaded = false;
-    private moduleComponents: { [moduleName: string]: IComponentDefinition[] } = {
+    private moduleComponents: { [moduleName: string]: IReactronComponentDefinition[] } = {
         'reactron': internalComponents
     };
 
-    public async getModuleComponents(moduleName: string): Promise<IComponentDefinition[] | undefined> {
+    public async getModuleComponents(moduleName: string): Promise<IReactronComponentDefinition[] | undefined> {
         if (!this.moduleComponents[moduleName]) {
             const modules = await apiClient.getModules();
             const m = modules.find(x => x.name === moduleName);
@@ -86,7 +86,7 @@ export class ComponentLoader {
         }
     }
 
-    public async getAllComponents(): Promise<{ [moduleName: string]: IComponentDefinition[] }> {
+    public async getAllComponents(): Promise<{ [moduleName: string]: IReactronComponentDefinition[] }> {
         if (this.allComponentsLoaded) {
             return this.moduleComponents;
         }

@@ -40,33 +40,33 @@ var registerRoute_1 = require("./registerRoute");
 var WebPageController = /** @class */ (function () {
     function WebPageController() {
     }
-    WebPageController.prototype.start = function (helper) {
+    WebPageController.prototype.start = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 console.log('WebPageController.start');
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getWebPages, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getWebPages, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         console.log('WebPageController.getAll');
-                        result = helper.backendService.webPageManager.getAll();
+                        result = context.backendService.webPageManager.getAll();
                         res.send(result);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.setWebPage, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.setWebPage, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var item;
                     return __generator(this, function (_a) {
                         console.log('WebPageController.createOrUpdate');
-                        item = helper.backendService.webPageManager.createOrUpdate(req.body);
+                        item = context.backendService.webPageManager.createOrUpdate(req.body);
                         res.send(item);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.deleteWebPage, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.deleteWebPage, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('WebPageController.remove');
-                        helper.backendService.webPageManager.remove(req.params.id);
+                        context.backendService.webPageManager.remove(req.params.id);
                         res.sendStatus(204);
                         return [2 /*return*/];
                     });

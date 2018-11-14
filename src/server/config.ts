@@ -1,4 +1,4 @@
-import { IBackendServiceConfig } from '../interfaces/IBackendServiceConfig';
+import { IBackendServiceConfig } from '@schirkan/reactron-interfaces';
 
 export const createConfig = (root: string): IBackendServiceConfig => {
     const isDev = process.env.NODE_ENV === 'development';

@@ -1,11 +1,11 @@
+import { IReactronComponentProps } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
 import { IGridLayoutOptions, IGridLayoutTileOptions } from './IGridLayoutTileOptions';
 
 import './GridLayout.css';
 
-export default class GridLayout extends React.Component<IDynamicReactComponentProps<IGridLayoutOptions>> {
-  constructor(props: IDynamicReactComponentProps<IGridLayoutOptions>) {
+export default class GridLayout extends React.Component<IReactronComponentProps<IGridLayoutOptions>> {
+  constructor(props: IReactronComponentProps<IGridLayoutOptions>) {
     super(props);
 
     this.renderTile = this.renderTile.bind(this);
@@ -24,7 +24,7 @@ export default class GridLayout extends React.Component<IDynamicReactComponentPr
     }
     return (
       <div className="GridTile" key={index} style={style}>
-        {this.props.renderComponent({ id: tile.content })}
+        {this.props.context.renderComponent({ id: tile.content })}
       </div>
     );
   }

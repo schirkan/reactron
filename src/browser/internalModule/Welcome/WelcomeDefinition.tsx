@@ -1,7 +1,7 @@
-import { IComponentDefinition } from "../../../interfaces/IComponentDefinition";
+import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
 import Welcome from "./Welcome";
 
-export const welcomeDefinition: IComponentDefinition = {
+export const welcomeDefinition: IReactronComponentDefinition = {
     component: Welcome,
     description: 'Welcome Component',
     displayName: 'Welcome',

@@ -1,7 +1,7 @@
-import { IComponentDefinition } from "../../../interfaces/IComponentDefinition";
+import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
 import IFrame from "./IFrame";
 
-export const iFrameDefinition: IComponentDefinition = {
+export const iFrameDefinition: IReactronComponentDefinition = {
     component: IFrame,
     description: 'IFrame Component',
     displayName: 'IFrame',

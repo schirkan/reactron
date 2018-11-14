@@ -1,7 +1,7 @@
+import { IBackendServiceConfig, IElectronApp } from '@schirkan/reactron-interfaces';
 import { app, BrowserWindow } from "electron";
-import { IBackendServiceConfig } from "../interfaces/IBackendServiceConfig";
 
-export class ElectronApp {
+export class ElectronApp implements IElectronApp {
     public mainWindow: Electron.BrowserWindow;
 
     constructor(private config: IBackendServiceConfig) { }

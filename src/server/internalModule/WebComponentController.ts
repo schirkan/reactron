@@ -1,27 +1,27 @@
+import { IReactronService } from '@schirkan/reactron-interfaces';
 import { routes } from '../../common/apiRoutes';
-import { IExternalService } from '../../interfaces/IExternalService';
-import { ServerModuleHelper } from '../ServerModuleHelper';
+import { ReactronServiceContext } from '../ReactronServiceContext';
 import { registerRoute } from './registerRoute';
 
-export class WebComponentController implements IExternalService {
-    public async start(helper: ServerModuleHelper): Promise<void> {
+export class WebComponentController implements IReactronService {
+    public async start(context: ReactronServiceContext): Promise<void> {
         console.log('WebComponentController.start');
 
-        registerRoute(helper.moduleApiRouter, routes.getWebComponentOptions, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.getWebComponentOptions, async (req, res) => {
             console.log('WebComponentController.getAll');
-            const result = helper.backendService.webComponentsManager.getAll();
+            const result = context.backendService.webComponentsManager.getAll();
             res.send(result);
         });
         
-        registerRoute(helper.moduleApiRouter, routes.setWebComponentOptions, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.setWebComponentOptions, async (req, res) => {
             console.log('WebComponentController.createOrUpdate');
-            const item = helper.backendService.webComponentsManager.createOrUpdate(req.body);
+            const item = context.backendService.webComponentsManager.createOrUpdate(req.body);
             res.send(item);
         });
         
-        registerRoute(helper.moduleApiRouter, routes.deleteWebComponentOptions, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.deleteWebComponentOptions, async (req, res) => {
             console.log('WebComponentController.remove');
-            helper.backendService.webComponentsManager.remove(req.params.id);
+            context.backendService.webComponentsManager.remove(req.params.id);
             res.sendStatus(204);
         });
     }

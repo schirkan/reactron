@@ -1,4 +1,4 @@
-import { IFieldDefinition } from 'src/interfaces/IObjectDefinition';
+import { IFieldDefinition } from '@schirkan/reactron-interfaces';
 
 export const pageOptionsFields: IFieldDefinition[] = [{
   description: 'Path',

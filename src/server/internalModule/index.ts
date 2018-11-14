@@ -1,4 +1,4 @@
-import { IServiceDefinition } from "../../interfaces/IServiceDefinition";
+import { IReactronServiceDefinition } from "@schirkan/reactron-interfaces";
 import { AppController } from "./AppController";
 import { ModuleController } from "./ModuleController";
 import { ServiceController } from "./ServiceController";
@@ -6,7 +6,7 @@ import { SettingsController } from "./SettingsController";
 import { WebComponentController } from "./WebComponentController";
 import { WebPageController } from "./WebPageController";
 
-export const services: IServiceDefinition[] = [{
+export const services: IReactronServiceDefinition[] = [{
     name: 'ModuleController',
     displayName: 'Modules API',
     description: 'API Controller for Modules',

@@ -1,5 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { IFieldDefinition } from "src/interfaces/IObjectDefinition";
+import { IFieldDefinition } from "@schirkan/reactron-interfaces";
 
 export interface IOptionCardProps {
   className?: string;

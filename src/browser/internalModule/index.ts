@@ -1,4 +1,4 @@
-import { IComponentDefinition } from "../../interfaces/IComponentDefinition";
+import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
 import { carouselLayoutDefinition } from "./CarouselLayout/CarouselLayoutDefinition";
 import { gridLayoutDefinition } from "./GridLayout/GridLayoutDefinition";
 import { iFrameDefinition } from "./IFrame/IFrameDefinition";
@@ -7,7 +7,7 @@ import { markDownDefinition } from "./MarkDown/MarkDownDefinition";
 import { notificationsDefinition } from "./Notifications/NotificationsDefinition";
 import { welcomeDefinition } from "./Welcome/WelcomeDefinition";
 
-export const components: IComponentDefinition[] = [
+export const components: IReactronComponentDefinition[] = [
     listLayoutDefinition,
     carouselLayoutDefinition,
     gridLayoutDefinition,

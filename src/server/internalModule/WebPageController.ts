@@ -1,27 +1,27 @@
+import { IReactronService } from '@schirkan/reactron-interfaces';
 import { routes } from '../../common/apiRoutes';
-import { IExternalService } from '../../interfaces/IExternalService';
-import { ServerModuleHelper } from '../ServerModuleHelper';
+import { ReactronServiceContext } from '../ReactronServiceContext';
 import { registerRoute } from './registerRoute';
 
-export class WebPageController implements IExternalService {
-    public async start(helper: ServerModuleHelper): Promise<void> {
+export class WebPageController implements IReactronService {
+    public async start(context: ReactronServiceContext): Promise<void> {
         console.log('WebPageController.start');
 
-        registerRoute(helper.moduleApiRouter, routes.getWebPages, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.getWebPages, async (req, res) => {
             console.log('WebPageController.getAll');
-            const result = helper.backendService.webPageManager.getAll();
+            const result = context.backendService.webPageManager.getAll();
             res.send(result);
         });
         
-        registerRoute(helper.moduleApiRouter, routes.setWebPage, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.setWebPage, async (req, res) => {
             console.log('WebPageController.createOrUpdate');
-            const item = helper.backendService.webPageManager.createOrUpdate(req.body);
+            const item = context.backendService.webPageManager.createOrUpdate(req.body);
             res.send(item);
         });
         
-        registerRoute(helper.moduleApiRouter, routes.deleteWebPage, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.deleteWebPage, async (req, res) => {
             console.log('WebPageController.remove');
-            helper.backendService.webPageManager.remove(req.params.id);
+            context.backendService.webPageManager.remove(req.params.id);
             res.sendStatus(204);
         });
     }

@@ -75,16 +75,16 @@ var getMemoryInfo = function () {
 var AppController = /** @class */ (function () {
     function AppController() {
     }
-    AppController.prototype.start = function (helper) {
+    AppController.prototype.start = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 console.log('AppController.start');
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getServerInfo, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getServerInfo, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var moduleInfo, result;
                     return __generator(this, function (_a) {
                         console.log('AppController.getServerInfo');
-                        moduleInfo = helper.backendService.moduleRepository.get('reactron');
+                        moduleInfo = context.backendService.moduleRepository.get('reactron');
                         result = {
                             hostname: os.hostname(),
                             ip: getIPAddress(),
@@ -96,45 +96,45 @@ var AppController = /** @class */ (function () {
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.exitApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.exitApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.exitApplication');
                         res.sendStatus(204);
-                        helper.backendService.exit();
+                        context.backendService.exit();
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.restartApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.restartApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.restartApplication');
                         res.sendStatus(204);
-                        helper.backendService.restart();
+                        context.backendService.restart();
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.shutdownSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.shutdownSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.shutdownSystem');
                         res.sendStatus(204);
                         osCommand.shutdown();
-                        helper.backendService.exit();
+                        context.backendService.exit();
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.rebootSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.rebootSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.rebootSystem');
                         res.sendStatus(204);
                         osCommand.reboot();
-                        helper.backendService.exit();
+                        context.backendService.exit();
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.resetApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.resetApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         console.log('AppController.resetApplication');
                         res.sendStatus(204);
-                        helper.backendService.reset();
+                        context.backendService.reset();
                         return [2 /*return*/];
                     });
                 }); });

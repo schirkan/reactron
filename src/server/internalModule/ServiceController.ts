@@ -1,16 +1,16 @@
+import { IReactronService } from '@schirkan/reactron-interfaces';
 import { routes } from '../../common/apiRoutes';
-import { IExternalService } from '../../interfaces/IExternalService';
 import { IServiceRepositoryItem } from '../../interfaces/IServiceRepositoryItem';
-import { ServerModuleHelper } from '../ServerModuleHelper';
+import { ReactronServiceContext } from '../ReactronServiceContext';
 import { registerRoute } from './registerRoute';
 
-export class ServiceController implements IExternalService {
-    public async start(helper: ServerModuleHelper): Promise<void> {
+export class ServiceController implements IReactronService {
+    public async start(context: ReactronServiceContext): Promise<void> {
         console.log('ServiceController.start');
 
-        registerRoute(helper.moduleApiRouter, routes.getServices, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.getServices, async (req, res) => {
             console.log('ServiceController.getAll');
-            const result = await helper.backendService.serviceRepository.getAll();
+            const result = await context.backendService.serviceRepository.getAll();
             const serviceInfos = result.map(item => {
                 const { instance, service, ...serviceInfo } = item;
                 return serviceInfo as IServiceRepositoryItem;
@@ -18,16 +18,16 @@ export class ServiceController implements IExternalService {
             res.send(serviceInfos);
         });
 
-        registerRoute(helper.moduleApiRouter, routes.getServiceOptions, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.getServiceOptions, async (req, res) => {
             console.log('ServiceController.getServiceOptions');
-            const result = helper.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
+            const result = context.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
             res.send(result);
         });
 
-        registerRoute(helper.moduleApiRouter, routes.setServiceOptions, async (req, res) => {
+        registerRoute(context.moduleApiRouter, routes.setServiceOptions, async (req, res) => {
             console.log('ServiceController.setServiceOptions');
-            helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
-            await helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
+            context.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
+            await context.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
             res.sendStatus(204);
             // TODO: ex handling
         });

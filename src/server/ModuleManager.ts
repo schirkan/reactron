@@ -1,6 +1,6 @@
+import { IBackendServiceConfig } from '@schirkan/reactron-interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
-import { IBackendServiceConfig } from "../interfaces/IBackendServiceConfig";
 import { ICommandResult, ICommandResultWithData } from "../interfaces/ICommandResult";
 import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
 import { command } from './commandResultWrapper';

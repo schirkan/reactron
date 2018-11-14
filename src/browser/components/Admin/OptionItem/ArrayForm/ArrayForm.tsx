@@ -1,9 +1,9 @@
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IFieldDefinition } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import { getDefaultFieldValue } from 'src/common/optionsHelper';
-import { IFieldDefinition } from 'src/interfaces/IObjectDefinition';
 import * as uuidv4 from 'uuid/v4';
 import UiButton from '../../UiButton/UiButton';
 import OptionItem from '../OptionItem';

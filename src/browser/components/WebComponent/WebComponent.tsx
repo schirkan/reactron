@@ -1,10 +1,8 @@
+import { IReactronComponentContext, IReactronComponentDefinition, IWebComponentOptions } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { IComponentDefinition } from '../../../interfaces/IComponentDefinition';
-import { IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
-import { IWebComponentOptions } from '../../../interfaces/IWebComponentOptions';
+import { ReactronComponentContext } from 'src/browser/ReactronComponentContext';
 import { apiClient } from '../../ApiClient';
 import { componentLoader } from '../../ComponentLoader';
-import { DynamicReactComponentProps } from '../../DynamicReactComponentProps';
 import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
@@ -14,8 +12,8 @@ import './WebComponent.css';
 
 interface IWebComponentState {
   componentFound?: boolean;
-  componentProps?: IDynamicReactComponentProps;
-  componentDefinition?: IComponentDefinition;
+  componentContext?: IReactronComponentContext;
+  componentDefinition?: IReactronComponentDefinition;
   componentOptions?: IWebComponentOptions;
 }
 
@@ -65,7 +63,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
         this.setState({ componentFound: false });
         return;
       }
-      
+
       const componentName = webComponentOptions.componentName;
       const componentDefinition = moduleComponents.find(x => x.name === componentName);
       if (!componentDefinition || !componentDefinition.component) {
@@ -74,8 +72,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       }
 
       this.setState({
-        componentProps: new DynamicReactComponentProps(webComponentOptions.moduleName,
-          webComponentOptions.componentName, webComponentOptions.options),
+        componentContext: new ReactronComponentContext(webComponentOptions.moduleName, webComponentOptions.componentName),
         componentDefinition,
         componentOptions: webComponentOptions,
         componentFound: true
@@ -93,9 +90,9 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       content = <ComponentNotFound {...this.props} />;
     }
 
-    if (this.state.componentDefinition && this.state.componentDefinition.component && this.state.componentProps) {
+    if (this.state.componentDefinition && this.state.componentDefinition.component && this.state.componentContext) {
       const Component = this.state.componentDefinition.component;
-      content = <Component {...this.state.componentProps} />;
+      content = <Component options={this.state.componentOptions && this.state.componentOptions.options} context={this.state.componentContext} />;
     }
 
     return (

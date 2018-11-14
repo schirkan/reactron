@@ -1,7 +1,7 @@
-import { IComponentDefinition } from "../../../interfaces/IComponentDefinition";
+import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
 import ListLayout from "./ListLayout";
 
-export const listLayoutDefinition: IComponentDefinition = {
+export const listLayoutDefinition: IReactronComponentDefinition = {
   component: ListLayout,
   description: 'List Layout',
   displayName: 'List Layout',

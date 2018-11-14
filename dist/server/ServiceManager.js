@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var commandResultWrapper_1 = require("./commandResultWrapper");
-var ServerModuleHelper_1 = require("./ServerModuleHelper");
+var ReactronServiceContext_1 = require("./ReactronServiceContext");
 // dependency loader für services
 var ServiceManager = /** @class */ (function () {
     function ServiceManager(serviceRepository, moduleRepository, optionsRepository) {
@@ -55,13 +55,13 @@ var ServiceManager = /** @class */ (function () {
         this.moduleRepository = moduleRepository;
         this.optionsRepository = optionsRepository;
     }
-    ServiceManager.prototype.get = function (moduleName, serviceName) {
+    ServiceManager.prototype.getAsync = function (moduleName, serviceName) {
         return __awaiter(this, void 0, void 0, function () {
             var serviceRepositoryItem, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
+                        console.log('ServiceManager.getAsync: ' + moduleName + '.' + serviceName);
                         serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
                         if (!!serviceRepositoryItem) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.loadService(moduleName, serviceName)];
@@ -75,6 +75,11 @@ var ServiceManager = /** @class */ (function () {
                 }
             });
         });
+    };
+    ServiceManager.prototype.get = function (moduleName, serviceName) {
+        console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
+        var serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
+        return serviceRepositoryItem && serviceRepositoryItem.instance;
     };
     ServiceManager.prototype.setOptions = function (moduleName, serviceName, options) {
         return __awaiter(this, void 0, void 0, function () {
@@ -204,7 +209,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
         return commandResultWrapper_1.command('startService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var helper, error_3;
+            var context, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -216,8 +221,8 @@ var ServiceManager = /** @class */ (function () {
                     case 1:
                         _a.trys.push([1, 4, , 5]);
                         if (!serviceRepositoryItem.instance.start) return [3 /*break*/, 3];
-                        helper = ServerModuleHelper_1.ServerModuleHelper.getServerModuleHelpers(serviceRepositoryItem.moduleName);
-                        return [4 /*yield*/, serviceRepositoryItem.instance.start(helper)];
+                        context = ReactronServiceContext_1.ReactronServiceContext.getServiceContext(serviceRepositoryItem.moduleName);
+                        return [4 /*yield*/, serviceRepositoryItem.instance.start(context)];
                     case 2:
                         _a.sent();
                         _a.label = 3;

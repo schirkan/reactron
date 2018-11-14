@@ -1,11 +1,11 @@
+import { IReactronComponentProps } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { IDynamicReactComponentProps } from '../../../interfaces/IDynamicReactComponentClass';
 import { IListLayoutItemOptions, IListLayoutOptions } from './IListLayoutOptions';
 
 import './ListLayout.css';
 
-export default class ListLayout extends React.Component<IDynamicReactComponentProps<IListLayoutOptions>> {
-  constructor(props: IDynamicReactComponentProps<IListLayoutOptions>) {
+export default class ListLayout extends React.Component<IReactronComponentProps<IListLayoutOptions>> {
+  constructor(props: IReactronComponentProps<IListLayoutOptions>) {
     super(props);
 
     this.renderListItem = this.renderListItem.bind(this);
@@ -16,7 +16,7 @@ export default class ListLayout extends React.Component<IDynamicReactComponentPr
 
     return (
       <div className="ListItem" key={index} style={style}>
-        {this.props.renderComponent({ id: item.content })}
+        {this.props.context.renderComponent({ id: item.content })}
       </div>
     );
   }

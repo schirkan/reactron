@@ -1,6 +1,6 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
+import { ISystemSettings } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { ISystemSettings } from '../../../../interfaces/ISystemSettings';
 import { apiClient } from '../../../ApiClient';
 import OptionCard from '../OptionCard/OptionCard';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';

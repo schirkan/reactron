@@ -1,5 +1,5 @@
+import { IPubSub, IPubSubEvgent } from '@schirkan/reactron-interfaces';
 import * as Emitter from 'events';
-import { IPubSub, IPubSubEvgent } from '../interfaces/IPubSub';
 
 export class PubSub implements IPubSub {
     private __EMITTER__ = new Emitter();

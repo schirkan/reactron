@@ -1,7 +1,7 @@
+import { IWebPageOptions } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { inernalModuleHelper } from 'src/browser/inernalModuleHelper';
-import { IWebPageOptions } from '../../../interfaces/IWebPageOptions';
+import { inernalModuleContext } from 'src/browser/inernalModuleContext';
 import { apiClient } from '../../ApiClient';
 import Admin from '../Admin/Admin';
 import Loading from '../Loading/Loading';
@@ -29,10 +29,10 @@ export default class App extends React.Component<{}, IAppState> {
     this.loadPages();
 
     // register page/component change event
-    if (inernalModuleHelper.topics) {
-      inernalModuleHelper.topics.subscribe('pages-updated', this.triggerReload);
-      inernalModuleHelper.topics.subscribe('components-updated', this.triggerReload);
-      inernalModuleHelper.topics.subscribe('system-settings-updated', this.triggerReload);
+    if (inernalModuleContext.topics) {
+      inernalModuleContext.topics.subscribe('pages-updated', this.triggerReload);
+      inernalModuleContext.topics.subscribe('components-updated', this.triggerReload);
+      inernalModuleContext.topics.subscribe('system-settings-updated', this.triggerReload);
     }
   }
 

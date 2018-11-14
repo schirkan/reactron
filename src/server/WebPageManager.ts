@@ -1,6 +1,5 @@
+import { IPubSub, IWebPageOptions } from "@schirkan/reactron-interfaces";
 import * as uuidv4 from 'uuid/v4';
-import { IPubSub } from "../interfaces/IPubSub";
-import { IWebPageOptions } from "../interfaces/IWebPageOptions";
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');

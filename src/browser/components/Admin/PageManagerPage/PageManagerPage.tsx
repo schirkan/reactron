@@ -1,8 +1,8 @@
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IWebPageOptions } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { IWebPageOptions } from '../../../../interfaces/IWebPageOptions';
 import { apiClient } from '../../../ApiClient';
 import OptionCard from '../OptionCard/OptionCard';
 import UiButton from '../UiButton/UiButton';

@@ -1,7 +1,5 @@
 import { ApiRoute, routes } from '../common/apiRoutes';
-import { BrowserModuleHelper } from './BrowserModuleHelper';
-
-const inernalModuleHelper = new BrowserModuleHelper('reactron');
+import { inernalModuleContext } from './inernalModuleContext';
 
 export class ApiClient {
     public getAllServices = apiCall(routes.getServices, true);
@@ -65,7 +63,7 @@ const apiCall = <TParams, TBody, TResponse>(
                 path = path.replace(':' + key, params[key]);
             });
         }
-        return fetch(inernalModuleHelper.moduleApiPath + path, {
+        return fetch(inernalModuleContext.moduleApiPath + path, {
             method,
             body: data && JSON.stringify(data),
             headers: {

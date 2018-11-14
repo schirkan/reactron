@@ -1,7 +1,7 @@
-import { IComponentDefinition } from "../../../interfaces/IComponentDefinition";
+import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
 import CarouselLayout from "./CarouselLayout";
 
-export const carouselLayoutDefinition: IComponentDefinition = {
+export const carouselLayoutDefinition: IReactronComponentDefinition = {
     component: CarouselLayout,
     description: 'Carousel Layout',
     displayName: 'Carousel Layout',

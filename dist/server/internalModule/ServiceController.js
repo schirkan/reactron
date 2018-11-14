@@ -49,18 +49,18 @@ var registerRoute_1 = require("./registerRoute");
 var ServiceController = /** @class */ (function () {
     function ServiceController() {
     }
-    ServiceController.prototype.start = function (helper) {
+    ServiceController.prototype.start = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 console.log('ServiceController.start');
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getServices, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getServices, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result, serviceInfos;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ServiceController.getAll');
-                                return [4 /*yield*/, helper.backendService.serviceRepository.getAll()];
+                                return [4 /*yield*/, context.backendService.serviceRepository.getAll()];
                             case 1:
                                 result = _a.sent();
                                 serviceInfos = result.map(function (item) {
@@ -72,22 +72,22 @@ var ServiceController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.getServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         console.log('ServiceController.getServiceOptions');
-                        result = helper.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
+                        result = context.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
                         res.send(result);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(helper.moduleApiRouter, apiRoutes_1.routes.setServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.setServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ServiceController.setServiceOptions');
-                                helper.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
-                                return [4 /*yield*/, helper.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
+                                context.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
+                                return [4 /*yield*/, context.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
                             case 1:
                                 _a.sent();
                                 res.sendStatus(204);

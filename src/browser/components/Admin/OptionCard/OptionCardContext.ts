@@ -1,6 +1,6 @@
+import { IWebComponentOptions } from "@schirkan/reactron-interfaces";
 import * as React from "react";
 import { apiClient } from "src/browser/ApiClient";
-import { IWebComponentOptions } from "src/interfaces/IWebComponentOptions";
 import { SimpleEvent } from "./SimpleEvent";
 
 export class OptionsCardContextData {

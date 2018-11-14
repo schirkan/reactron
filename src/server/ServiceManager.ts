@@ -1,11 +1,9 @@
-import { IFieldDefinition } from "src/interfaces/IObjectDefinition";
+import { IFieldDefinition, IReactronService, IReactronServiceDefinition } from "@schirkan/reactron-interfaces";
 import { ICommandResult } from "../interfaces/ICommandResult";
-import { IExternalService } from "../interfaces/IExternalService";
-import { IServiceDefinition } from "../interfaces/IServiceDefinition";
 import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { command } from "./commandResultWrapper";
 import { ModuleRepository } from "./ModuleRepository";
-import { ServerModuleHelper } from "./ServerModuleHelper";
+import { ReactronServiceContext } from "./ReactronServiceContext";
 import { ServiceOptionsRepository } from "./ServiceOptionsRepository";
 import { ServiceRepository } from "./ServiceRepository";
 
@@ -17,8 +15,8 @@ export class ServiceManager {
         private optionsRepository: ServiceOptionsRepository
     ) { }
 
-    public async get(moduleName: string, serviceName: string): Promise<IExternalService | undefined> {
-        console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
+    public async getAsync(moduleName: string, serviceName: string): Promise<IReactronService | undefined> {
+        console.log('ServiceManager.getAsync: ' + moduleName + '.' + serviceName);
         let serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
         if (!serviceRepositoryItem) {
             const result = await this.loadService(moduleName, serviceName);
@@ -26,6 +24,12 @@ export class ServiceManager {
                 serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
             }
         }
+        return serviceRepositoryItem && serviceRepositoryItem.instance;
+    }
+
+    public get(moduleName: string, serviceName: string): IReactronService | undefined {
+        console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
+        const serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
         return serviceRepositoryItem && serviceRepositoryItem.instance;
     }
 
@@ -48,7 +52,7 @@ export class ServiceManager {
                 if (m.serverFile) {
                     result.log.push('Loading: ' + m.serverFile);
                     try {
-                        const serviceDefinitions = require(m.serverFile).services as IServiceDefinition[];
+                        const serviceDefinitions = require(m.serverFile).services as IReactronServiceDefinition[];
                         // TODO: ex handling
                         if (serviceDefinitions && serviceDefinitions.length) {
                             // tslint:disable-next-line:prefer-for-of
@@ -106,8 +110,8 @@ export class ServiceManager {
             serviceRepositoryItem.state = "starting";
             try {
                 if (serviceRepositoryItem.instance.start) {
-                    const helper = ServerModuleHelper.getServerModuleHelpers(serviceRepositoryItem.moduleName);
-                    await serviceRepositoryItem.instance.start(helper);
+                    const context = ReactronServiceContext.getServiceContext(serviceRepositoryItem.moduleName);
+                    await serviceRepositoryItem.instance.start(context);
                 }
                 serviceRepositoryItem.state = "running";
             } catch (error) {
@@ -142,7 +146,7 @@ export class ServiceManager {
                 throw new Error('Module has no server file: ' + moduleName);
             }
 
-            let services: IServiceDefinition[];
+            let services: IReactronServiceDefinition[];
             try {
                 result.log.push('Loading: ' + moduleDefinition.serverFile);
                 services = require(moduleDefinition.serverFile).services;
@@ -154,7 +158,8 @@ export class ServiceManager {
             if (!serviceDefinition) {
                 throw new Error('Service not found: ' + serviceName);
             }
-            const serviceInstance = new serviceDefinition.service() as IExternalService;
+
+            const serviceInstance = new serviceDefinition.service();
 
             // get / init service options
             let serviceOptions = this.optionsRepository.get(moduleName, serviceName);

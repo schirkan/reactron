@@ -1,4 +1,4 @@
-import { IWebPageOptions } from "../../../../../interfaces/IWebPageOptions";
+import { IWebPageOptions } from "@schirkan/reactron-interfaces";
 
 export interface IPageCardProps {
   page: IWebPageOptions;

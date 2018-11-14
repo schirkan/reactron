@@ -1,7 +1,7 @@
-import { IComponentDefinition } from "../../../interfaces/IComponentDefinition";
+import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
 import MarkDown from "./MarkDown";
 
-export const markDownDefinition: IComponentDefinition = {
+export const markDownDefinition: IReactronComponentDefinition = {
   component: MarkDown,
   description: 'MarkDown Component',
   displayName: 'MarkDown',
