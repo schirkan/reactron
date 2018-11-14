@@ -1,6 +1,6 @@
 {
     "name": "@schirkan/reactron",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "description": "Dynamic Electron & React Module Loader",
     "keywords": [
         "electron",
