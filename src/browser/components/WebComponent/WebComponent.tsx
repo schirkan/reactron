@@ -1,8 +1,9 @@
 import { IReactronComponentContext, IReactronComponentDefinition, IWebComponentOptions } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { ReactronComponentContext } from 'src/browser/ReactronComponentContext';
+import { WebComponentContext } from 'src/browser/WebComponentContext';
 import { apiClient } from '../../ApiClient';
 import { componentLoader } from '../../ComponentLoader';
+import { WebComponentContextType } from '../../WebComponentContext';
 import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
@@ -72,7 +73,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       }
 
       this.setState({
-        componentContext: new ReactronComponentContext(webComponentOptions.moduleName, webComponentOptions.componentName),
+        componentContext: new WebComponentContext(webComponentOptions.moduleName, webComponentOptions.componentName),
         componentDefinition,
         componentOptions: webComponentOptions,
         componentFound: true
@@ -92,12 +93,25 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
 
     if (this.state.componentDefinition && this.state.componentDefinition.component && this.state.componentContext) {
       const Component = this.state.componentDefinition.component;
-      content = <Component options={this.state.componentOptions && this.state.componentOptions.options} context={this.state.componentContext} />;
+
+      // set contextType
+      if(!(Component as any).contextType){
+        (Component as any).contextType = WebComponentContextType;
+      }
+
+      // render context and component
+      content = (
+        <WebComponentContextType.Provider value={this.state.componentContext}>
+          <Component options={this.state.componentOptions && this.state.componentOptions.options} context={this.state.componentContext} />
+        </WebComponentContextType.Provider>
+      );
     }
 
     return (
       <section className="WebComponent">
-        <ErrorBoundary>{content}</ErrorBoundary>
+        <ErrorBoundary>
+          {content}
+        </ErrorBoundary>
       </section>
     );
   }

@@ -1,12 +1,20 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
+import { IModuleRepositoryItem } from "../../../../../interfaces/IModuleRepositoryItem";
 import UiButton from '../../UiButton/UiButton';
 import UiCard from '../../UiCard/UiCard';
 import UiCardButtonRow from '../../UiCardButtonRow/UiCardButtonRow';
-import { IUpdateModulesCardProps } from './IUpdateModulesCardProps';
 
 import './UpdateModulesCard.css';
+
+export interface IUpdateModulesCardProps {
+  checkingUpdates: boolean;
+  modules: IModuleRepositoryItem[];
+  onCheckUpdates: () => void;
+  onUpdateAll: () => void;
+  onUpdateModule: (module: IModuleRepositoryItem) => void;
+}
 
 export default class UpdateModulesCard extends React.Component<IUpdateModulesCardProps> {
   public render() {
@@ -21,7 +29,7 @@ export default class UpdateModulesCard extends React.Component<IUpdateModulesCar
           <UiButton className="checkUpdatesButton" onClick={this.props.onCheckUpdates} disabled={this.props.checkingUpdates}>
             <FontAwesomeIcon icon={SolidIcons.faSyncAlt} spin={this.props.checkingUpdates} /> Check
           </UiButton>
-          <UiButton className="updateAllButton" onClick={this.props.onCheckUpdates} disabled={!modulesWithUpdates.length}>
+          <UiButton className="updateAllButton" onClick={this.props.onUpdateAll} disabled={!modulesWithUpdates.length}>
             <FontAwesomeIcon icon={SolidIcons.faDownload} /> Update All
           </UiButton>
         </UiCardButtonRow>

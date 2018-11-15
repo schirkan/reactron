@@ -14,6 +14,9 @@ interface IWelcomeState {
 }
 
 export default class Welcome extends React.Component<IReactronComponentProps, IWelcomeState> {
+  // import { IReactronComponentContext } from '@schirkan/reactron-interfaces';
+  // public context: IReactronComponentContext;
+
   constructor(props: IReactronComponentProps) {
     super(props);
     this.state = {};
@@ -36,13 +39,13 @@ export default class Welcome extends React.Component<IReactronComponentProps, IW
     }
     return (
       <section className="Welcome">
-        <img src={logo} className="logo" alt="logo" />
-        <div className="title">Welcome to Reactron</div>
-        {info}
         <RoundButton to="/admin">
           <FontAwesome.FontAwesomeIcon icon={SvgIcons.faCog} />
           Admin
         </RoundButton>
+        <img src={logo} className="logo" alt="logo" />
+        <div className="title">Welcome to Reactron</div>
+        {info}
       </section>
     );
   }

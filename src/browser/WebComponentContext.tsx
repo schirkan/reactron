@@ -6,7 +6,7 @@ import Loading from "./components/Loading/Loading";
 import { IWebComponentProps } from './components/WebComponent/IWebComponentProps';
 import WebComponent from "./components/WebComponent/WebComponent";
 
-export class ReactronComponentContext extends BrowserModuleContext implements IReactronComponentContext {
+export class WebComponentContext extends BrowserModuleContext implements IReactronComponentContext {
     public renderLoading: (text?: string, iconSize?: SizeProp) => any;
     public renderComponent: (props: IWebComponentProps) => any;
 
@@ -22,3 +22,5 @@ export class ReactronComponentContext extends BrowserModuleContext implements IR
         };
     }
 }
+
+export const WebComponentContextType = React.createContext<WebComponentContext>(new WebComponentContext('', ''));
