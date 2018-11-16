@@ -7,8 +7,6 @@ export const gridLayoutDefinition: IReactronComponentDefinition = {
     displayName: 'Grid Layout',
     name: 'GridLayout',
     fields: [
-        // { displayName: 'Rows', name: 'rows', valueType: 'number', minValue: 0 },
-        // { displayName: 'Columns', name: 'cols', valueType: 'number', minValue: 0 },
         { displayName: 'Grid Style', name: 'gridStyle', valueType: 'style' },
         { displayName: 'Tile Style', name: 'tileStyle', valueType: 'style' },
         {

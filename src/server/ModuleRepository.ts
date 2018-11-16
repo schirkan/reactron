@@ -1,4 +1,4 @@
-import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
+import { IModuleRepositoryItem } from "@schirkan/reactron-interfaces";
 
 export class ModuleRepository {
     private readonly modules: IModuleRepositoryItem[] = [];

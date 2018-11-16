@@ -1,6 +1,5 @@
+import { ICommandResult, IModuleRepositoryItem } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { ICommandResult } from '../../../../interfaces/ICommandResult';
-import { IModuleRepositoryItem } from '../../../../interfaces/IModuleRepositoryItem';
 import { apiClient } from '../../../ApiClient';
 import Loading from '../../Loading/Loading';
 import UiFlowLayout from '../UiFlowLayout/UiFlowLayout';

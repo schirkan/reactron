@@ -1,6 +1,4 @@
-import { IFieldDefinition, IReactronService, IReactronServiceDefinition, IServiceManager } from "@schirkan/reactron-interfaces";
-import { ICommandResult } from "../interfaces/ICommandResult";
-import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
+import { ICommandResult, IFieldDefinition, IReactronService, IReactronServiceDefinition, IServiceManager, IServiceRepositoryItem } from "@schirkan/reactron-interfaces";
 import { command } from "./commandResultWrapper";
 import { ModuleRepository } from "./ModuleRepository";
 import { ReactronServiceContext } from "./ReactronServiceContext";
@@ -52,7 +50,8 @@ export class ServiceManager implements IServiceManager {
                 if (m.serverFile) {
                     result.log.push('Loading: ' + m.serverFile);
                     try {
-                        const serviceDefinitions = require(m.serverFile).services as IReactronServiceDefinition[];
+                        const serverFileExport = require(m.serverFile) as any;
+                        const serviceDefinitions = serverFileExport.services as IReactronServiceDefinition[];
                         // TODO: ex handling
                         if (serviceDefinitions && serviceDefinitions.length) {
                             // tslint:disable-next-line:prefer-for-of
@@ -149,9 +148,14 @@ export class ServiceManager implements IServiceManager {
             let services: IReactronServiceDefinition[];
             try {
                 result.log.push('Loading: ' + moduleDefinition.serverFile);
-                services = require(moduleDefinition.serverFile).services;
+                const serverFileExport = require(moduleDefinition.serverFile) as any;
+                services = serverFileExport && serverFileExport.services;
             } catch (error) {
                 throw new Error('Error loading Module: ' + moduleDefinition.serverFile);
+            }
+
+            if (!services || !Array.isArray(services)) {
+                throw new Error('No services found for module: ' + moduleName);
             }
 
             const serviceDefinition = services.find(x => x.name === serviceName);

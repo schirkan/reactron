@@ -6,9 +6,8 @@ export interface IGridLayoutTileOptions {
   content: string;
   style: any;
 }
+
 export interface IGridLayoutOptions {
-  rows: number;
-  cols: number;
   gridStyle: any;
   tileStyle: any;
   tiles: IGridLayoutTileOptions[];

@@ -3,10 +3,9 @@ import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
-import { IReactronComponentDefinition } from '@schirkan/reactron-interfaces';
+import { IModuleRepositoryItem, IReactronComponentDefinition } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { IModuleRepositoryItem } from 'src/interfaces/IModuleRepositoryItem';
 import { apiClient } from './ApiClient';
 import { inernalModuleContext } from './inernalModuleContext';
 import { components as internalComponents } from "./internalModule";
@@ -41,7 +40,7 @@ Object.keys(externalModules).forEach(key => {
 export class ComponentLoader {
     private allComponentsLoaded = false;
     private moduleComponents: { [moduleName: string]: IReactronComponentDefinition[] } = {
-        'reactron': internalComponents
+        '@schirkan/reactron': internalComponents
     };
 
     public async getModuleComponents(moduleName: string): Promise<IReactronComponentDefinition[] | undefined> {

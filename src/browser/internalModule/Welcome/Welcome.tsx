@@ -1,6 +1,5 @@
 import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
-import { IReactronComponentProps } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import { IServerInfo } from '../../../interfaces/IServerInfo';
 import { apiClient } from '../../ApiClient';
@@ -13,11 +12,8 @@ interface IWelcomeState {
   info?: IServerInfo;
 }
 
-export default class Welcome extends React.Component<IReactronComponentProps, IWelcomeState> {
-  // import { IReactronComponentContext } from '@schirkan/reactron-interfaces';
-  // public context: IReactronComponentContext;
-
-  constructor(props: IReactronComponentProps) {
+export default class Welcome extends React.Component<any, IWelcomeState> {
+  constructor(props: any) {
     super(props);
     this.state = {};
   }

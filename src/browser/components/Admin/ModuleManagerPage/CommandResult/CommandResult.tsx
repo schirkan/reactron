@@ -1,11 +1,15 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ICommandResult } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { ICommandResult } from 'src/interfaces/ICommandResult';
 import UiCard from '../../UiCard/UiCard';
-import { ICommandResultProps } from './ICommandResultProps';
 
 import './CommandResult.css';
+
+export interface ICommandResultProps {
+  results: ICommandResult[];
+  onClose: () => void;
+}
 
 export default class CommandResult extends React.Component<ICommandResultProps> {
   constructor(props: ICommandResultProps) {

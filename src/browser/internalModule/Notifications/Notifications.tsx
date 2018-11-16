@@ -1,10 +1,9 @@
-import { IReactronComponentProps } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 
 import './Notifications.css';
 
-export default class Notifications extends React.Component<IReactronComponentProps, any> {
-  constructor(props: IReactronComponentProps) {
+export default class Notifications extends React.Component<any, any> {
+  constructor(props: any) {
     super(props);
   }
 

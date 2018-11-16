@@ -1,10 +1,9 @@
-import { IReactronComponentProps } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 
 import './CarouselLayout.css';
 
-export default class CarouselLayout extends React.Component<IReactronComponentProps, any> {
-  constructor(props: IReactronComponentProps) {
+export default class CarouselLayout extends React.Component<any, any> {
+  constructor(props: any) {
     super(props);
   }
 

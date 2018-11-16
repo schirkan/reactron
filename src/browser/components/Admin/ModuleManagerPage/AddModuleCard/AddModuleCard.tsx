@@ -3,9 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import UiButton from '../../UiButton/UiButton';
 import UiCard from '../../UiCard/UiCard';
-import { IAddModuleCardProps } from './IAddModuleCardProps';
 
 import './AddModuleCard.css';
+
+export interface IAddModuleCardProps {
+  onAdd: (repository: string | null) => void;
+}
 
 export default class AddModuleCard extends React.Component<IAddModuleCardProps> {
   public render() {

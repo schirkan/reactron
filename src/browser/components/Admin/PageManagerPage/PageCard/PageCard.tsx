@@ -1,15 +1,20 @@
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
-import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IWebPageOptions } from "@schirkan/reactron-interfaces";
 import * as React from 'react';
 import UiButton from '../../UiButton/UiButton';
 import UiCard from '../../UiCard/UiCard';
 import UiCardButtonRow from '../../UiCardButtonRow/UiCardButtonRow';
 import UiCardContent from '../../UiCardContent/UiCardContent';
 import UiCardTitle from '../../UiCardTitle/UiCardTitle';
-import { IPageCardProps } from './IPageCardProps';
 
 import './PageCard.css';
+
+export interface IPageCardProps {
+  page: IWebPageOptions;
+  onEdit: (page: IWebPageOptions) => any;
+  onDelete: (page: IWebPageOptions) => any;
+}
 
 export default class PageCard extends React.Component<IPageCardProps> {
   constructor(props: IPageCardProps) {

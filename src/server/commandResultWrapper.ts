@@ -1,4 +1,4 @@
-import { ICommandResultWithData } from "../interfaces/ICommandResult";
+import { ICommandResultWithData } from "@schirkan/reactron-interfaces";
 
 export const command = async <T = void>(commandName: string | undefined, args: any,
     callback: (result: ICommandResultWithData<T>) => Promise<T> | T | Promise<ICommandResultWithData<T>> | ICommandResultWithData<T>)

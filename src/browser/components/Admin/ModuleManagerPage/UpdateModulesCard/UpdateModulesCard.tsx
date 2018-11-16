@@ -1,7 +1,7 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IModuleRepositoryItem } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { IModuleRepositoryItem } from "../../../../../interfaces/IModuleRepositoryItem";
 import UiButton from '../../UiButton/UiButton';
 import UiCard from '../../UiCard/UiCard';
 import UiCardButtonRow from '../../UiCardButtonRow/UiCardButtonRow';

@@ -1,6 +1,5 @@
-import { IReactronService } from '@schirkan/reactron-interfaces';
+import { IReactronService, IServiceRepositoryItem } from '@schirkan/reactron-interfaces';
 import { routes } from '../../common/apiRoutes';
-import { IServiceRepositoryItem } from '../../interfaces/IServiceRepositoryItem';
 import { ReactronServiceContext } from '../ReactronServiceContext';
 import { registerRoute } from './registerRoute';
 

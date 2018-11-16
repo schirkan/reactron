@@ -1,4 +1,4 @@
-import { IServiceRepositoryItem } from '../interfaces/IServiceRepositoryItem';
+import { IServiceRepositoryItem } from "@schirkan/reactron-interfaces";
 
 export class ServiceRepository {
     private readonly services: IServiceRepositoryItem[] = [];

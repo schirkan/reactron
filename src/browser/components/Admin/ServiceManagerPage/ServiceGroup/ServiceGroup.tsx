@@ -1,7 +1,7 @@
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IServiceRepositoryItem } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { IServiceRepositoryItem } from 'src/interfaces/IServiceRepositoryItem';
 import UiButton from '../../UiButton/UiButton';
 import UiFlowLayout from '../../UiFlowLayout/UiFlowLayout';
 import ServiceCard from '../ServiceCard/ServiceCard';

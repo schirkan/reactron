@@ -1,15 +1,21 @@
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IServiceRepositoryItem } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import UiButton from '../../UiButton/UiButton';
 import UiCard from '../../UiCard/UiCard';
 import UiCardButtonRow from '../../UiCardButtonRow/UiCardButtonRow';
 import UiCardContent from '../../UiCardContent/UiCardContent';
 import UiCardTitle from '../../UiCardTitle/UiCardTitle';
-import { IServiceCardProps } from './IServiceCardProps';
 
 import './ServiceCard.css';
+
+export interface IServiceCardProps {
+  service: IServiceRepositoryItem;
+  onShowLog: (service: IServiceRepositoryItem) => void;
+  onShowOptions: (service: IServiceRepositoryItem) => void;
+}
 
 export default class ServiceCard extends React.Component<IServiceCardProps> {
   constructor(props: IServiceCardProps) {

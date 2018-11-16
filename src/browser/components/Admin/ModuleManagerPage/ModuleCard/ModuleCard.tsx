@@ -1,6 +1,7 @@
 import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IModuleRepositoryItem } from '@schirkan/reactron-interfaces';
 import * as classname from 'classnames';
 import * as React from 'react';
 import UiButton from '../../UiButton/UiButton';
@@ -8,9 +9,15 @@ import UiCard from '../../UiCard/UiCard';
 import UiCardButtonRow from '../../UiCardButtonRow/UiCardButtonRow';
 import UiCardContent from '../../UiCardContent/UiCardContent';
 import UiCardTitle from '../../UiCardTitle/UiCardTitle';
-import { IModuleCardProps } from './IModuleCardProps';
 
 import './ModuleCard.css';
+
+export interface IModuleCardProps {
+  module: IModuleRepositoryItem;
+  onUpdate: (module: IModuleRepositoryItem) => void;
+  onRebuild: (module: IModuleRepositoryItem) => void;
+  onRemove: (module: IModuleRepositoryItem) => void;
+}
 
 interface IModuleCardState {
   showActions: boolean;

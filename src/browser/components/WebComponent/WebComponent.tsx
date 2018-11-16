@@ -98,11 +98,11 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     }
 
     if (this.state.componentDefinition && this.state.componentDefinition.component && this.state.componentContext) {
-      const Component = this.state.componentDefinition.component;
+      const Component = this.state.componentDefinition.component as typeof React.Component;
 
       // set contextType
-      if(!(Component as any).contextType){
-        (Component as any).contextType = WebComponentContextType;
+      if(!Component.contextType){
+        Component.contextType = WebComponentContextType;
       }
 
       const props = this.state.componentOptions && this.state.componentOptions.options || {}; 

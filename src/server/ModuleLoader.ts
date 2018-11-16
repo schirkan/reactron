@@ -1,7 +1,6 @@
-import { IBackendServiceConfig } from '@schirkan/reactron-interfaces';
+import { IBackendServiceConfig, IModuleRepositoryItem } from '@schirkan/reactron-interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
-import { IModuleRepositoryItem } from "../interfaces/IModuleRepositoryItem";
 
 export class ModuleLoader {
     private modulesPath: string;

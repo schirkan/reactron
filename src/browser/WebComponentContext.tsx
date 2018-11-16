@@ -3,8 +3,7 @@ import { IReactronComponentContext } from '@schirkan/reactron-interfaces';
 import React from 'react';
 import { BrowserModuleContext } from "./BrowserModuleContext";
 import Loading from "./components/Loading/Loading";
-import { IWebComponentProps } from './components/WebComponent/IWebComponentProps';
-import WebComponent from "./components/WebComponent/WebComponent";
+import WebComponent, { IWebComponentProps } from "./components/WebComponent/WebComponent";
 
 export class WebComponentContext extends BrowserModuleContext implements IReactronComponentContext {
     public renderLoading: (text?: string, iconSize?: SizeProp) => any;

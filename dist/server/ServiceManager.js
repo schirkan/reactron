@@ -101,7 +101,7 @@ var ServiceManager = /** @class */ (function () {
     ServiceManager.prototype.startAllServices = function () {
         var _this = this;
         return commandResultWrapper_1.command('startAllServices', undefined, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var modules, i, m, serviceDefinitions, j, serviceName, _a, _b, error_1;
+            var modules, i, m, serverFileExport, serviceDefinitions, j, serviceName, _a, _b, error_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -117,7 +117,8 @@ var ServiceManager = /** @class */ (function () {
                         _c.label = 2;
                     case 2:
                         _c.trys.push([2, 7, , 8]);
-                        serviceDefinitions = require(m.serverFile).services;
+                        serverFileExport = require(m.serverFile);
+                        serviceDefinitions = serverFileExport.services;
                         if (!(serviceDefinitions && serviceDefinitions.length)) return [3 /*break*/, 6];
                         j = 0;
                         _c.label = 3;
@@ -260,7 +261,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = moduleName + '.' + serviceName;
         return commandResultWrapper_1.command('loadService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var moduleDefinition, services, serviceDefinition, serviceInstance, serviceOptions, serviceRepositoryItem, _a, _b, _c, _d;
+            var moduleDefinition, services, serverFileExport, serviceDefinition, serviceInstance, serviceOptions, serviceRepositoryItem, _a, _b, _c, _d;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -276,10 +277,14 @@ var ServiceManager = /** @class */ (function () {
                         }
                         try {
                             result.log.push('Loading: ' + moduleDefinition.serverFile);
-                            services = require(moduleDefinition.serverFile).services;
+                            serverFileExport = require(moduleDefinition.serverFile);
+                            services = serverFileExport && serverFileExport.services;
                         }
                         catch (error) {
                             throw new Error('Error loading Module: ' + moduleDefinition.serverFile);
+                        }
+                        if (!services || !Array.isArray(services)) {
+                            throw new Error('No services found for module: ' + moduleName);
                         }
                         serviceDefinition = services.find(function (x) { return x.name === serviceName; });
                         if (!serviceDefinition) {

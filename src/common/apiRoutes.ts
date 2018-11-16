@@ -1,8 +1,5 @@
-import { ISystemSettings, IWebComponentOptions, IWebPageOptions } from '@schirkan/reactron-interfaces';
-import { ICommandResult } from '../interfaces/ICommandResult';
-import { IModuleRepositoryItem } from '../interfaces/IModuleRepositoryItem';
+import { ICommandResult, IModuleRepositoryItem, IServiceRepositoryItem, ISystemSettings, IWebComponentOptions, IWebPageOptions } from '@schirkan/reactron-interfaces';
 import { IServerInfo } from '../interfaces/IServerInfo';
-import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 
 export class ApiRoute<TParams, TBody, TResponse = void>{
     constructor(

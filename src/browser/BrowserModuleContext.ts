@@ -1,5 +1,20 @@
 import { IBackendService, IModuleContext, IPubSub } from "@schirkan/reactron-interfaces";
 
+let electron: Electron.AllElectron;
+let backendService: IBackendService;
+let topics: IPubSub;
+let Store: typeof ElectronStore;
+
+if ((window as any).require) {
+    electron = (window as any).require('electron');
+    backendService = electron.remote.require('./dist/server/BackendService').BackendService.instance;
+    topics = backendService.topics;
+    Store = electron.remote.require('electron-store');
+}
+
+const moduleStoreCache: { [key: string]: ElectronStore } = {};
+const serviceCache: { [key: string]: any } = {};
+
 export class BrowserModuleContext implements IModuleContext {
     public readonly electron: Electron.AllElectron;
     public readonly backendService: IBackendService;
@@ -9,13 +24,15 @@ export class BrowserModuleContext implements IModuleContext {
     public readonly getService: <TService = any>(serviceName: string, moduleName?: string | undefined) => TService | undefined;
 
     constructor(public moduleName: string) {
-        if ((window as any).require) {
-            this.electron = (window as any).require('electron');
-            this.backendService = this.electron.remote.require('./dist/server/BackendService').BackendService.instance;
-            this.topics = this.backendService.topics;
-            const Store = this.electron.remote.require('electron-store');
-            this.moduleStorage = new Store({ name: 'module.' + moduleName });
+        this.electron = electron;
+        this.backendService = backendService;
+        this.topics = topics;
+
+        const moduleStoreKey = 'module.' + moduleName;
+        if (!moduleStoreCache[moduleStoreKey]) {
+            moduleStoreCache[moduleStoreKey] = new Store({ name: 'module.' + moduleName });
         }
+        this.moduleStorage = moduleStoreCache[moduleStoreKey];
 
         const escapedModuleName = moduleName.replace('/', '@');
         this.moduleApiPath = '/api/modules/' + escapedModuleName;
@@ -25,7 +42,11 @@ export class BrowserModuleContext implements IModuleContext {
                 console.log('Method getService() is not supported in browser environment.');
                 return undefined;
             }
-            return this.backendService.serviceManager.get(explicitModuleName || moduleName, serviceName) as TService | undefined;
+            const serviceKey = (explicitModuleName || moduleName) + '.' + serviceName;
+            if (!serviceCache[serviceKey]) {
+                serviceCache[serviceKey] = this.backendService.serviceManager.get(explicitModuleName || moduleName, serviceName);
+            }
+            return serviceCache[serviceKey] as TService | undefined;
         }
     }
 }

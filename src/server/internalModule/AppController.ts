@@ -47,7 +47,7 @@ export class AppController implements IReactronService {
         registerRoute(context.moduleApiRouter, routes.getServerInfo, async (req, res) => {
             console.log('AppController.getServerInfo');
 
-            const moduleInfo = context.backendService.moduleRepository.get('reactron');
+            const moduleInfo = context.backendService.moduleRepository.get('@schirkan/reactron');
 
             const result: IServerInfo = {
                 hostname: os.hostname(),

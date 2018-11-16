@@ -1,5 +1,5 @@
+import { ICommandResult } from '@schirkan/reactron-interfaces';
 import { exec } from 'child_process';
-import { ICommandResult } from '../interfaces/ICommandResult';
 
 export class SystemCommand {
     public static run(command: string, cwd: string): Promise<ICommandResult> {
