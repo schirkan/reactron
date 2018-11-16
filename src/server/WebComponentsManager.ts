@@ -1,10 +1,10 @@
-import { IPubSub, IWebComponentOptions } from "@schirkan/reactron-interfaces";
+import { IPubSub, IWebComponentOptions, IWebComponentsManager } from "@schirkan/reactron-interfaces";
 import * as uuidv4 from 'uuid/v4';
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
 
-export class WebComponentsManager {
+export class WebComponentsManager implements IWebComponentsManager {
     private repository: ElectronStore<{ list: IWebComponentOptions[] }>
 
     constructor(private topics: IPubSub, defaultOptions: IWebComponentOptions[]) {

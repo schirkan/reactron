@@ -1,4 +1,4 @@
-import { IFieldDefinition, IReactronService, IReactronServiceDefinition } from "@schirkan/reactron-interfaces";
+import { IFieldDefinition, IReactronService, IReactronServiceDefinition, IServiceManager } from "@schirkan/reactron-interfaces";
 import { ICommandResult } from "../interfaces/ICommandResult";
 import { IServiceRepositoryItem } from "../interfaces/IServiceRepositoryItem";
 import { command } from "./commandResultWrapper";
@@ -8,7 +8,7 @@ import { ServiceOptionsRepository } from "./ServiceOptionsRepository";
 import { ServiceRepository } from "./ServiceRepository";
 
 // dependency loader für services
-export class ServiceManager {
+export class ServiceManager implements IServiceManager {
     constructor(
         private serviceRepository: ServiceRepository,
         private moduleRepository: ModuleRepository,

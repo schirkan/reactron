@@ -7,9 +7,15 @@ import { WebComponentContextType } from '../../WebComponentContext';
 import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
-import { IWebComponentProps } from './IWebComponentProps';
 
 import './WebComponent.css';
+
+export interface IWebComponentProps {
+  id?: string;
+  moduleName?: string;
+  componentName?: string;
+  options?: any;
+}  
 
 interface IWebComponentState {
   componentFound?: boolean;
@@ -99,10 +105,12 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
         (Component as any).contextType = WebComponentContextType;
       }
 
+      const props = this.state.componentOptions && this.state.componentOptions.options || {}; 
+
       // render context and component
       content = (
         <WebComponentContextType.Provider value={this.state.componentContext}>
-          <Component options={this.state.componentOptions && this.state.componentOptions.options} context={this.state.componentContext} />
+          <Component {...props} />
         </WebComponentContextType.Provider>
       );
     }

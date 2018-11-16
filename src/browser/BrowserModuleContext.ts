@@ -1,5 +1,4 @@
 import { IBackendService, IModuleContext, IPubSub } from "@schirkan/reactron-interfaces";
-import { ServiceManager } from "src/server/ServiceManager";
 
 export class BrowserModuleContext implements IModuleContext {
     public readonly electron: Electron.AllElectron;
@@ -22,13 +21,11 @@ export class BrowserModuleContext implements IModuleContext {
         this.moduleApiPath = '/api/modules/' + escapedModuleName;
 
         this.getService = <TService>(serviceName: string, explicitModuleName?: string) => {
-            if(!this.backendService){
+            if (!this.backendService) {
                 console.log('Method getService() is not supported in browser environment.');
                 return undefined;
             }
-            // TODO
-            const serviceManager = (this.backendService as any).serviceManager as ServiceManager;
-            return serviceManager.get(explicitModuleName || moduleName, serviceName) as TService | undefined;
+            return this.backendService.serviceManager.get(explicitModuleName || moduleName, serviceName) as TService | undefined;
         }
     }
 }
