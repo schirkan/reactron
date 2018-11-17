@@ -1,5 +1,7 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IFieldDefinition } from "@schirkan/reactron-interfaces";
 import * as React from 'react';
 import { getDefaultFieldValue } from '../../../../common/optionsHelper';
 import OptionList from '../OptionList/OptionList';
@@ -8,10 +10,20 @@ import UiCard from '../UiCard/UiCard';
 import UiCardButtonRow from '../UiCardButtonRow/UiCardButtonRow';
 import UiCardContent from '../UiCardContent/UiCardContent';
 import UiCardTitle from '../UiCardTitle/UiCardTitle';
-import { IOptionCardProps } from './IOptionCardProps';
 import { OptionCardContext, OptionsCardContextData } from './OptionCardContext';
 
 import './OptionCard.css';
+
+export interface IOptionCardProps {
+  className?: string;
+  icon: IconProp;
+  title: string;
+  options: object;
+  fields: IFieldDefinition[];
+  onSave: (newOptions: object) => any;
+  onCancel?: () => any;
+  showReset?: boolean;
+}
 
 interface IOptionCardState {
   newOptions: any;

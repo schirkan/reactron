@@ -100,7 +100,7 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
     this.setState({ selectedServiceOptions: newOptions })
   }
 
-  private saveOptions() {
+  private saveOptions(newOptions: any) {
     if (!this.state.selectedService) {
       return;
     }
@@ -109,7 +109,7 @@ export default class ServiceManagerPage extends React.Component<any, IModuleMana
       moduleName: this.state.selectedService.moduleName,
       serviceName: this.state.selectedService.name
     },
-      this.state.selectedServiceOptions
+      newOptions
     );
 
     this.closeOptions();
