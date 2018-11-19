@@ -1,7 +1,7 @@
 import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
+import { IServerInfo } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { IServerInfo } from '../../../interfaces/IServerInfo';
 import { apiClient } from '../../ApiClient';
 import RoundButton from '../../components/RoundButton/RoundButton';
 import logo from './logo.svg';

@@ -4,6 +4,8 @@ import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import { IComponentLoader, IModuleRepositoryItem, IReactronComponentDefinition } from '@schirkan/reactron-interfaces';
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import * as ReactRouterDom from 'react-router-dom';
@@ -12,10 +14,7 @@ import { inernalModuleContext } from './inernalModuleContext';
 import { components as internalComponents } from "./internalModule";
 
 // tslint:disable:no-string-literal
-// tslint:disable:no-var-requires
 
-import moment from 'moment';
-import momentTimezone from 'moment-timezone';
 const SystemJS = (window as any).System as SystemJSLoader.System;
 
 const externalModules = {};

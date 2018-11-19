@@ -1,11 +1,7 @@
-import { ICommandResult, IModuleRepositoryItem, IServiceRepositoryItem, ISystemSettings, IWebComponentOptions, IWebPageOptions } from '@schirkan/reactron-interfaces';
-import { IServerInfo } from '../interfaces/IServerInfo';
+import { ICommandResult, IModuleRepositoryItem, IServerInfo, IServiceRepositoryItem, ISystemSettings, IWebComponentOptions, IWebPageOptions } from '@schirkan/reactron-interfaces';
 
 export class ApiRoute<TParams, TBody, TResponse = void>{
-    constructor(
-        public path: string,
-        public method: string
-    ) { }
+    constructor(public path: string, public method: string) { }
 }
 
 export const routes = {
@@ -30,7 +26,7 @@ export const routes = {
     shutdownSystem: new ApiRoute<undefined, undefined>('/app/shutdownSystem', 'post'),
     rebootSystem: new ApiRoute<undefined, undefined>('/app/restartSystem', 'post'),
     resetApplication: new ApiRoute<undefined, undefined>('/app/resetApplication', 'post'),
-    
+
     getSettings: new ApiRoute<undefined, undefined, ISystemSettings>('/settings/', 'get'),
     setSettings: new ApiRoute<undefined, ISystemSettings>('/settings/', 'post'),
 
