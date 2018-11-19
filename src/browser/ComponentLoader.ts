@@ -14,16 +14,16 @@ import { components as internalComponents } from "./internalModule";
 // tslint:disable:no-string-literal
 // tslint:disable:no-var-requires
 
-const moment = require('moment');
-const momentTimezone = require('moment-timezone');
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 const SystemJS = (window as any).System as SystemJSLoader.System;
 
 const externalModules = {};
 externalModules['react'] = React;
 externalModules['react-dom'] = ReactDom;
 externalModules['react-router-dom'] = ReactRouterDom;
-externalModules['moment'] = moment;
-externalModules['moment-timezone'] = momentTimezone;
+externalModules['moment'] = { default: moment };
+externalModules['moment-timezone'] = { default: momentTimezone };
 externalModules['@fortawesome/fontawesome-svg-core'] = SvgCore;
 externalModules['@fortawesome/free-solid-svg-icons'] = SolidIcons;
 externalModules['@fortawesome/free-regular-svg-icons'] = RegularIcons;
