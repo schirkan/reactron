@@ -25,7 +25,6 @@ export class ServiceController implements IReactronService {
 
         registerRoute(context.moduleApiRouter, routes.setServiceOptions, async (req, res) => {
             console.log('ServiceController.setServiceOptions');
-            context.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
             await context.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
             res.sendStatus(204);
             // TODO: ex handling

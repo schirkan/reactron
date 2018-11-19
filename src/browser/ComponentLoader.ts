@@ -3,9 +3,10 @@ import * as BrandIcons from '@fortawesome/free-brands-svg-icons';
 import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
-import { IModuleRepositoryItem, IReactronComponentDefinition } from '@schirkan/reactron-interfaces';
+import { IComponentLoader, IModuleRepositoryItem, IReactronComponentDefinition } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
+import * as ReactRouterDom from 'react-router-dom';
 import { apiClient } from './ApiClient';
 import { inernalModuleContext } from './inernalModuleContext';
 import { components as internalComponents } from "./internalModule";
@@ -20,6 +21,7 @@ const SystemJS = (window as any).System as SystemJSLoader.System;
 const externalModules = {};
 externalModules['react'] = React;
 externalModules['react-dom'] = ReactDom;
+externalModules['react-router-dom'] = ReactRouterDom;
 externalModules['moment'] = moment;
 externalModules['moment-timezone'] = momentTimezone;
 externalModules['@fortawesome/fontawesome-svg-core'] = SvgCore;
@@ -37,7 +39,7 @@ Object.keys(externalModules).forEach(key => {
     SystemJS.register(key, [], exports => ({ execute: () => exports(moduleExport) }));
 });
 
-export class ComponentLoader {
+export class ComponentLoader implements IComponentLoader {
     private allComponentsLoaded = false;
     private moduleComponents: { [moduleName: string]: IReactronComponentDefinition[] } = {
         '@schirkan/reactron': internalComponents
@@ -49,7 +51,7 @@ export class ComponentLoader {
             const m = modules.find(x => x.name === moduleName);
 
             if (!m) {
-                console.log('Module not found loaded: ' + moduleName);
+                console.error('Module not found: ' + moduleName);
                 return;
             }
 
@@ -81,7 +83,7 @@ export class ComponentLoader {
             }
             console.log('Components loaded for module: ' + m.name);
         } catch (error) {
-            console.log('Error loading components for module: ' + m.name, error);
+            console.error('Error loading components for module: ' + m.name, error);
         }
     }
 

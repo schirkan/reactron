@@ -10,9 +10,9 @@ export const createConfig = (root: string): IBackendServiceConfig => {
         defaultSystemSettings: {
             lang: 'en',
             location: '',
-            theme: 'default',
             timezone: 'Europe/Berlin',
-            startupPath: '/'
+            startupPath: '/',
+            autorefresh: []
         },
         defaultWebPageOptions: [{
             id: 'homepage',

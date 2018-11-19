@@ -86,7 +86,6 @@ var ServiceController = /** @class */ (function () {
                         switch (_a.label) {
                             case 0:
                                 console.log('ServiceController.setServiceOptions');
-                                context.backendService.serviceOptionsRepository.set(req.params.moduleName, req.params.serviceName, req.body);
                                 return [4 /*yield*/, context.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
                             case 1:
                                 _a.sent();

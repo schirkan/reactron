@@ -81,12 +81,16 @@ var ServiceManager = /** @class */ (function () {
         var serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
         return serviceRepositoryItem && serviceRepositoryItem.instance;
     };
+    ServiceManager.prototype.getOptions = function (moduleName, serviceName) {
+        return this.optionsRepository.get(moduleName, serviceName);
+    };
     ServiceManager.prototype.setOptions = function (moduleName, serviceName, options) {
         return __awaiter(this, void 0, void 0, function () {
             var serviceRepositoryItem;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.optionsRepository.set(moduleName, serviceName, options);
                         serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
                         if (!serviceRepositoryItem) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.setOptionsInternal(serviceRepositoryItem, options)];

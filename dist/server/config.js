@@ -10,9 +10,9 @@ exports.createConfig = function (root) {
         defaultSystemSettings: {
             lang: 'en',
             location: '',
-            theme: 'default',
             timezone: 'Europe/Berlin',
-            startupPath: '/'
+            startupPath: '/',
+            autorefresh: []
         },
         defaultWebPageOptions: [{
                 id: 'homepage',

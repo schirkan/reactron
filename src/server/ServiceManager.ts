@@ -30,8 +30,14 @@ export class ServiceManager implements IServiceManager {
         const serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
         return serviceRepositoryItem && serviceRepositoryItem.instance;
     }
+    
+    public getOptions(moduleName: string, serviceName: string): any {
+        return this.optionsRepository.get(moduleName, serviceName);
+    }
 
     public async setOptions(moduleName: string, serviceName: string, options: any): Promise<void> {
+        this.optionsRepository.set(moduleName, serviceName, options);
+
         const serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
         if (serviceRepositoryItem) {
             await this.setOptionsInternal(serviceRepositoryItem, options);
