@@ -29,7 +29,7 @@ export class BrowserModuleContext implements IModuleContext {
         this.topics = topics;
 
         const moduleStoreKey = 'module.' + moduleName;
-        if (!moduleStoreCache[moduleStoreKey]) {
+        if (Store && !moduleStoreCache[moduleStoreKey]) {
             moduleStoreCache[moduleStoreKey] = new Store({ name: 'module.' + moduleName });
         }
         this.moduleStorage = moduleStoreCache[moduleStoreKey];

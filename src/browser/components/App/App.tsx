@@ -3,7 +3,6 @@ import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { inernalModuleContext } from 'src/browser/inernalModuleContext';
 import { apiClient } from '../../ApiClient';
-import Admin from '../Admin/Admin';
 import Loading from '../Loading/Loading';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import WebComponent from '../WebComponent/WebComponent';
@@ -68,7 +67,6 @@ export default class App extends React.Component<{}, IAppState> {
       content = (
         <Router>
           <Switch>
-            <Route path="/admin" component={Admin} />
             {this.state.pages.map(item =>
               (<Route key={item.path} path={item.path} exact={true} component={this.renderPage(item.webComponentId, item.style)} />)
             )}

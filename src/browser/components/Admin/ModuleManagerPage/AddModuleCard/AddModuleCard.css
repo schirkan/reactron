@@ -1,9 +1,0 @@
-section.AddModuleCard {
-  display: inline-flex; }
-  section.AddModuleCard input {
-    padding-left: 6px;
-    border: none;
-    width: 100%; }
-  section.AddModuleCard .addButton {
-    border-left: 1px solid #ddd;
-    overflow: visible; }
