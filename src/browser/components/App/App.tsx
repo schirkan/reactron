@@ -68,7 +68,7 @@ export default class App extends React.Component<{}, IAppState> {
         <Router>
           <Switch>
             {this.state.pages.map(item =>
-              (<Route key={item.path} path={item.path} exact={true} component={this.renderPage(item.webComponentId, item.style)} />)
+              (<Route key={item.path} path={item.path} exact={item.path === '/'} component={this.renderPage(item.webComponentId, item.style)} />)
             )}
             <Route component={PageNotFound} />
           </Switch>

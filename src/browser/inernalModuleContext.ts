@@ -1,2 +1,2 @@
 import { BrowserModuleContext } from './BrowserModuleContext';
-export const inernalModuleContext = new BrowserModuleContext('@schirkan/reactron'); // internal module
+export const inernalModuleContext = new BrowserModuleContext('reactron'); // internal module

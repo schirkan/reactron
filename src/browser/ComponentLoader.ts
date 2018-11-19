@@ -42,7 +42,7 @@ Object.keys(externalModules).forEach(key => {
 export class ComponentLoader implements IComponentLoader {
     private allComponentsLoaded = false;
     private moduleComponents: { [moduleName: string]: IReactronComponentDefinition[] } = {
-        '@schirkan/reactron': internalComponents
+        'reactron': internalComponents
     };
 
     public async getModuleComponents(moduleName: string): Promise<IReactronComponentDefinition[] | undefined> {
