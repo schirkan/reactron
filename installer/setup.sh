@@ -93,7 +93,7 @@ fi
 
 cd ~/reactron || exit
 echo -e "\e[96mInstalling dependencies ...\e[90m"
-if npm install; then 
+if npm install --production; then 
 	echo -e "\e[92mDependencies installation Done!\e[0m"
 else
 	echo -e "\e[91mUnable to install dependencies for reactron!"
@@ -111,7 +111,7 @@ fi
 
 cd ~/reactron/modules/reactron-admin
 echo -e "\e[96mInstalling dependencies ...\e[90m"
-if npm install; then 
+if npm install --production; then 
 	echo -e "\e[92mDependencies installation Done!\e[0m"
 else
 	echo -e "\e[91mUnable to install dependencies for reactron-admin!"
