@@ -123,7 +123,7 @@ read -p "Do you want use pm2 for auto starting of reactron (Y/N)?" choice
 if [[ $choice =~ ^[Yy]$ ]]; then
     sudo npm install -g pm2
     sudo su -c "env PATH=$PATH:/usr/bin pm2 startup linux -u pi --hp /home/pi"
-    pm2 start ~/reactron/installers/pm2.json
+    pm2 start ~/reactron/installer/pm2.json
     pm2 save
 fi
 
