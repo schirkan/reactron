@@ -32,16 +32,9 @@ export class ModuleManager {
 
     public add(repository: string): Promise<ICommandResultWithData<IModuleRepositoryItem | undefined>> {
         return command<IModuleRepositoryItem | undefined>('add', repository, async (result) => {
-            repository = (repository || '').trim();
+            // clean repository url
+            repository = ModuleLoader.cleanRepositoryUrl(repository);
 
-            // remove / from end
-            if (repository.endsWith('/')) {
-                repository = repository.substr(0, repository.length - 1);
-            }
-            // remove .git from end
-            if (repository.endsWith('.git')) {
-                repository = repository.substr(0, repository.length - 4);
-            }
             if (!repository) {
                 throw new Error('Invalid repository');
             }
@@ -86,13 +79,14 @@ export class ModuleManager {
         });
     }
 
-    public install(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
+    public install(moduleDefinition: IModuleRepositoryItem, propdOnly: boolean): Promise<ICommandResult> {
         return command('install', moduleDefinition.name, async () => {
             if (!moduleDefinition || !moduleDefinition.canInstall) {
                 throw new Error('Can not install module');
             }
 
-            const result = await SystemCommand.run('npm install', moduleDefinition.path);
+            const commandArgs = propdOnly ? ' --production' : '';
+            const result = await SystemCommand.run('npm install' + commandArgs, moduleDefinition.path);
             moduleDefinition.isInstalled = moduleDefinition.isInstalled || result.success;
             return result;
         });

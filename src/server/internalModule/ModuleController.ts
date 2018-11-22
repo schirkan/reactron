@@ -30,10 +30,13 @@ export class ModuleController implements IReactronService {
 
             if (resultAdd.success && resultAdd.data) {
                 const moduleRepositoryItem = resultAdd.data;
-                const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem);
-                results.push(resultInstall);
 
-                if (!resultAdd.data.isBuilded) {
+                if(moduleRepositoryItem.isBuilded){
+                    const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem, true);
+                    results.push(resultInstall);
+                } else {
+                    const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem, false);
+                    results.push(resultInstall);
                     const resultBuild = await context.backendService.moduleManager.build(moduleRepositoryItem);
                     results.push(resultBuild);
                 }
@@ -58,7 +61,7 @@ export class ModuleController implements IReactronService {
 
             const moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
             if (moduleRepositoryItem) {
-                const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem);
+                const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem, false);
                 const resultBuild = await context.backendService.moduleManager.build(moduleRepositoryItem);
                 res.send([resultInstall, resultBuild]);
             } else {
@@ -75,10 +78,16 @@ export class ModuleController implements IReactronService {
                 if (moduleRepositoryItem.hasUpdate) {
                     const resultUpdate = await context.backendService.moduleManager.update(moduleRepositoryItem);
                     results.push(resultUpdate);
-                    const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem);
-                    results.push(resultInstall);
-                    const resultBuild = await context.backendService.moduleManager.build(moduleRepositoryItem);
-                    results.push(resultBuild);
+
+                    if(moduleRepositoryItem.isBuilded){
+                        const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem, true);
+                        results.push(resultInstall);
+                    } else {
+                        const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem, false);
+                        results.push(resultInstall);
+                        const resultBuild = await context.backendService.moduleManager.build(moduleRepositoryItem);
+                        results.push(resultBuild);
+                    }
                 }
                 res.send(results);
             } else {

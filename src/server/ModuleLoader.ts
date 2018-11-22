@@ -5,6 +5,22 @@ import * as path from 'path';
 export class ModuleLoader {
     private modulesPath: string;
 
+    public static cleanRepositoryUrl(repository?: string) {
+        repository = (repository || '').trim();
+
+        // remove / from end
+        if (repository.endsWith('/')) {
+            repository = repository.substr(0, repository.length - 1);
+        }
+
+        // remove .git from end
+        if (repository.endsWith('.git')) {
+            repository = repository.substr(0, repository.length - 4);
+        }
+
+        return repository;
+    }
+
     constructor(
         private config: IBackendServiceConfig
     ) {
@@ -48,6 +64,9 @@ export class ModuleLoader {
             repository: p.repository && p.repository.url || p.repository,
             isBuilded: true
         } as IModuleRepositoryItem;
+
+        // clean repository url
+        moduleDefinition.repository = ModuleLoader.cleanRepositoryUrl(moduleDefinition.repository);
 
         if (p.browser) {
             moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
