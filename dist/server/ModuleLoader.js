@@ -42,6 +42,18 @@ var ModuleLoader = /** @class */ (function () {
         this.config = config;
         this.modulesPath = path.join(this.config.root, 'modules');
     }
+    ModuleLoader.cleanRepositoryUrl = function (repository) {
+        repository = (repository || '').trim();
+        // remove / from end
+        if (repository.endsWith('/')) {
+            repository = repository.substr(0, repository.length - 1);
+        }
+        // remove .git from end
+        if (repository.endsWith('.git')) {
+            repository = repository.substr(0, repository.length - 4);
+        }
+        return repository;
+    };
     ModuleLoader.prototype.loadAllModules = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result, items, _i, items_1, item, moduleFolderFull, newModule;
@@ -96,6 +108,8 @@ var ModuleLoader = /** @class */ (function () {
                     repository: p.repository && p.repository.url || p.repository,
                     isBuilded: true
                 };
+                // clean repository url
+                moduleDefinition.repository = ModuleLoader.cleanRepositoryUrl(moduleDefinition.repository);
                 if (p.browser) {
                     moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
                     if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {

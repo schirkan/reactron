@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
 var commandResultWrapper_1 = require("./commandResultWrapper");
+var ModuleLoader_1 = require("./ModuleLoader");
 var SystemCommand_1 = require("./SystemCommand");
 var ModuleManager = /** @class */ (function () {
     function ModuleManager(config, moduleRepository, moduleLoader) {
@@ -73,15 +74,8 @@ var ModuleManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        repository = (repository || '').trim();
-                        // remove / from end
-                        if (repository.endsWith('/')) {
-                            repository = repository.substr(0, repository.length - 1);
-                        }
-                        // remove .git from end
-                        if (repository.endsWith('.git')) {
-                            repository = repository.substr(0, repository.length - 4);
-                        }
+                        // clean repository url
+                        repository = ModuleLoader_1.ModuleLoader.cleanRepositoryUrl(repository);
                         if (!repository) {
                             throw new Error('Invalid repository');
                         }
@@ -127,17 +121,18 @@ var ModuleManager = /** @class */ (function () {
             });
         }); });
     };
-    ModuleManager.prototype.install = function (moduleDefinition) {
+    ModuleManager.prototype.install = function (moduleDefinition, propdOnly) {
         var _this = this;
         return commandResultWrapper_1.command('install', moduleDefinition.name, function () { return __awaiter(_this, void 0, void 0, function () {
-            var result;
+            var commandArgs, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!moduleDefinition || !moduleDefinition.canInstall) {
                             throw new Error('Can not install module');
                         }
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install', moduleDefinition.path)];
+                        commandArgs = propdOnly ? ' --production' : '';
+                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('npm install' + commandArgs, moduleDefinition.path)];
                     case 1:
                         result = _a.sent();
                         moduleDefinition.isInstalled = moduleDefinition.isInstalled || result.success;

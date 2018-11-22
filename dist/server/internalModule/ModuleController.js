@@ -69,7 +69,7 @@ var ModuleController = /** @class */ (function () {
                     });
                 }); });
                 registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var results, resultAdd, moduleRepositoryItem, resultInstall, resultBuild;
+                    var results, resultAdd, moduleRepositoryItem, resultInstall, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -79,19 +79,24 @@ var ModuleController = /** @class */ (function () {
                             case 1:
                                 resultAdd = _a.sent();
                                 results.push(resultAdd);
-                                if (!(resultAdd.success && resultAdd.data)) return [3 /*break*/, 4];
+                                if (!(resultAdd.success && resultAdd.data)) return [3 /*break*/, 6];
                                 moduleRepositoryItem = resultAdd.data;
-                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem)];
+                                if (!moduleRepositoryItem.isBuilded) return [3 /*break*/, 3];
+                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem, true)];
                             case 2:
                                 resultInstall = _a.sent();
                                 results.push(resultInstall);
-                                if (!!resultAdd.data.isBuilded) return [3 /*break*/, 4];
+                                return [3 /*break*/, 6];
+                            case 3: return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem, false)];
+                            case 4:
+                                resultInstall = _a.sent();
+                                results.push(resultInstall);
                                 return [4 /*yield*/, context.backendService.moduleManager.build(moduleRepositoryItem)];
-                            case 3:
+                            case 5:
                                 resultBuild = _a.sent();
                                 results.push(resultBuild);
-                                _a.label = 4;
-                            case 4:
+                                _a.label = 6;
+                            case 6:
                                 res.send(results);
                                 return [2 /*return*/];
                         }
@@ -125,7 +130,7 @@ var ModuleController = /** @class */ (function () {
                                 console.log('ModuleController.rebuild');
                                 moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 3];
-                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem)];
+                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem, false)];
                             case 1:
                                 resultInstall = _a.sent();
                                 return [4 /*yield*/, context.backendService.moduleManager.build(moduleRepositoryItem)];
@@ -141,35 +146,41 @@ var ModuleController = /** @class */ (function () {
                     });
                 }); });
                 registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.updateModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var moduleRepositoryItem, results, resultUpdate, resultInstall, resultBuild;
+                    var moduleRepositoryItem, results, resultUpdate, resultInstall, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 console.log('ModuleController.update');
                                 moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
-                                if (!moduleRepositoryItem) return [3 /*break*/, 5];
+                                if (!moduleRepositoryItem) return [3 /*break*/, 7];
                                 results = [];
-                                if (!moduleRepositoryItem.hasUpdate) return [3 /*break*/, 4];
+                                if (!moduleRepositoryItem.hasUpdate) return [3 /*break*/, 6];
                                 return [4 /*yield*/, context.backendService.moduleManager.update(moduleRepositoryItem)];
                             case 1:
                                 resultUpdate = _a.sent();
                                 results.push(resultUpdate);
-                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem)];
+                                if (!moduleRepositoryItem.isBuilded) return [3 /*break*/, 3];
+                                return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem, true)];
                             case 2:
                                 resultInstall = _a.sent();
                                 results.push(resultInstall);
+                                return [3 /*break*/, 6];
+                            case 3: return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem, false)];
+                            case 4:
+                                resultInstall = _a.sent();
+                                results.push(resultInstall);
                                 return [4 /*yield*/, context.backendService.moduleManager.build(moduleRepositoryItem)];
-                            case 3:
+                            case 5:
                                 resultBuild = _a.sent();
                                 results.push(resultBuild);
-                                _a.label = 4;
-                            case 4:
-                                res.send(results);
-                                return [3 /*break*/, 6];
-                            case 5:
-                                res.sendStatus(404);
                                 _a.label = 6;
-                            case 6: return [2 /*return*/];
+                            case 6:
+                                res.send(results);
+                                return [3 /*break*/, 8];
+                            case 7:
+                                res.sendStatus(404);
+                                _a.label = 8;
+                            case 8: return [2 /*return*/];
                         }
                     });
                 }); });
