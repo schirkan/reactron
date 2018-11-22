@@ -1,0 +1,6 @@
+{
+    "apps": [{
+        "name": "Reactron",
+        "script": "/home/pi/reactron/installers/start.sh"
+    }]
+}
