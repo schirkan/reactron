@@ -84,7 +84,7 @@ var AppController = /** @class */ (function () {
                     var moduleInfo, result;
                     return __generator(this, function (_a) {
                         console.log('AppController.getServerInfo');
-                        moduleInfo = context.backendService.moduleRepository.get('@schirkan/reactron');
+                        moduleInfo = context.backendService.moduleRepository.get('reactron');
                         result = {
                             hostname: os.hostname(),
                             ip: getIPAddress(),
