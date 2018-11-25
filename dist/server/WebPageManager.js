@@ -34,7 +34,7 @@ var WebPageManager = /** @class */ (function () {
         var items = this.repository.store.list;
         var index = items.findIndex(function (x) { return x.id === id; });
         if (index >= 0) {
-            items.splice(index);
+            items.splice(index, 1);
         }
         this.repository.store = { list: items };
         this.topics.publish('pages-updated', this.repository.store);

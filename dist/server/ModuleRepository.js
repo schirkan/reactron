@@ -17,7 +17,7 @@ var ModuleRepository = /** @class */ (function () {
     ModuleRepository.prototype.remove = function (moduleName) {
         var index = this.modules.findIndex(function (x) { return x.name === moduleName; });
         if (index >= 0) {
-            this.modules.splice(index);
+            this.modules.splice(index, 1);
         }
     };
     ModuleRepository.prototype.get = function (moduleName) {

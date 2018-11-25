@@ -17,7 +17,7 @@ var ServiceRepository = /** @class */ (function () {
     ServiceRepository.prototype.remove = function (moduleName, serviceName) {
         var index = this.services.findIndex(function (x) { return x.moduleName === moduleName && x.name === serviceName; });
         if (index >= 0) {
-            this.services.splice(index);
+            this.services.splice(index, 1);
         }
     };
     ServiceRepository.prototype.get = function (moduleName, serviceName) {
