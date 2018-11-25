@@ -20,7 +20,7 @@ export class ServiceRepository {
     public remove(moduleName: string, serviceName: string): void {
         const index = this.services.findIndex(x => x.moduleName === moduleName && x.name === serviceName);
         if (index >= 0) {
-            this.services.splice(index);
+            this.services.splice(index, 1);
         }
     }
 

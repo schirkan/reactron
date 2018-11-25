@@ -41,7 +41,7 @@ export class WebPageManager implements IWebPageManager  {
         const index = items.findIndex(x => x.id === id);
 
         if (index >= 0) {
-            items.splice(index);
+            items.splice(index, 1);
         }
 
         this.repository.store = { list: items };

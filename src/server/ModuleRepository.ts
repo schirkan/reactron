@@ -20,7 +20,7 @@ export class ModuleRepository {
     public remove(moduleName: string): void {
         const index = this.modules.findIndex(x => x.name === moduleName);
         if (index >= 0) {
-            this.modules.splice(index);
+            this.modules.splice(index, 1);
         }
     }
 
