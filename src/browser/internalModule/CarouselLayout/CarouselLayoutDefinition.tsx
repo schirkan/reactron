@@ -6,5 +6,6 @@ export const carouselLayoutDefinition: IReactronComponentDefinition = {
     description: 'Carousel Layout',
     displayName: 'Carousel Layout',
     name: 'CarouselLayout',
+    type: 'layout',
     fields: []
 };

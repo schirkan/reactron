@@ -6,6 +6,7 @@ export const listLayoutDefinition: IReactronComponentDefinition = {
   description: 'List Layout',
   displayName: 'List Layout',
   name: 'ListLayout',
+  type: 'layout',
   fields: [
     { displayName: 'List Style', name: 'listStyle', valueType: 'style' },
     { displayName: 'Item Style', name: 'itemStyle', valueType: 'style' },
