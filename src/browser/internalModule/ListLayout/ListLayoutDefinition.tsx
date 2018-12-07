@@ -18,7 +18,8 @@ export const listLayoutDefinition: IReactronComponentDefinition = {
       fields: [
         { displayName: 'Content', name: 'content', valueType: 'webComponent' },
         { displayName: 'Style', name: 'style', valueType: 'style' }
-      ]
+      ],
+      inputControl: { module: 'reactron', component: 'ListLayoutItemHeader' }
     }
   ]
 };

@@ -1,7 +1,4 @@
-export interface IListLayoutItemOptions {
-  content: string;
-  style: any;
-}
+import { IListLayoutItemOptions } from "./IListLayoutItemOptions";
 
 export interface IListLayoutOptions {
   listStyle: any;

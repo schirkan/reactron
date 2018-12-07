@@ -16,13 +16,14 @@ export const gridLayoutDefinition: IReactronComponentDefinition = {
       valueType: 'object',
       isArray: true,
       fields: [
-        { displayName: 'Row', name: 'row', valueType: 'number', minValue: 1, defaultValue: 1 },
-        { displayName: 'Column', name: 'col', valueType: 'number', minValue: 1, defaultValue: 1 },
-        { displayName: 'Row span', name: 'rowspan', valueType: 'number', minValue: 1, defaultValue: 1 },
-        { displayName: 'Column span', name: 'colspan', valueType: 'number', minValue: 1, defaultValue: 1 },
+        { displayName: 'Row', name: 'row', valueType: 'number', defaultValue: 1, stepSize: 1, minValue: 1, maxValue: 20 },
+        { displayName: 'Column', name: 'col', valueType: 'number', defaultValue: 1, stepSize: 1, minValue: 1, maxValue: 20 },
+        { displayName: 'Row span', name: 'rowspan', valueType: 'number', defaultValue: 1, stepSize: 1, minValue: 1, maxValue: 20 },
+        { displayName: 'Column span', name: 'colspan', valueType: 'number', defaultValue: 1, stepSize: 1, minValue: 1, maxValue: 20 },
         { displayName: 'Content', name: 'content', valueType: 'webComponent' },
         { displayName: 'Style', name: 'style', valueType: 'style' }
-      ]
+      ],
+      inputControl: { module: 'reactron', component: 'GridLayoutTileHeader' }
     }
   ]
 };

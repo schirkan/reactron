@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { IListLayoutItemOptions, IListLayoutOptions } from './IListLayoutOptions';
+import { IListLayoutItemOptions } from "./IListLayoutItemOptions";
+import { IListLayoutOptions } from "./IListLayoutOptions";
 
 import './ListLayout.css';
 

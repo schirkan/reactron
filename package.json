@@ -74,7 +74,7 @@
         "react-router-dom": "^4.3.1",
         "react-scripts-ts": "^4.0.8",
         "rimraf": "^2.6.2",
-        "typescript": "^3.2.1"
+        "typescript": "^3.2.2"
     },
     "browserslist": [
         ">0.2%",
