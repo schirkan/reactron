@@ -1,4 +1,5 @@
 import { IWebPageOptions } from '@schirkan/reactron-interfaces';
+import moment from 'moment';
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { inernalModuleContext } from 'src/browser/inernalModuleContext';
@@ -8,6 +9,13 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import WebComponent from '../WebComponent/WebComponent';
 
 import './App.css';
+
+// load moment locales
+import 'moment/locale/de';
+import 'moment/locale/es';
+import 'moment/locale/fr';
+import 'moment/locale/it';
+import 'moment/locale/ru';
 
 export interface IAppState {
   pages?: IWebPageOptions[];
@@ -25,7 +33,7 @@ export default class App extends React.Component<{}, IAppState> {
   }
 
   public componentDidMount() {
-    this.loadPages();
+    this.init();
 
     // register page/component change event
     if (inernalModuleContext.topics) {
@@ -35,7 +43,12 @@ export default class App extends React.Component<{}, IAppState> {
     }
   }
 
-  private async loadPages() {
+  private async init() {
+    // load settings
+    const settings = await apiClient.getSettings();
+    moment.locale(settings.lang);
+
+    // load pages
     const pages = await apiClient.getWebPages();
     return this.setState({ pages });
   }
@@ -49,7 +62,7 @@ export default class App extends React.Component<{}, IAppState> {
   private reload() {
     apiClient.getWebPages.clearCache();
     apiClient.getWebComponentOptions.clearCache();
-    this.loadPages();
+    this.init();
   }
 
   public renderPage(id: string, style: any) {
