@@ -1,4 +1,4 @@
-import { IReactronServiceContext } from '@schirkan/reactron-interfaces';
+import { IReactronServiceContext, ISystemSettings } from '@schirkan/reactron-interfaces';
 import { Router } from 'express';
 import { BackendService } from './BackendService';
 
@@ -19,6 +19,10 @@ export class ReactronServiceContext implements IReactronServiceContext {
         console.log('Module Api Path: ' + moduleApiPath);
 
         this.backendService.expressApp.apiRouter.use(moduleApiPath, this.moduleApiRouter);
+    }
+
+    public getSettings():Readonly<ISystemSettings>{
+        return this.backendService.settings.get();
     }
 
     public getService<TService = any>(serviceName: string, moduleName?: string): TService | undefined {
