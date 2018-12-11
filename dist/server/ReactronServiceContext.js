@@ -50,6 +50,13 @@ var ReactronServiceContext = /** @class */ (function () {
         console.log('Module Api Path: ' + moduleApiPath);
         this.backendService.expressApp.apiRouter.use(moduleApiPath, this.moduleApiRouter);
     }
+    Object.defineProperty(ReactronServiceContext.prototype, "settings", {
+        get: function () {
+            return this.backendService.settings.get();
+        },
+        enumerable: true,
+        configurable: true
+    });
     ReactronServiceContext.prototype.getService = function (serviceName, moduleName) {
         return this.backendService.serviceManager.get(moduleName || this.moduleName, serviceName);
     };

@@ -21,7 +21,7 @@ export class ReactronServiceContext implements IReactronServiceContext {
         this.backendService.expressApp.apiRouter.use(moduleApiPath, this.moduleApiRouter);
     }
 
-    public getSettings():Readonly<ISystemSettings>{
+    public get settings(): Readonly<ISystemSettings> {
         return this.backendService.settings.get();
     }
 

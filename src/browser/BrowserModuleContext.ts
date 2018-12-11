@@ -33,7 +33,7 @@ export class BrowserModuleContext implements IModuleContext {
   public readonly moduleStorage: ElectronStore;
   public readonly moduleApiPath: string;
   public getService: <TService = any>(serviceName: string, moduleName?: string | undefined) => TService | undefined;
-  public getSettings(): Readonly<ISystemSettings> {
+  public get settings(): Readonly<ISystemSettings> {
     return settings;
   }
 

@@ -59,14 +59,13 @@ export default class App extends React.Component<{}, IAppState> {
   }
 
   private triggerReload() {
-    console.log('triggerReload', arguments);
     window.clearTimeout(this.reloadTimer);
     this.reloadTimer = window.setTimeout(this.reload, this.reloadWait);
   }
 
   private reload() {
-    apiClient.getWebPages.clearCache();
-    apiClient.getWebComponentOptions.clearCache();
+    console.log('reload');
+    apiClient.clearCache();
     this.init();
   }
 
