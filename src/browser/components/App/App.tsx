@@ -1,5 +1,6 @@
 import { IWebPageOptions } from '@schirkan/reactron-interfaces';
 import moment from 'moment';
+import numeral from 'numeral';
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { inernalModuleContext } from 'src/browser/inernalModuleContext';
@@ -16,6 +17,9 @@ import 'moment/locale/es';
 import 'moment/locale/fr';
 import 'moment/locale/it';
 import 'moment/locale/ru';
+
+// load numeral locales
+import 'numeral/min/locales.min';
 
 export interface IAppState {
   pages?: IWebPageOptions[];
@@ -47,6 +51,7 @@ export default class App extends React.Component<{}, IAppState> {
     // load settings
     const settings = await apiClient.getSettings();
     moment.locale(settings.lang);
+    numeral.locale(settings.lang);
 
     // load pages
     const pages = await apiClient.getWebPages();
