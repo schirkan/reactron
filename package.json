@@ -1,6 +1,6 @@
 {
   "name": "reactron",
-  "version": "0.9.12",
+  "version": "0.10.0",
   "description": "Dynamic Electron & React Module Loader",
   "keywords": [
     "electron",
