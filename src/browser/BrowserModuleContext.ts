@@ -12,7 +12,7 @@ if ((window as any).require) {
   backendService = electron.remote.require('./dist/server/BackendService').BackendService.instance;
   topics = backendService.topics;
   Store = electron.remote.require('electron-store');
-  
+
   // on settings change
   topics.subscribe('system-settings-updated', (event, data: ISystemSettings) => {
     settings = data
@@ -23,8 +23,11 @@ const moduleStoreCache: { [key: string]: ElectronStore } = {};
 const serviceCache: { [key: string]: any } = {};
 let settings: ISystemSettings;
 
-// load settings
-apiClient.getSettings().then(x => settings = x); // TODO
+export const initModuleContext = async () => {
+  if (!settings) {
+    settings = await apiClient.getSettings();
+  }
+}
 
 export class BrowserModuleContext implements IModuleContext {
   public readonly electron: Electron.AllElectron;

@@ -1,7 +1,9 @@
-import { IReactronComponentContext, IReactronComponentDefinition, IWebComponentOptions } from '@schirkan/reactron-interfaces';
+import { IExtraWebComponentProps, IReactronComponentContext, IReactronComponentDefinition, IWebComponentOptions } from '@schirkan/reactron-interfaces';
+import * as classname from 'classnames';
 import * as React from 'react';
 import { WebComponentContext } from 'src/browser/WebComponentContext';
 import { apiClient } from '../../ApiClient';
+import { initModuleContext } from '../../BrowserModuleContext';
 import { componentLoader } from '../../ComponentLoader';
 import { WebComponentContextType } from '../../WebComponentContext';
 import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
@@ -10,12 +12,12 @@ import Loading from '../Loading/Loading';
 
 import './WebComponent.css';
 
-export interface IWebComponentProps {
-  id?: string;
-  moduleName?: string;
-  componentName?: string;
-  options?: any;
-}  
+export interface IWebComponentProps extends Partial<IWebComponentOptions>, IExtraWebComponentProps {
+  // id?: string;
+  // moduleName?: string;
+  // componentName?: string;
+  // options?: any;
+}
 
 interface IWebComponentState {
   componentFound?: boolean;
@@ -30,7 +32,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     this.state = {};
   }
 
-  public componentDidUpdate(prevProps: IWebComponentProps, prevState: IWebComponentState) {
+  public componentDidUpdate(prevProps: IWebComponentProps) {
     if (this.props.id !== prevProps.id ||
       this.props.moduleName !== prevProps.moduleName ||
       this.props.componentName !== prevProps.componentName ||
@@ -47,8 +49,8 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     try {
       let webComponentOptions: IWebComponentOptions | undefined;
 
-      // nur mit der ID lesen
       if (this.props.id) {
+        // nur mit der ID lesen
         const allComponentOptions = await apiClient.getWebComponentOptions();
         webComponentOptions = allComponentOptions.find(x => x.id === this.props.id);
       } else if (this.props.moduleName && this.props.componentName) {
@@ -78,6 +80,9 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
         return;
       }
 
+      // load settings
+      await initModuleContext();
+
       this.setState({
         componentContext: new WebComponentContext(webComponentOptions.moduleName, webComponentOptions.componentName),
         componentDefinition,
@@ -101,11 +106,11 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       const Component = this.state.componentDefinition.component as typeof React.Component;
 
       // set contextType
-      if(!Component.contextType){
+      if (!Component.contextType) {
         Component.contextType = WebComponentContextType;
       }
 
-      const props = this.state.componentOptions && this.state.componentOptions.options || {}; 
+      const props = this.state.componentOptions && this.state.componentOptions.options || {};
 
       // render context and component
       content = (
@@ -115,8 +120,10 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       );
     }
 
+    const className = classname("WebComponent", this.props.className);
+
     return (
-      <section className="WebComponent">
+      <section className={className} style={this.props.style}>
         <ErrorBoundary>
           {content}
         </ErrorBoundary>
