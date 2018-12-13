@@ -45,6 +45,13 @@ export default class App extends React.Component<{}, IAppState> {
       inernalModuleContext.topics.subscribe('components-updated', this.triggerReload);
       inernalModuleContext.topics.subscribe('system-settings-updated', this.triggerReload);
     }
+
+    document.onkeydown = (e) => {
+      const evtobj = window.event ? window.event as KeyboardEvent : e;
+      if (evtobj.keyCode === 65 && evtobj.ctrlKey && evtobj.altKey) {
+        window.location.href = '/admin';
+      }
+    };
   }
 
   private async init() {
