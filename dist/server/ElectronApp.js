@@ -10,7 +10,8 @@ var ElectronApp = /** @class */ (function () {
         console.log('ElectronApp is starting');
         return new Promise(function (resolve) {
             var createWindow = function () {
-                _this.mainWindow = new electron_1.BrowserWindow({ width: 900, height: 700 });
+                var mainScreen = electron_1.screen.getPrimaryDisplay();
+                _this.mainWindow = new electron_1.BrowserWindow({ width: mainScreen.size.width * 0.9, height: 700 });
                 if (_this.config.isDev) {
                     _this.mainWindow.webContents.openDevTools();
                 }

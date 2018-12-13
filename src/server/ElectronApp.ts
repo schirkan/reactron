@@ -1,5 +1,5 @@
 import { IBackendServiceConfig, IElectronApp } from '@schirkan/reactron-interfaces';
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, screen } from "electron";
 
 export class ElectronApp implements IElectronApp {
     public mainWindow: Electron.BrowserWindow;
@@ -10,7 +10,9 @@ export class ElectronApp implements IElectronApp {
         console.log('ElectronApp is starting');
         return new Promise<void>((resolve: (() => void) | null) => {
             const createWindow = () => {
-                this.mainWindow = new BrowserWindow({ width: 900, height: 700 });
+                const mainScreen = screen.getPrimaryDisplay();
+
+                this.mainWindow = new BrowserWindow({ width: mainScreen.size.width * 0.9, height: 700 });
                 if (this.config.isDev) {
                     this.mainWindow.webContents.openDevTools();
                 } else {
