@@ -9,23 +9,17 @@ import Loading from '../Loading/Loading';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import WebComponent from '../WebComponent/WebComponent';
 
-import './App.css';
-
-// load moment locales
-import 'moment/locale/de';
-import 'moment/locale/es';
-import 'moment/locale/fr';
-import 'moment/locale/it';
-import 'moment/locale/ru';
-
-// load numeral locales
+// load moment & numeral locales
+import 'moment/min/locales.min';
 import 'numeral/min/locales.min';
+
+import './App.css';
 
 export interface IAppState {
   pages?: IWebPageOptions[];
 }
 
-export default class App extends React.Component<{}, IAppState> {
+export default class App extends React.Component<any, IAppState> {
   private reloadTimer: number;
   private reloadWait: number = 2000;
 
@@ -34,24 +28,42 @@ export default class App extends React.Component<{}, IAppState> {
     this.state = {};
     this.reload = this.reload.bind(this);
     this.triggerReload = this.triggerReload.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   public componentDidMount() {
     this.init();
+    this.subscribeTopics();
+    document.addEventListener('keydown', this.onKeyDown);
+  }
 
+  public componentWillUnmount() {
+    this.unsubscribeTopics();
+    document.removeEventListener('keydown', this.onKeyDown);
+  }
+
+  private onKeyDown(e: KeyboardEvent) {
+    const evtobj = window.event ? window.event as KeyboardEvent : e;
+    if (evtobj.keyCode === 65 && evtobj.ctrlKey && evtobj.altKey) {
+      window.location.href = '/admin';
+    }
+  }
+
+  private subscribeTopics() {
     // register page/component change event
     if (inernalModuleContext.topics) {
       inernalModuleContext.topics.subscribe('pages-updated', this.triggerReload);
       inernalModuleContext.topics.subscribe('components-updated', this.triggerReload);
       inernalModuleContext.topics.subscribe('system-settings-updated', this.triggerReload);
     }
+  }
 
-    document.onkeydown = (e) => {
-      const evtobj = window.event ? window.event as KeyboardEvent : e;
-      if (evtobj.keyCode === 65 && evtobj.ctrlKey && evtobj.altKey) {
-        window.location.href = '/admin';
-      }
-    };
+  private unsubscribeTopics() {
+    if (inernalModuleContext.topics) {
+      inernalModuleContext.topics.unsubscribe('pages-updated', this.triggerReload);
+      inernalModuleContext.topics.unsubscribe('components-updated', this.triggerReload);
+      inernalModuleContext.topics.unsubscribe('system-settings-updated', this.triggerReload);
+    }
   }
 
   private async init() {
