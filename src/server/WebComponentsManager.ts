@@ -32,19 +32,29 @@ export class WebComponentsManager implements IWebComponentsManager {
         }
 
         this.repository.store = { list: items };
-        this.topics.publish('components-updated', this.repository.store);
+        this.topics.publish('components-updated', this.repository.store.list);
         return item;
     }
 
     public remove(id: string): void {
-        const items = this.repository.store.list;
-        const index = items.findIndex(x => x.id === id);
+        // const items = this.repository.store.list;
+        // const index = items.findIndex(x => x.id === id);
 
-        if (index >= 0) {
-            items.splice(index, 1);
-        }
+        // if (index >= 0) {
+        //     items.splice(index, 1);
+        // }
 
+        // this.repository.store = { list: items };
+
+        this.removeRecursive(id);
+        this.topics.publish('components-updated', this.repository.store.list);
+    }
+
+    private removeRecursive(id: string): void {
+        let items = this.repository.store.list;
+        const children = items.filter(x => x.parentId === id);
+        items = items.filter(x => x.id !== id);
         this.repository.store = { list: items };
-        this.topics.publish('components-updated', this.repository.store);
+        children.forEach(child => this.removeRecursive(child.id));
     }
 }

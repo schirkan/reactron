@@ -27,17 +27,26 @@ var WebComponentsManager = /** @class */ (function () {
             items.push(item);
         }
         this.repository.store = { list: items };
-        this.topics.publish('components-updated', this.repository.store);
+        this.topics.publish('components-updated', this.repository.store.list);
         return item;
     };
     WebComponentsManager.prototype.remove = function (id) {
+        // const items = this.repository.store.list;
+        // const index = items.findIndex(x => x.id === id);
+        // if (index >= 0) {
+        //     items.splice(index, 1);
+        // }
+        // this.repository.store = { list: items };
+        this.removeRecursive(id);
+        this.topics.publish('components-updated', this.repository.store.list);
+    };
+    WebComponentsManager.prototype.removeRecursive = function (id) {
+        var _this = this;
         var items = this.repository.store.list;
-        var index = items.findIndex(function (x) { return x.id === id; });
-        if (index >= 0) {
-            items.splice(index, 1);
-        }
+        var children = items.filter(function (x) { return x.parentId === id; });
+        items = items.filter(function (x) { return x.id !== id; });
         this.repository.store = { list: items };
-        this.topics.publish('components-updated', this.repository.store);
+        children.forEach(function (child) { return _this.removeRecursive(child.id); });
     };
     return WebComponentsManager;
 }());

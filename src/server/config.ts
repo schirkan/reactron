@@ -26,6 +26,7 @@ export const createConfig = (root: string): IBackendServiceConfig => {
     }],
     defaultWebComponentOptions: [{
       id: 'welcome',
+      parentId: 'homepage',
       componentName: 'Welcome',
       moduleName: 'reactron'
     }]

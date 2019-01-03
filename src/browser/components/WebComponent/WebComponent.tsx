@@ -56,6 +56,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       } else if (this.props.moduleName && this.props.componentName) {
         webComponentOptions = {
           id: '',
+          parentId: '',
           moduleName: this.props.moduleName,
           componentName: this.props.componentName,
           options: this.props.options,

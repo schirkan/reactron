@@ -26,6 +26,7 @@ exports.createConfig = function (root) {
             }],
         defaultWebComponentOptions: [{
                 id: 'welcome',
+                parentId: 'homepage',
                 componentName: 'Welcome',
                 moduleName: 'reactron'
             }]
