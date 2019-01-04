@@ -3,7 +3,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { inernalModuleContext } from 'src/browser/inernalModuleContext';
+import { inernalModuleContext } from '../../inernalModuleContext';
 import { apiClient } from '../../ApiClient';
 import Loading from '../Loading/Loading';
 import PageNotFound from '../PageNotFound/PageNotFound';
@@ -20,7 +20,7 @@ export interface IAppState {
 }
 
 export default class App extends React.Component<any, IAppState> {
-  private reloadTimer: number;
+  private reloadTimer: number | undefined;
   private reloadWait: number = 2000;
 
   constructor(props: any) {

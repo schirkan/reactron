@@ -2,7 +2,7 @@ import { IPubSub, IPubSubEvgent } from '@schirkan/reactron-interfaces';
 import * as Emitter from 'events';
 
 export class PubSub implements IPubSub {
-    private __EMITTER__ = new Emitter();
+    private __EMITTER__ = new Emitter.EventEmitter();
 
     public subscribe(eventName: string, listener: (event: IPubSubEvgent, ...args: any[]) => void) {
         this.__EMITTER__.on(eventName, listener);

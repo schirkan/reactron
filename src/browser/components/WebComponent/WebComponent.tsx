@@ -1,7 +1,7 @@
 import { IExtraWebComponentProps, IReactronComponentContext, IReactronComponentDefinition, IWebComponentOptions } from '@schirkan/reactron-interfaces';
-import * as classname from 'classnames';
+import classname from 'classnames';
 import * as React from 'react';
-import { WebComponentContext } from 'src/browser/WebComponentContext';
+import { WebComponentContext } from '../../WebComponentContext';
 import { apiClient } from '../../ApiClient';
 import { initModuleContext } from '../../BrowserModuleContext';
 import { componentLoader } from '../../ComponentLoader';

@@ -4,9 +4,9 @@ import * as http from 'http';
 import * as path from 'path';
 
 export class ExpressApp implements IExpressApp {
-    public express: express.Application;
-    public server: http.Server;
-    public apiRouter: express.Router;
+    public express!: express.Application;
+    public server!: http.Server;
+    public apiRouter!: express.Router;
 
     constructor(private config: IBackendServiceConfig) { }
 

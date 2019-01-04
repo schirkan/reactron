@@ -1,6 +1,6 @@
 import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
-import * as classname from 'classnames';
+import classname from 'classnames';
 import * as React from 'react';
 import { ILoadingProps } from './ILoadingProps';
 

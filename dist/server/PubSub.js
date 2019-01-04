@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Emitter = require("events");
 var PubSub = /** @class */ (function () {
     function PubSub() {
-        this.__EMITTER__ = new Emitter();
+        this.__EMITTER__ = new Emitter.EventEmitter();
     }
     PubSub.prototype.subscribe = function (eventName, listener) {
         this.__EMITTER__.on(eventName, listener);

@@ -1,15 +1,30 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs"
+    "allowSyntheticDefaultImports": true,
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "sourceMap": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": false,
   },
   "include": [
-    "src/server/**/*",
-    "src/common/**/*",
-    "src/typings/**/*",
-    "src/interfaces/**/*",
+    "src/server",
+    "src/common",
+    "src/typings",
+    "src/interfaces",
   ],
   "exclude": [
-    "src/browser/**/*",
-  ]
+    "src/browser",
+  ],
 }
