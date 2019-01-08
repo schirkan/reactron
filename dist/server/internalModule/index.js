@@ -6,6 +6,7 @@ var ServiceController_1 = require("./ServiceController");
 var SettingsController_1 = require("./SettingsController");
 var WebComponentController_1 = require("./WebComponentController");
 var WebPageController_1 = require("./WebPageController");
+var RefreshController_1 = require("./RefreshController");
 exports.services = [{
         name: 'ModuleController',
         displayName: 'Modules API',
@@ -36,5 +37,10 @@ exports.services = [{
         displayName: 'Application API',
         description: 'API Controller for Application',
         service: AppController_1.AppController
+    }, {
+        name: 'RefreshController',
+        displayName: 'Refresh Controller',
+        description: 'Auto Refresh Controller',
+        service: RefreshController_1.RefreshController
     }];
 //# sourceMappingURL=index.js.map

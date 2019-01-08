@@ -1,4 +1,5 @@
 import { IPubSub, ISettingsManager, ISystemSettings } from "@schirkan/reactron-interfaces";
+import { topicNames } from "../common/topics";
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
@@ -19,6 +20,6 @@ export class SystemSettingsManager implements ISettingsManager {
 
     public set(settings: ISystemSettings) {
         this.repository.store = settings;
-        this.topics.publish('system-settings-updated', settings);
+        this.topics.publish(topicNames.systemSettingsUpdated, settings);
     }
 }

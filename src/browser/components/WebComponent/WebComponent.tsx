@@ -1,10 +1,10 @@
 import { IExtraWebComponentProps, IReactronComponentContext, IReactronComponentDefinition, IWebComponentOptions } from '@schirkan/reactron-interfaces';
 import classname from 'classnames';
 import * as React from 'react';
-import { WebComponentContext } from '../../WebComponentContext';
 import { apiClient } from '../../ApiClient';
 import { initModuleContext } from '../../BrowserModuleContext';
 import { componentLoader } from '../../ComponentLoader';
+import { WebComponentContext } from '../../WebComponentContext';
 import { WebComponentContextType } from '../../WebComponentContext';
 import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
@@ -13,10 +13,6 @@ import Loading from '../Loading/Loading';
 import './WebComponent.css';
 
 export interface IWebComponentProps extends Partial<IWebComponentOptions>, IExtraWebComponentProps {
-  // id?: string;
-  // moduleName?: string;
-  // componentName?: string;
-  // options?: any;
 }
 
 interface IWebComponentState {

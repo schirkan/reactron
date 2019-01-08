@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var topics_1 = require("../common/topics");
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
 var SystemSettingsManager = /** @class */ (function () {
@@ -15,7 +16,7 @@ var SystemSettingsManager = /** @class */ (function () {
     };
     SystemSettingsManager.prototype.set = function (settings) {
         this.repository.store = settings;
-        this.topics.publish('system-settings-updated', settings);
+        this.topics.publish(topics_1.topicNames.systemSettingsUpdated, settings);
     };
     return SystemSettingsManager;
 }());

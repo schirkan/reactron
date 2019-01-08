@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var uuidv4 = require("uuid/v4");
+var topics_1 = require("../common/topics");
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
 var WebComponentsManager = /** @class */ (function () {
@@ -27,18 +28,12 @@ var WebComponentsManager = /** @class */ (function () {
             items.push(item);
         }
         this.repository.store = { list: items };
-        this.topics.publish('components-updated', this.repository.store.list);
+        this.topics.publish(topics_1.topicNames.componentsUpdated, this.repository.store.list);
         return item;
     };
     WebComponentsManager.prototype.remove = function (id) {
-        // const items = this.repository.store.list;
-        // const index = items.findIndex(x => x.id === id);
-        // if (index >= 0) {
-        //     items.splice(index, 1);
-        // }
-        // this.repository.store = { list: items };
         this.removeRecursive(id);
-        this.topics.publish('components-updated', this.repository.store.list);
+        this.topics.publish(topics_1.topicNames.componentsUpdated, this.repository.store.list);
     };
     WebComponentsManager.prototype.removeRecursive = function (id) {
         var _this = this;

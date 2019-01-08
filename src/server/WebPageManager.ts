@@ -1,5 +1,6 @@
 import { IPubSub, IWebPageManager, IWebPageOptions } from "@schirkan/reactron-interfaces";
 import * as uuidv4 from 'uuid/v4';
+import { topicNames } from "../common/topics";
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
@@ -32,7 +33,7 @@ export class WebPageManager implements IWebPageManager  {
         }
 
         this.repository.store = { list: items };
-        this.topics.publish('pages-updated', this.repository.store);
+        this.topics.publish(topicNames.pagesUpdated, this.repository.store);
         return item;
     }
 
@@ -45,6 +46,6 @@ export class WebPageManager implements IWebPageManager  {
         }
 
         this.repository.store = { list: items };
-        this.topics.publish('pages-updated', this.repository.store);
+        this.topics.publish(topicNames.pagesUpdated, this.repository.store);
     }
 }

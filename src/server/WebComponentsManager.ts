@@ -1,5 +1,6 @@
 import { IPubSub, IWebComponentOptions, IWebComponentsManager } from "@schirkan/reactron-interfaces";
 import * as uuidv4 from 'uuid/v4';
+import { topicNames } from "../common/topics";
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
@@ -32,22 +33,13 @@ export class WebComponentsManager implements IWebComponentsManager {
         }
 
         this.repository.store = { list: items };
-        this.topics.publish('components-updated', this.repository.store.list);
+        this.topics.publish(topicNames.componentsUpdated, this.repository.store.list);
         return item;
     }
 
     public remove(id: string): void {
-        // const items = this.repository.store.list;
-        // const index = items.findIndex(x => x.id === id);
-
-        // if (index >= 0) {
-        //     items.splice(index, 1);
-        // }
-
-        // this.repository.store = { list: items };
-
         this.removeRecursive(id);
-        this.topics.publish('components-updated', this.repository.store.list);
+        this.topics.publish(topicNames.componentsUpdated, this.repository.store.list);
     }
 
     private removeRecursive(id: string): void {
