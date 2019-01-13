@@ -4,11 +4,11 @@ export interface IGridLayoutTileOptions {
   rowspan: number;
   colspan: number;
   content: string;
-  style: any;
+  style: React.CSSProperties;
 }
 
 export interface IGridLayoutOptions {
-  gridStyle: any;
-  tileStyle: any;
+  gridStyle: React.CSSProperties;
+  tileStyle: React.CSSProperties;
   tiles: IGridLayoutTileOptions[];
 }

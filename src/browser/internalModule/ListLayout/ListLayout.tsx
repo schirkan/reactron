@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { IListLayoutItemOptions } from "./IListLayoutItemOptions";
 import { IListLayoutOptions } from "./IListLayoutOptions";
+import { IReactronComponentContext } from '@schirkan/reactron-interfaces';
 
 import './ListLayout.css';
 
 export default class ListLayout extends React.Component<IListLayoutOptions> {
+  public context!: IReactronComponentContext;
+
   constructor(props: IListLayoutOptions) {
     super(props);
 

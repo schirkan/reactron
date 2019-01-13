@@ -1,5 +1,7 @@
-import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
+import { IReactronComponentDefinition, IInputComponentProps } from "@schirkan/reactron-interfaces";
 import ListLayout from "./ListLayout";
+import * as React from 'react';
+import { IListLayoutItemOptions } from "./IListLayoutItemOptions";
 
 export const listLayoutDefinition: IReactronComponentDefinition = {
   component: ListLayout,
@@ -19,7 +21,11 @@ export const listLayoutDefinition: IReactronComponentDefinition = {
         { displayName: 'Content', name: 'content', valueType: 'webComponent' },
         { displayName: 'Style', name: 'style', valueType: 'style' }
       ],
-      inputControl: { module: 'reactron', component: 'ListLayoutItemHeader' }
+      inputControl: (props: IInputComponentProps) => {
+        const item = props.value as IListLayoutItemOptions || {};
+        const style = { width: '100%', textOverflow: 'ellipsis', overflow: 'hidden' };
+        return (<div style={style}>[ {item.content} ]</div>);
+      }
     }
   ]
 };

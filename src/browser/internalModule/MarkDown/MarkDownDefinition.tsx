@@ -7,6 +7,7 @@ export const markDownDefinition: IReactronComponentDefinition = {
   displayName: 'MarkDown',
   name: 'MarkDown',
   fields: [
-    { displayName: 'Text', name: 'text', valueType: 'string', textRows: 10 }
+    { displayName: 'Text', name: 'text', valueType: 'string', textRows: 10 },
+    { displayName: 'Style', name: 'style', valueType: 'style' }
   ]
 };

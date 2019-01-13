@@ -1,5 +1,7 @@
-import { IReactronComponentDefinition } from "@schirkan/reactron-interfaces";
+import { IReactronComponentDefinition, IInputComponentProps } from "@schirkan/reactron-interfaces";
 import GridLayout from "./GridLayout";
+import * as React from 'react';
+import { IGridLayoutTileOptions } from "./IGridLayoutTileOptions";
 
 export const gridLayoutDefinition: IReactronComponentDefinition = {
   component: GridLayout,
@@ -23,7 +25,11 @@ export const gridLayoutDefinition: IReactronComponentDefinition = {
         { displayName: 'Content', name: 'content', valueType: 'webComponent' },
         { displayName: 'Style', name: 'style', valueType: 'style' }
       ],
-      inputControl: { module: 'reactron', component: 'GridLayoutTileHeader' }
+      inputControl: (props: IInputComponentProps) => {
+        const tile = props.value as IGridLayoutTileOptions || {};
+        const style = { width: '100%', textOverflow: 'ellipsis', overflow: 'hidden' };
+        return (<div style={style}>[ {tile.row} | {tile.col} | {tile.content} ]</div>);
+      }
     }
   ]
 };
