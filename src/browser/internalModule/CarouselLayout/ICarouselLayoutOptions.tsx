@@ -1,6 +1,7 @@
 import { CarouselProps } from "react-responsive-carousel";
 
-export interface ICarouselLayoutOptions extends CarouselProps {
-  carouselStyle: React.CSSProperties;
+export interface ICarouselLayoutOptions {
+  style: React.CSSProperties;
+  options: CarouselProps;
   items: string[];
 }

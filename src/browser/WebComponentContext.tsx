@@ -15,7 +15,8 @@ export class WebComponentContext extends BrowserModuleContext implements IReactr
         super(moduleName);
 
         this.renderComponent = (props: IWebComponentProps) => {
-            return <WebComponent {...props} />;
+            const key = props.id + '.' + props.moduleName + '.' + props.componentName;
+            return <WebComponent {...props} key={key} />;
         };
 
         this.renderLoading = (text?: string, iconSize?: SizeProp) => {
