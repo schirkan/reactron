@@ -18,7 +18,7 @@ export default class ErrorBoundary extends React.Component<any, IErrorBoundarySt
 
   public render() {
     if (this.state.error) {
-      return <h1>Something went wrong.</h1>;
+      return <span style={{ color: 'red' }}>Something went wrong.</span>;
     }
     return this.props.children;
   }

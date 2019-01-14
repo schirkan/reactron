@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { IReactronComponentDefinition, IInputComponentProps } from "@schirkan/reactron-interfaces";
 import CarouselLayout from "./CarouselLayout";
 import { CarouselProps } from "react-responsive-carousel";
