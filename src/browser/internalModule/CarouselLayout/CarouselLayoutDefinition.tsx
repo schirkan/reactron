@@ -2,8 +2,9 @@ import * as React from 'react';
 import { IReactronComponentDefinition, IInputComponentProps } from "@schirkan/reactron-interfaces";
 import CarouselLayout from "./CarouselLayout";
 import { CarouselProps } from 'react-responsive-carousel';
+import { ICarouselLayoutOptions } from './ICarouselLayoutOptions';
 
-export const carouselLayoutDefinition: IReactronComponentDefinition = {
+export const carouselLayoutDefinition: IReactronComponentDefinition<ICarouselLayoutOptions> = {
   component: CarouselLayout,
   description: 'Carousel Layout',
   displayName: 'Carousel Layout',
