@@ -35,21 +35,60 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
+var express = require("express");
 var BackendService_1 = require("./BackendService");
+var LogWriter_1 = require("./../common/LogWriter");
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
 var ReactronServiceContext = /** @class */ (function () {
-    function ReactronServiceContext(moduleName) {
+    function ReactronServiceContext(moduleName, serviceName) {
+        var _this = this;
         this.moduleName = moduleName;
+        this.serviceName = serviceName;
         this.backendService = BackendService_1.BackendService.instance;
-        this.moduleStorage = new Store({ name: 'module.' + moduleName });
-        this.moduleApiRouter = express_1.Router();
-        var escapedModuleName = moduleName.replace('/', '@');
-        var moduleApiPath = '/modules/' + escapedModuleName;
-        console.log('Module Api Path: ' + moduleApiPath);
-        this.backendService.expressApp.apiRouter.use(moduleApiPath, this.moduleApiRouter);
+        this.registerRoute = function (route, handler) {
+            _this.log.debug('Register route: ' + route.method + ' ' + route.path);
+            var router = _this.moduleApiRouter;
+            var method = router[route.method.toLowerCase()].bind(router);
+            var internalHandler = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+                var error_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            this.log.debug('Call route: ' + route.method + ' ' + route.path);
+                            return [4 /*yield*/, handler(req, res, next)];
+                        case 1:
+                            _a.sent();
+                            return [3 /*break*/, 3];
+                        case 2:
+                            error_1 = _a.sent();
+                            this.log.error('Error in route: ' + route.method + ' ' + route.path, error_1);
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); };
+            method(route.path, internalHandler);
+        };
+        this.moduleContext = InternalModuleContext.getModuleContext(this.backendService, this.moduleName);
+        this.log = new LogWriter_1.LogWriter(this.backendService.logManager, moduleName + '.' + serviceName);
+        // this.log.debug('Module Api Path: ' + this.moduleContext.moduleApiPath);
     }
+    Object.defineProperty(ReactronServiceContext.prototype, "moduleStorage", {
+        get: function () {
+            return this.moduleContext.moduleStorage;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ReactronServiceContext.prototype, "moduleApiRouter", {
+        get: function () {
+            return this.moduleContext.moduleApiRouter;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ReactronServiceContext.prototype, "settings", {
         get: function () {
             return this.backendService.settings.get();
@@ -70,10 +109,10 @@ var ReactronServiceContext = /** @class */ (function () {
             });
         });
     };
-    ReactronServiceContext.getServiceContext = function (moduleName) {
-        var context = ReactronServiceContext.serviceContexts.find(function (x) { return x.moduleName === moduleName; });
+    ReactronServiceContext.getServiceContext = function (moduleName, serviceName) {
+        var context = ReactronServiceContext.serviceContexts.find(function (x) { return x.moduleName === moduleName && x.serviceName === serviceName; });
         if (!context) {
-            context = new ReactronServiceContext(moduleName);
+            context = new ReactronServiceContext(moduleName, serviceName);
             ReactronServiceContext.serviceContexts.push(context);
         }
         return context;
@@ -82,4 +121,24 @@ var ReactronServiceContext = /** @class */ (function () {
     return ReactronServiceContext;
 }());
 exports.ReactronServiceContext = ReactronServiceContext;
+var InternalModuleContext = /** @class */ (function () {
+    function InternalModuleContext(backendService, moduleName) {
+        this.moduleName = moduleName;
+        this.moduleStorage = new Store({ name: 'module.' + moduleName });
+        this.moduleApiRouter = express.Router();
+        var escapedModuleName = moduleName.replace('/', '@');
+        this.moduleApiPath = '/modules/' + escapedModuleName;
+        backendService.expressApp.apiRouter.use(this.moduleApiPath, this.moduleApiRouter);
+    }
+    InternalModuleContext.getModuleContext = function (backendService, moduleName) {
+        var context = InternalModuleContext.moduleContexts.find(function (x) { return x.moduleName === moduleName; });
+        if (!context) {
+            context = new InternalModuleContext(backendService, moduleName);
+            InternalModuleContext.moduleContexts.push(context);
+        }
+        return context;
+    };
+    InternalModuleContext.moduleContexts = [];
+    return InternalModuleContext;
+}());
 //# sourceMappingURL=ReactronServiceContext.js.map

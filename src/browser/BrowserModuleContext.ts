@@ -1,11 +1,10 @@
-import { IBackendService, IModuleContext, IPubSub, ISystemSettings } from "@schirkan/reactron-interfaces";
+import { IBackendService, IModuleContext, IPubSub, ISystemSettings, ElectronStore, topicNames } from "@schirkan/reactron-interfaces";
 import { apiClient } from "./ApiClient";
-import { topicNames } from "../common/topics";
 
 let electron: Electron.AllElectron;
 let backendService: IBackendService;
 let topics: IPubSub | undefined;
-let Store: typeof ElectronStore;
+let Store: new (options?: any) => ElectronStore;
 
 const moduleStoreCache: { [key: string]: ElectronStore } = {};
 const serviceCache: { [key: string]: any } = {};
@@ -15,7 +14,7 @@ export const initModuleContext = async () => {
   if (!settings) {
     settings = await apiClient.getSettings();
   }
-  
+
   // check if env is electron
   if ((window as any).require) {
     electron = (window as any).require('electron');

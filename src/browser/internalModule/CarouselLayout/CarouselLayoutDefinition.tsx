@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IReactronComponentDefinition, IInputComponentProps } from "@schirkan/reactron-interfaces";
 import CarouselLayout from "./CarouselLayout";
-import { CarouselProps } from "react-responsive-carousel";
+import { CarouselProps } from 'react-responsive-carousel';
 
 export const carouselLayoutDefinition: IReactronComponentDefinition = {
   component: CarouselLayout,
@@ -20,9 +20,10 @@ export const carouselLayoutDefinition: IReactronComponentDefinition = {
         { displayName: 'Center Mode', name: 'centerMode', valueType: 'boolean', defaultValue: false },
         { displayName: 'Center Slide Percentage', name: 'centerSlidePercentage', valueType: 'number', defaultValue: 70, minValue: 1, maxValue: 100, stepSize: 1 },
         { displayName: 'Axis', name: 'axis', valueType: 'boolean', defaultValue: 'horizontal', values: [{ value: 'horizontal', text: 'horizontal' }, { value: 'vertical', text: 'vertical' }] },
-      ], inputControl: (props: IInputComponentProps) => {
-        const options = props.value.options as CarouselProps;
-        return <span>interval {options.interval} ms</span>;
+      ],
+      inputControl: (props: IInputComponentProps<CarouselProps>) => {
+        const interval = props.value && props.value.interval;
+        return <span>interval {interval} ms</span>;
       }
     },
     { displayName: 'Content', name: 'items', valueType: 'webComponent', isArray: true },

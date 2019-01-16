@@ -50,6 +50,7 @@ var SystemCommand_1 = require("./SystemCommand");
 var SystemSettingsManager_1 = require("./SystemSettingsManager");
 var WebComponentsManager_1 = require("./WebComponentsManager");
 var WebPageManager_1 = require("./WebPageManager");
+var LogManager_1 = require("./LogManager");
 var BackendService = /** @class */ (function () {
     function BackendService(config) {
         this.config = config;
@@ -65,6 +66,7 @@ var BackendService = /** @class */ (function () {
         this.webPageManager = new WebPageManager_1.WebPageManager(this.topics, this.config.defaultWebPageOptions);
         this.webComponentsManager = new WebComponentsManager_1.WebComponentsManager(this.topics, this.config.defaultWebComponentOptions);
         this.settings = new SystemSettingsManager_1.SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
+        this.logManager = new LogManager_1.LogManager();
     }
     BackendService.prototype.exit = function () {
         this.electronApp.mainWindow.close();

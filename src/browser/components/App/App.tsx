@@ -1,4 +1,4 @@
-import { IWebPageOptions } from '@schirkan/reactron-interfaces';
+import { IWebPageOptions, topicNames } from '@schirkan/reactron-interfaces';
 import moment from 'moment';
 import numeral from 'numeral';
 import * as React from 'react';
@@ -52,17 +52,17 @@ export default class App extends React.Component<any, IAppState> {
   private subscribeTopics() {
     // register page/component change event
     if (inernalModuleContext.topics) {
-      inernalModuleContext.topics.subscribe('pages-updated', this.triggerReload);
-      inernalModuleContext.topics.subscribe('components-updated', this.triggerReload);
-      inernalModuleContext.topics.subscribe('system-settings-updated', this.triggerReload);
+      inernalModuleContext.topics.subscribe(topicNames.pagesUpdated, this.triggerReload);
+      inernalModuleContext.topics.subscribe(topicNames.componentsUpdated, this.triggerReload);
+      inernalModuleContext.topics.subscribe(topicNames.systemSettingsUpdated, this.triggerReload);
     }
   }
 
   private unsubscribeTopics() {
     if (inernalModuleContext.topics) {
-      inernalModuleContext.topics.unsubscribe('pages-updated', this.triggerReload);
-      inernalModuleContext.topics.unsubscribe('components-updated', this.triggerReload);
-      inernalModuleContext.topics.unsubscribe('system-settings-updated', this.triggerReload);
+      inernalModuleContext.topics.unsubscribe(topicNames.pagesUpdated, this.triggerReload);
+      inernalModuleContext.topics.unsubscribe(topicNames.componentsUpdated, this.triggerReload);
+      inernalModuleContext.topics.unsubscribe(topicNames.systemSettingsUpdated, this.triggerReload);
     }
   }
 

@@ -25,8 +25,8 @@ export const gridLayoutDefinition: IReactronComponentDefinition = {
         { displayName: 'Content', name: 'content', valueType: 'webComponent' },
         { displayName: 'Style', name: 'style', valueType: 'style' }
       ],
-      inputControl: (props: IInputComponentProps) => {
-        const tile = props.value as IGridLayoutTileOptions || {};
+      inputControl: (props: IInputComponentProps<IGridLayoutTileOptions>) => {
+        const tile = props.value || {};
         const style = { width: '100%', textOverflow: 'ellipsis', overflow: 'hidden' };
         return (<div style={style}>[ {tile.row} | {tile.col} | {tile.content} ]</div>);
       }

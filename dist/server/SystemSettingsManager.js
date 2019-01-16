@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var topics_1 = require("../common/topics");
+var reactron_interfaces_1 = require("@schirkan/reactron-interfaces");
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
 var SystemSettingsManager = /** @class */ (function () {
@@ -16,7 +16,7 @@ var SystemSettingsManager = /** @class */ (function () {
     };
     SystemSettingsManager.prototype.set = function (settings) {
         this.repository.store = settings;
-        this.topics.publish(topics_1.topicNames.systemSettingsUpdated, settings);
+        this.topics.publish(reactron_interfaces_1.topicNames.systemSettingsUpdated, settings);
     };
     return SystemSettingsManager;
 }());

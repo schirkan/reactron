@@ -1,5 +1,4 @@
-import { IReactronService } from '@schirkan/reactron-interfaces';
-import { topicNames } from '../../common/topics';
+import { IReactronService, topicNames } from '@schirkan/reactron-interfaces';
 import { ReactronServiceContext } from '../ReactronServiceContext';
 
 export class RefreshController implements IReactronService {
@@ -12,8 +11,6 @@ export class RefreshController implements IReactronService {
   }
 
   public async start(context: ReactronServiceContext): Promise<void> {
-    console.log('RefreshController.start');
-
     this.context = context;
 
     // subscribe to settings changes
@@ -28,7 +25,7 @@ export class RefreshController implements IReactronService {
   }
 
   private onTimer() {
-    console.log('RefreshController.onTimer');
+    this.context.log.debug('onTimer');
     clearTimeout(this.timer);
     this.context.backendService.topics.publish(topicNames.refresh);
     this.setNextTimer();
@@ -80,7 +77,7 @@ export class RefreshController implements IReactronService {
   }
 
   private startAutoRefresh() {
-    console.log('RefreshController.startAutoRefresh');
+    this.context.log.debug('startAutoRefresh');
     if (this.timer) {
       return;
     }
@@ -88,7 +85,7 @@ export class RefreshController implements IReactronService {
   }
 
   private stopAutoRefresh() {
-    console.log('RefreshController.stopAutoRefresh');
+    this.context.log.debug('stopAutoRefresh');
     if (this.timer) {
       clearTimeout(this.timer);
     }

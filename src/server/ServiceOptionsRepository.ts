@@ -1,3 +1,5 @@
+import { ElectronStore } from "@schirkan/reactron-interfaces";
+
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
 

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var reactron_interfaces_1 = require("@schirkan/reactron-interfaces");
 var uuidv4 = require("uuid/v4");
-var topics_1 = require("../common/topics");
 // tslint:disable-next-line:no-var-requires
 var Store = require('electron-store');
 var WebComponentsManager = /** @class */ (function () {
@@ -28,12 +28,12 @@ var WebComponentsManager = /** @class */ (function () {
             items.push(item);
         }
         this.repository.store = { list: items };
-        this.topics.publish(topics_1.topicNames.componentsUpdated, this.repository.store.list);
+        this.topics.publish(reactron_interfaces_1.topicNames.componentsUpdated, this.repository.store.list);
         return item;
     };
     WebComponentsManager.prototype.remove = function (id) {
         this.removeRecursive(id);
-        this.topics.publish(topics_1.topicNames.componentsUpdated, this.repository.store.list);
+        this.topics.publish(reactron_interfaces_1.topicNames.componentsUpdated, this.repository.store.list);
     };
     WebComponentsManager.prototype.removeRecursive = function (id) {
         var _this = this;

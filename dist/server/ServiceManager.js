@@ -184,9 +184,10 @@ var ServiceManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (serviceRepositoryItem.state === "stopped") {
+                        if (serviceRepositoryItem.state === 'stopped') {
                             return [2 /*return*/];
                         }
+                        serviceRepositoryItem.context.log.debug('stopping');
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
@@ -196,12 +197,13 @@ var ServiceManager = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        serviceRepositoryItem.state = "stopped";
+                        serviceRepositoryItem.state = 'stopped';
+                        serviceRepositoryItem.context.log.debug('stopped');
                         return [3 /*break*/, 5];
                     case 4:
                         error_2 = _a.sent();
-                        serviceRepositoryItem.state = "error";
-                        serviceRepositoryItem.log.push(error_2);
+                        serviceRepositoryItem.state = 'error';
+                        serviceRepositoryItem.context.log.error('error stopping service', error_2);
                         result.success = false;
                         result.log.push('Error stopping service: ' + serviceKey);
                         return [3 /*break*/, 5];
@@ -214,30 +216,32 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name;
         return commandResultWrapper_1.command('startService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var context, error_3;
+            var error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (serviceRepositoryItem.state === "starting" || serviceRepositoryItem.state === "running") {
+                        if (serviceRepositoryItem.state === 'starting' || serviceRepositoryItem.state === 'running') {
                             return [2 /*return*/];
                         }
-                        serviceRepositoryItem.state = "starting";
+                        serviceRepositoryItem.state = 'starting';
+                        serviceRepositoryItem.context.log.debug('starting');
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
                         if (!serviceRepositoryItem.instance.start) return [3 /*break*/, 3];
-                        context = ReactronServiceContext_1.ReactronServiceContext.getServiceContext(serviceRepositoryItem.moduleName);
-                        return [4 /*yield*/, serviceRepositoryItem.instance.start(context)];
+                        serviceRepositoryItem.context.log.debug('start');
+                        return [4 /*yield*/, serviceRepositoryItem.instance.start(serviceRepositoryItem.context)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        serviceRepositoryItem.state = "running";
+                        serviceRepositoryItem.state = 'running';
+                        serviceRepositoryItem.context.log.debug('running');
                         return [3 /*break*/, 5];
                     case 4:
                         error_3 = _a.sent();
-                        serviceRepositoryItem.state = "error";
-                        serviceRepositoryItem.log.push(error_3);
+                        serviceRepositoryItem.state = 'error';
+                        serviceRepositoryItem.context.log.error('error starting service', error_3);
                         result.log.push('Error starting service: ' + serviceKey);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
@@ -265,7 +269,7 @@ var ServiceManager = /** @class */ (function () {
         var _this = this;
         var serviceKey = moduleName + '.' + serviceName;
         return commandResultWrapper_1.command('loadService', serviceKey, function (result) { return __awaiter(_this, void 0, void 0, function () {
-            var moduleDefinition, services, serverFileExport, serviceDefinition, serviceInstance, serviceOptions, serviceRepositoryItem, _a, _b, _c, _d;
+            var moduleDefinition, services, serverFileExport, serviceDefinition, serviceContext, serviceInstance, serviceOptions, serviceRepositoryItem, _a, _b, _c, _d;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -294,14 +298,15 @@ var ServiceManager = /** @class */ (function () {
                         if (!serviceDefinition) {
                             throw new Error('Service not found: ' + serviceName);
                         }
-                        serviceInstance = new serviceDefinition.service();
+                        serviceContext = ReactronServiceContext_1.ReactronServiceContext.getServiceContext(moduleName, serviceName);
+                        serviceInstance = new serviceDefinition.service(serviceContext);
                         serviceOptions = this.optionsRepository.get(moduleName, serviceName);
                         if (!serviceOptions) {
                             serviceOptions = this.getDefaultObjectOptions(serviceDefinition.fields);
                             this.optionsRepository.set(moduleName, serviceName, serviceOptions);
                             console.log('Initializing Service Options for ' + serviceKey, serviceOptions);
                         }
-                        serviceRepositoryItem = __assign({}, serviceDefinition, { moduleName: moduleName, instance: serviceInstance, log: [], state: 'stopped' });
+                        serviceRepositoryItem = __assign({}, serviceDefinition, { moduleName: moduleName, instance: serviceInstance, context: serviceContext, state: 'stopped' });
                         this.serviceRepository.add(serviceRepositoryItem);
                         _b = (_a = result.children).push;
                         return [4 /*yield*/, this.setOptionsInternal(serviceRepositoryItem, serviceOptions)];

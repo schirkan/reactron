@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var os = require("os");
 var apiRoutes_1 = require("../../common/apiRoutes");
-var registerRoute_1 = require("./registerRoute");
 // tslint:disable-next-line:no-var-requires
 var osCommand = require('electron-shutdown-command');
 var getIPAddress = function () {
@@ -77,67 +76,40 @@ var AppController = /** @class */ (function () {
     }
     AppController.prototype.start = function (context) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             return __generator(this, function (_a) {
-                console.log('AppController.start');
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getServerInfo, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    var moduleInfo, result;
-                    return __generator(this, function (_a) {
-                        console.log('AppController.getServerInfo');
-                        moduleInfo = context.backendService.moduleRepository.get('reactron');
-                        result = {
-                            hostname: os.hostname(),
-                            ip: getIPAddress(),
-                            cpu: getCpuInfo(),
-                            memory: getMemoryInfo(),
-                            version: moduleInfo && moduleInfo.version || ''
-                        };
-                        res.send(result);
-                        return [2 /*return*/];
-                    });
-                }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.exitApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('AppController.exitApplication');
-                        res.sendStatus(204);
-                        context.backendService.exit();
-                        return [2 /*return*/];
-                    });
-                }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.restartApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('AppController.restartApplication');
-                        res.sendStatus(204);
-                        context.backendService.restart();
-                        return [2 /*return*/];
-                    });
-                }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.shutdownSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('AppController.shutdownSystem');
-                        res.sendStatus(204);
-                        osCommand.shutdown();
-                        context.backendService.exit();
-                        return [2 /*return*/];
-                    });
-                }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.rebootSystem, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('AppController.rebootSystem');
-                        res.sendStatus(204);
-                        osCommand.reboot();
-                        context.backendService.exit();
-                        return [2 /*return*/];
-                    });
-                }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.resetApplication, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        console.log('AppController.resetApplication');
-                        res.sendStatus(204);
-                        context.backendService.reset();
-                        return [2 /*return*/];
-                    });
-                }); });
+                context.registerRoute(apiRoutes_1.routes.getServerInfo, function (req, res) {
+                    var moduleInfo = context.backendService.moduleRepository.get('reactron');
+                    var result = {
+                        hostname: os.hostname(),
+                        ip: getIPAddress(),
+                        cpu: getCpuInfo(),
+                        memory: getMemoryInfo(),
+                        version: moduleInfo && moduleInfo.version || ''
+                    };
+                    res.send(result);
+                });
+                context.registerRoute(apiRoutes_1.routes.exitApplication, function (req, res) {
+                    res.sendStatus(204);
+                    context.backendService.exit();
+                });
+                context.registerRoute(apiRoutes_1.routes.restartApplication, function (req, res) {
+                    res.sendStatus(204);
+                    context.backendService.restart();
+                });
+                context.registerRoute(apiRoutes_1.routes.shutdownSystem, function (req, res) {
+                    res.sendStatus(204);
+                    osCommand.shutdown();
+                    context.backendService.exit();
+                });
+                context.registerRoute(apiRoutes_1.routes.rebootSystem, function (req, res) {
+                    res.sendStatus(204);
+                    osCommand.reboot();
+                    context.backendService.exit();
+                });
+                context.registerRoute(apiRoutes_1.routes.resetApplication, function (req, res) {
+                    res.sendStatus(204);
+                    context.backendService.reset();
+                });
                 return [2 /*return*/];
             });
         });

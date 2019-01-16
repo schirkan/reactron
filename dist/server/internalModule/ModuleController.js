@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var apiRoutes_1 = require("../../common/apiRoutes");
-var registerRoute_1 = require("./registerRoute");
 var ModuleController = /** @class */ (function () {
     function ModuleController() {
     }
@@ -44,23 +43,19 @@ var ModuleController = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                console.log('ModuleController.start');
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getModules, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.getModules, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var modules;
                     return __generator(this, function (_a) {
-                        console.log('ModuleController.getAll');
                         modules = context.backendService.moduleManager.getAll();
                         res.send(modules);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.checkUpdates, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.checkUpdates, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var resultCheckUpdates;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                console.log('ModuleController.checkUpdates');
-                                return [4 /*yield*/, context.backendService.moduleManager.checkUpdates()];
+                            case 0: return [4 /*yield*/, context.backendService.moduleManager.checkUpdates()];
                             case 1:
                                 resultCheckUpdates = _a.sent();
                                 res.send([resultCheckUpdates]);
@@ -68,12 +63,11 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.addModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var results, resultAdd, moduleRepositoryItem, resultInstall, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('ModuleController.add');
                                 results = [];
                                 return [4 /*yield*/, context.backendService.moduleManager.add(req.body.repository)];
                             case 1:
@@ -102,12 +96,11 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.deleteModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.deleteModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var moduleRepositoryItem, result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('ModuleController.remove');
                                 moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 2];
                                 return [4 /*yield*/, context.backendService.moduleManager.remove(moduleRepositoryItem)];
@@ -122,12 +115,11 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.rebuildModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.rebuildModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var moduleRepositoryItem, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('ModuleController.rebuild');
                                 moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 3];
                                 return [4 /*yield*/, context.backendService.moduleManager.install(moduleRepositoryItem, false)];
@@ -145,12 +137,11 @@ var ModuleController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.updateModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.updateModule, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var moduleRepositoryItem, results, resultUpdate, resultInstall, resultInstall, resultBuild;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log('ModuleController.update');
                                 moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
                                 if (!moduleRepositoryItem) return [3 /*break*/, 7];
                                 results = [];

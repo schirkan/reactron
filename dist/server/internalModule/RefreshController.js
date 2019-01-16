@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var topics_1 = require("../../common/topics");
+var reactron_interfaces_1 = require("@schirkan/reactron-interfaces");
 var RefreshController = /** @class */ (function () {
     function RefreshController() {
         this.restart = this.restart.bind(this);
@@ -44,10 +44,9 @@ var RefreshController = /** @class */ (function () {
     RefreshController.prototype.start = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log('RefreshController.start');
                 this.context = context;
                 // subscribe to settings changes
-                this.context.backendService.topics.subscribe(topics_1.topicNames.systemSettingsUpdated, this.restart);
+                this.context.backendService.topics.subscribe(reactron_interfaces_1.topicNames.systemSettingsUpdated, this.restart);
                 this.startAutoRefresh();
                 return [2 /*return*/];
             });
@@ -56,16 +55,16 @@ var RefreshController = /** @class */ (function () {
     RefreshController.prototype.stop = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                this.context.backendService.topics.unsubscribe(topics_1.topicNames.systemSettingsUpdated, this.restart);
+                this.context.backendService.topics.unsubscribe(reactron_interfaces_1.topicNames.systemSettingsUpdated, this.restart);
                 this.stopAutoRefresh();
                 return [2 /*return*/];
             });
         });
     };
     RefreshController.prototype.onTimer = function () {
-        console.log('RefreshController.onTimer');
+        this.context.log.debug('onTimer');
         clearTimeout(this.timer);
-        this.context.backendService.topics.publish(topics_1.topicNames.refresh);
+        this.context.backendService.topics.publish(reactron_interfaces_1.topicNames.refresh);
         this.setNextTimer();
     };
     RefreshController.prototype.setNextTimer = function () {
@@ -113,14 +112,14 @@ var RefreshController = /** @class */ (function () {
         this.startAutoRefresh();
     };
     RefreshController.prototype.startAutoRefresh = function () {
-        console.log('RefreshController.startAutoRefresh');
+        this.context.log.debug('startAutoRefresh');
         if (this.timer) {
             return;
         }
         this.setNextTimer();
     };
     RefreshController.prototype.stopAutoRefresh = function () {
-        console.log('RefreshController.stopAutoRefresh');
+        this.context.log.debug('stopAutoRefresh');
         if (this.timer) {
             clearTimeout(this.timer);
         }

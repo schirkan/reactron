@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var apiRoutes_1 = require("../../common/apiRoutes");
-var registerRoute_1 = require("./registerRoute");
 var WebComponentController = /** @class */ (function () {
     function WebComponentController() {
     }
@@ -44,28 +43,24 @@ var WebComponentController = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                console.log('WebComponentController.start');
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.getWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
-                        console.log('WebComponentController.getAll');
                         result = context.backendService.webComponentsManager.getAll();
                         res.send(result);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.setWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.setWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var item;
                     return __generator(this, function (_a) {
-                        console.log('WebComponentController.createOrUpdate');
                         item = context.backendService.webComponentsManager.createOrUpdate(req.body);
                         res.send(item);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.deleteWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.deleteWebComponentOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        console.log('WebComponentController.remove');
                         context.backendService.webComponentsManager.remove(req.params.id);
                         res.sendStatus(204);
                         return [2 /*return*/];

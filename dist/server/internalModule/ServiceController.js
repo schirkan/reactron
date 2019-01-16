@@ -45,7 +45,6 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var apiRoutes_1 = require("../../common/apiRoutes");
-var registerRoute_1 = require("./registerRoute");
 var ServiceController = /** @class */ (function () {
     function ServiceController() {
     }
@@ -53,18 +52,15 @@ var ServiceController = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                console.log('ServiceController.start');
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getServices, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.getServices, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result, serviceInfos;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                console.log('ServiceController.getAll');
-                                return [4 /*yield*/, context.backendService.serviceRepository.getAll()];
+                            case 0: return [4 /*yield*/, context.backendService.serviceRepository.getAll()];
                             case 1:
                                 result = _a.sent();
                                 serviceInfos = result.map(function (item) {
-                                    var instance = item.instance, service = item.service, serviceInfo = __rest(item, ["instance", "service"]);
+                                    var instance = item.instance, service = item.service, context = item.context, serviceInfo = __rest(item, ["instance", "service", "context"]);
                                     return serviceInfo;
                                 });
                                 res.send(serviceInfos);
@@ -72,21 +68,18 @@ var ServiceController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.getServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
-                        console.log('ServiceController.getServiceOptions');
                         result = context.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
                         res.send(result);
                         return [2 /*return*/];
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.setServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.setServiceOptions, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                console.log('ServiceController.setServiceOptions');
-                                return [4 /*yield*/, context.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
+                            case 0: return [4 /*yield*/, context.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body)];
                             case 1:
                                 _a.sent();
                                 res.sendStatus(204);

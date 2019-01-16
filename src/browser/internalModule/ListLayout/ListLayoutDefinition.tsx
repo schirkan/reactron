@@ -21,8 +21,8 @@ export const listLayoutDefinition: IReactronComponentDefinition = {
         { displayName: 'Content', name: 'content', valueType: 'webComponent' },
         { displayName: 'Style', name: 'style', valueType: 'style' }
       ],
-      inputControl: (props: IInputComponentProps) => {
-        const item = props.value as IListLayoutItemOptions || {};
+      inputControl: (props: IInputComponentProps<IListLayoutItemOptions>) => {
+        const item = props.value || {};
         const style = { width: '100%', textOverflow: 'ellipsis', overflow: 'hidden' };
         return (<div style={style}>[ {item.content} ]</div>);
       }

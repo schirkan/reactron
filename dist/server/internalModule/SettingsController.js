@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var apiRoutes_1 = require("../../common/apiRoutes");
-var registerRoute_1 = require("./registerRoute");
 var SettingsController = /** @class */ (function () {
     function SettingsController() {
     }
@@ -44,14 +43,11 @@ var SettingsController = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                console.log('SettingsController.start');
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.getSettings, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.getSettings, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     var result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                console.log('SettingsController.get');
-                                return [4 /*yield*/, context.backendService.settings.get()];
+                            case 0: return [4 /*yield*/, context.backendService.settings.get()];
                             case 1:
                                 result = _a.sent();
                                 res.send(result);
@@ -59,9 +55,8 @@ var SettingsController = /** @class */ (function () {
                         }
                     });
                 }); });
-                registerRoute_1.registerRoute(context.moduleApiRouter, apiRoutes_1.routes.setSettings, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                context.registerRoute(apiRoutes_1.routes.setSettings, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        console.log('SettingsController.set');
                         context.backendService.settings.set(req.body);
                         res.sendStatus(204);
                         return [2 /*return*/];
