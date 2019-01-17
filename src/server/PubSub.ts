@@ -1,34 +1,27 @@
-import { IPubSub, IPubSubEvgent } from '@schirkan/reactron-interfaces';
+import { IPubSub, IPubSubEvent, PubSubListener } from '@schirkan/reactron-interfaces';
 import * as Emitter from 'events';
 
 export class PubSub implements IPubSub {
-    private __EMITTER__ = new Emitter.EventEmitter();
+  private __EMITTER__ = new Emitter.EventEmitter();
 
-    public subscribe(eventName: string, listener: (event: IPubSubEvgent, ...args: any[]) => void) {
-        this.__EMITTER__.on(eventName, listener);
-    }
+  public subscribe(eventName: string, listener: PubSubListener) {
+    this.__EMITTER__.on(eventName, listener);
+  }
 
-    public once(eventName: string, listener: (event: IPubSubEvgent, ...args: any[]) => void) {
-        this.__EMITTER__.once(eventName, listener);
-    }
+  public once(eventName: string, listener: PubSubListener) {
+    this.__EMITTER__.once(eventName, listener);
+  }
 
-    public unsubscribe(eventName: string, listener: (event: IPubSubEvgent, ...args: any[]) => void) {
-        this.__EMITTER__.removeListener(eventName, listener);
-    }
+  public unsubscribe(eventName: string, listener: PubSubListener) {
+    this.__EMITTER__.removeListener(eventName, listener);
+  }
 
-    public publish(eventName: string, ...args: any[]): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            const event = {
-                name: eventName,
-                resolve,
-                reject,
-            };
+  public publish(eventName: string, ...args: any[]): void {
+    const event: IPubSubEvent = { name: eventName };
+    this.__EMITTER__.emit(eventName, event, ...args);
+  }
 
-            this.__EMITTER__.emit(eventName, event, ...args);
-        });
-    }
-
-    public clearAllSubscriptions() {
-        this.__EMITTER__.removeAllListeners();
-    }
+  public clearAllSubscriptions() {
+    this.__EMITTER__.removeAllListeners();
+  }
 }

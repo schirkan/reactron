@@ -66,7 +66,7 @@ var BackendService = /** @class */ (function () {
         this.webPageManager = new WebPageManager_1.WebPageManager(this.topics, this.config.defaultWebPageOptions);
         this.webComponentsManager = new WebComponentsManager_1.WebComponentsManager(this.topics, this.config.defaultWebComponentOptions);
         this.settings = new SystemSettingsManager_1.SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
-        this.logManager = new LogManager_1.LogManager();
+        this.logManager = new LogManager_1.LogManager(this.topics);
     }
     BackendService.prototype.exit = function () {
         this.electronApp.mainWindow.close();

@@ -1,21 +1,25 @@
-import { ILogWriter, ILogManager } from "@schirkan/reactron-interfaces";
+import { ILogWriter, IPubSub, topicNames, Severity } from "@schirkan/reactron-interfaces";
 
 export class LogWriter implements ILogWriter {
-  constructor(private logManager: ILogManager, public readonly source: string) { }
+  constructor(private topics: IPubSub, public readonly source: string) { }
 
-  error(message: string, data?: any): void {
-    this.logManager && this.logManager.writeLog(this.source, 'error', message, data);
+  private log(severity: Severity, message: string, data?: any): void {
+    this.topics && this.topics.publish(topicNames.log, { source: this.source, severity, message, data });
   }
 
-  warning(message: string, data?: any): void {
-    this.logManager && this.logManager.writeLog(this.source, 'warning', message, data);
+  public error(message: string, data?: any): void {
+    this.log('error', message, data);
   }
 
-  info(message: string, data?: any): void {
-    this.logManager && this.logManager.writeLog(this.source, 'information', message, data);
+  public warning(message: string, data?: any): void {
+    this.log('warning', message, data);
   }
 
-  debug(message: string, data?: any): void {
-    this.logManager && this.logManager.writeLog(this.source, 'debug', message, data);
+  public info(message: string, data?: any): void {
+    this.log('information', message, data);
+  }
+
+  public debug(message: string, data?: any): void {
+    this.log('debug', message, data);
   }
 }

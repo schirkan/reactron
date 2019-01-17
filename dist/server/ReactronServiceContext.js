@@ -72,7 +72,7 @@ var ReactronServiceContext = /** @class */ (function () {
             method(route.path, internalHandler);
         };
         this.moduleContext = InternalModuleContext.getModuleContext(this.backendService, this.moduleName);
-        this.log = new LogWriter_1.LogWriter(this.backendService.logManager, moduleName + '.' + serviceName);
+        this.log = new LogWriter_1.LogWriter(this.backendService.topics, moduleName + '.' + serviceName);
         // this.log.debug('Module Api Path: ' + this.moduleContext.moduleApiPath);
     }
     Object.defineProperty(ReactronServiceContext.prototype, "moduleStorage", {

@@ -31,7 +31,7 @@ export class BackendService implements IBackendService {
   public readonly webPageManager = new WebPageManager(this.topics, this.config.defaultWebPageOptions);
   public readonly webComponentsManager = new WebComponentsManager(this.topics, this.config.defaultWebComponentOptions);
   public readonly settings = new SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
-  public readonly logManager = new LogManager();
+  public readonly logManager = new LogManager(this.topics);
 
   public constructor(public readonly config: IBackendServiceConfig) { }
 

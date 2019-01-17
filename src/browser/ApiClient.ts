@@ -31,6 +31,8 @@ export class ApiClient {
   public setWebComponentOptions = apiCall(routes.setWebComponentOptions);
   public deleteWebComponentOptions = apiCall(routes.deleteWebComponentOptions);
 
+  public getLogEntries = apiCall(routes.getLogEntries);
+
   public clearCache() {
     Object.keys(this).forEach(key => {
       if (this[key] && this[key].clearCache) {

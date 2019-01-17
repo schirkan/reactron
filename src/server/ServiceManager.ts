@@ -92,16 +92,16 @@ export class ServiceManager implements IServiceManager {
       if (serviceRepositoryItem.state === 'stopped') {
         return;
       }
-      serviceRepositoryItem.context.log.debug('stopping');
+      serviceRepositoryItem.context.log.debug('State: stopping');
       try {
         if (serviceRepositoryItem.instance.stop) {
           await serviceRepositoryItem.instance.stop();
         }
         serviceRepositoryItem.state = 'stopped';
-        serviceRepositoryItem.context.log.debug('stopped');
+        serviceRepositoryItem.context.log.debug('State: stopped');
       } catch (error) {
         serviceRepositoryItem.state = 'error';
-        serviceRepositoryItem.context.log.error('error stopping service', error);
+        serviceRepositoryItem.context.log.error('State: error stopping service', error);
         result.success = false;
         result.log.push('Error stopping service: ' + serviceKey);
       }
@@ -115,17 +115,16 @@ export class ServiceManager implements IServiceManager {
         return;
       }
       serviceRepositoryItem.state = 'starting';
-      serviceRepositoryItem.context.log.debug('starting');
+      serviceRepositoryItem.context.log.debug('State: starting');
       try {
         if (serviceRepositoryItem.instance.start) {
-          serviceRepositoryItem.context.log.debug('start');
           await serviceRepositoryItem.instance.start(serviceRepositoryItem.context);
         }
         serviceRepositoryItem.state = 'running';
-        serviceRepositoryItem.context.log.debug('running');
+        serviceRepositoryItem.context.log.debug('State: running');
       } catch (error) {
         serviceRepositoryItem.state = 'error';
-        serviceRepositoryItem.context.log.error('error starting service', error);
+        serviceRepositoryItem.context.log.error('State: error starting service', error);
         result.log.push('Error starting service: ' + serviceKey);
       }
     });

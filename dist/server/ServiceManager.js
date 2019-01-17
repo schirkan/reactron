@@ -187,7 +187,7 @@ var ServiceManager = /** @class */ (function () {
                         if (serviceRepositoryItem.state === 'stopped') {
                             return [2 /*return*/];
                         }
-                        serviceRepositoryItem.context.log.debug('stopping');
+                        serviceRepositoryItem.context.log.debug('State: stopping');
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
@@ -198,12 +198,12 @@ var ServiceManager = /** @class */ (function () {
                         _a.label = 3;
                     case 3:
                         serviceRepositoryItem.state = 'stopped';
-                        serviceRepositoryItem.context.log.debug('stopped');
+                        serviceRepositoryItem.context.log.debug('State: stopped');
                         return [3 /*break*/, 5];
                     case 4:
                         error_2 = _a.sent();
                         serviceRepositoryItem.state = 'error';
-                        serviceRepositoryItem.context.log.error('error stopping service', error_2);
+                        serviceRepositoryItem.context.log.error('State: error stopping service', error_2);
                         result.success = false;
                         result.log.push('Error stopping service: ' + serviceKey);
                         return [3 /*break*/, 5];
@@ -224,24 +224,23 @@ var ServiceManager = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         serviceRepositoryItem.state = 'starting';
-                        serviceRepositoryItem.context.log.debug('starting');
+                        serviceRepositoryItem.context.log.debug('State: starting');
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
                         if (!serviceRepositoryItem.instance.start) return [3 /*break*/, 3];
-                        serviceRepositoryItem.context.log.debug('start');
                         return [4 /*yield*/, serviceRepositoryItem.instance.start(serviceRepositoryItem.context)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
                     case 3:
                         serviceRepositoryItem.state = 'running';
-                        serviceRepositoryItem.context.log.debug('running');
+                        serviceRepositoryItem.context.log.debug('State: running');
                         return [3 /*break*/, 5];
                     case 4:
                         error_3 = _a.sent();
                         serviceRepositoryItem.state = 'error';
-                        serviceRepositoryItem.context.log.error('error starting service', error_3);
+                        serviceRepositoryItem.context.log.error('State: error starting service', error_3);
                         result.log.push('Error starting service: ' + serviceKey);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];

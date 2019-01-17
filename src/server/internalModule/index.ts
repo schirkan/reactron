@@ -6,6 +6,7 @@ import { SettingsController } from "./SettingsController";
 import { WebComponentController } from "./WebComponentController";
 import { WebPageController } from "./WebPageController";
 import { RefreshController } from "./RefreshController";
+import { LogController } from "./LogController";
 
 export const services: IReactronServiceDefinition[] = [{
   name: 'ModuleController',
@@ -42,4 +43,9 @@ export const services: IReactronServiceDefinition[] = [{
   displayName: 'Refresh Controller',
   description: 'Auto Refresh Controller',
   service: RefreshController
+}, {
+  name: 'LogController',
+  displayName: 'Log Controller',
+  description: 'API Controller for Logging',
+  service: LogController
 }];

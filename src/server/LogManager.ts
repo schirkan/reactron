@@ -1,7 +1,11 @@
-import { ILogManager, ILogEntry } from "@schirkan/reactron-interfaces";
+import { ILogManager, ILogEntry, IPubSub, topicNames } from "@schirkan/reactron-interfaces";
 
 export class LogManager implements ILogManager {
   private repository: ILogEntry[] = [];
+
+  constructor(topics: IPubSub) {
+    topics.subscribe(topicNames.log, (e, data) => this.writeLog(data));
+  }
 
   public writeLog(sourceOrLogEntry: any, severity?: any, message?: any, data?: any): void {
     if (typeof sourceOrLogEntry === 'string') {
@@ -23,7 +27,7 @@ export class LogManager implements ILogManager {
 
   public readLog(source?: string): ILogEntry[] {
     if (source) {
-      this.repository.filter(x => x.source === source);
+      return this.repository.filter(x => x.source === source);
     }
     return this.repository;
   }

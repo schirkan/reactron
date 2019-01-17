@@ -32,5 +32,6 @@ exports.routes = {
     getWebComponentOptions: new ApiRoute('/components/', 'get'),
     setWebComponentOptions: new ApiRoute('/components/', 'post'),
     deleteWebComponentOptions: new ApiRoute('/components/:id', 'delete'),
+    getLogEntries: new ApiRoute('/log/:source', 'get'),
 };
 //# sourceMappingURL=apiRoutes.js.map

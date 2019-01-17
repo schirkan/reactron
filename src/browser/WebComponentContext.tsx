@@ -25,7 +25,7 @@ export class WebComponentContext extends BrowserModuleContext implements IReactr
       return <Loading text={text} iconSize={iconSize} />;
     };
 
-    this.log = new LogWriter(this.backendService && this.backendService.logManager, moduleName + '.' + componentName);
+    this.log = new LogWriter(this.backendService && this.backendService.topics, moduleName + '.' + componentName);
   }
 }
 

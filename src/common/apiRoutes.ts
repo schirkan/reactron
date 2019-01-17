@@ -1,4 +1,4 @@
-import { ICommandResult, IModuleRepositoryItem, IServerInfo, IServiceRepositoryItem, ISystemSettings, IWebComponentOptions, IWebPageOptions } from '@schirkan/reactron-interfaces';
+import { ICommandResult, IModuleRepositoryItem, IServerInfo, IServiceRepositoryItem, ISystemSettings, IWebComponentOptions, IWebPageOptions, ILogEntry } from '@schirkan/reactron-interfaces';
 
 export class ApiRoute<TParams, TBody, TResponse = void>{
     constructor(public path: string, public method: string) { }
@@ -33,4 +33,6 @@ export const routes = {
     getWebComponentOptions: new ApiRoute<undefined, undefined, IWebComponentOptions[]>('/components/', 'get'),
     setWebComponentOptions: new ApiRoute<undefined, IWebComponentOptions, IWebComponentOptions>('/components/', 'post'),
     deleteWebComponentOptions: new ApiRoute<{ id: string }, undefined>('/components/:id', 'delete'),
+
+    getLogEntries: new ApiRoute<{ source?: string }, undefined, ILogEntry[]>('/log/:source', 'get'),
 };

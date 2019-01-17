@@ -15,20 +15,13 @@ var PubSub = /** @class */ (function () {
         this.__EMITTER__.removeListener(eventName, listener);
     };
     PubSub.prototype.publish = function (eventName) {
-        var _this = this;
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        return new Promise(function (resolve, reject) {
-            var _a;
-            var event = {
-                name: eventName,
-                resolve: resolve,
-                reject: reject,
-            };
-            (_a = _this.__EMITTER__).emit.apply(_a, [eventName, event].concat(args));
-        });
+        var _a;
+        var event = { name: eventName };
+        (_a = this.__EMITTER__).emit.apply(_a, [eventName, event].concat(args));
     };
     PubSub.prototype.clearAllSubscriptions = function () {
         this.__EMITTER__.removeAllListeners();

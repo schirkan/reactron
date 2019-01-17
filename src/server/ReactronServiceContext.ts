@@ -16,7 +16,7 @@ export class ReactronServiceContext implements IReactronServiceContext {
 
   constructor(public moduleName: string, public serviceName: string) {
     this.moduleContext = InternalModuleContext.getModuleContext(this.backendService, this.moduleName);
-    this.log = new LogWriter(this.backendService.logManager, moduleName + '.' + serviceName);
+    this.log = new LogWriter(this.backendService.topics, moduleName + '.' + serviceName);
     // this.log.debug('Module Api Path: ' + this.moduleContext.moduleApiPath);
   }
 
