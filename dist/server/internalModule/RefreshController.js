@@ -75,20 +75,20 @@ var RefreshController = /** @class */ (function () {
         var timestampToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
         var nextRefreshTimestamp = 0;
         this.context.settings.autorefresh.forEach(function (item) {
-            var tempNextRefreshTimestamp;
-            if (_this.isInInterval(timeInMinutes, item.from, item.to)) {
+            var tempNextRefreshTimestamp = 0;
+            if (_this.isInInterval(timeInMinutes, +item.from, +item.to)) {
                 tempNextRefreshTimestamp = timestamp + (item.interval * 60 * 1000);
             }
             else {
-                tempNextRefreshTimestamp = timestampToday + (item.from * 60 * 1000);
+                tempNextRefreshTimestamp = timestampToday + (+item.from * 60 * 1000);
             }
-            if (nextRefreshTimestamp === 0 || tempNextRefreshTimestamp < nextRefreshTimestamp) {
+            if (nextRefreshTimestamp === 0 || (tempNextRefreshTimestamp > 0 && tempNextRefreshTimestamp < nextRefreshTimestamp)) {
                 nextRefreshTimestamp = tempNextRefreshTimestamp;
             }
         });
         if (nextRefreshTimestamp > 0) {
             var timeout = nextRefreshTimestamp - timestamp;
-            setTimeout(this.onTimer, timeout);
+            this.timer = setTimeout(this.onTimer, timeout);
         }
     };
     RefreshController.prototype.isInInterval = function (value, from, to) {

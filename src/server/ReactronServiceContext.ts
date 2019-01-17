@@ -50,11 +50,8 @@ export class ReactronServiceContext implements IReactronServiceContext {
     const internalHandler: RouteHandler<TParams, TBody, TResponse> = async (req, res, next) => {
       try {
         let data: any = undefined;
-        if (req.params) {
-          data = { ...data, params: req.params };
-        }
-        if (req.body) {
-          data = { ...data, body: req.body };
+        if (req.params && Object.keys(req.params).length) {
+          data = req.params;
         }
         this.log.debug('Call route: ' + route.method + ' ' + route.path, data);
         await handler(req, res, next);

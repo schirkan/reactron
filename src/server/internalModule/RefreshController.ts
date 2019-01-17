@@ -3,7 +3,7 @@ import { ReactronServiceContext } from '../ReactronServiceContext';
 
 export class RefreshController implements IReactronService {
   private context!: ReactronServiceContext;
-  private timer?: number;
+  private timer?: any;
 
   constructor() {
     this.restart = this.restart.bind(this);
@@ -39,20 +39,20 @@ export class RefreshController implements IReactronService {
     let nextRefreshTimestamp = 0;
 
     this.context.settings.autorefresh.forEach(item => {
-      let tempNextRefreshTimestamp: number;
-      if (this.isInInterval(timeInMinutes, item.from, item.to)) {
+      let tempNextRefreshTimestamp: number = 0;
+      if (this.isInInterval(timeInMinutes, +item.from, +item.to)) {
         tempNextRefreshTimestamp = timestamp + (item.interval * 60 * 1000);
       } else {
-        tempNextRefreshTimestamp = timestampToday + (item.from * 60 * 1000);
+        tempNextRefreshTimestamp = timestampToday + (+item.from * 60 * 1000);
       }
-      if (nextRefreshTimestamp === 0 || tempNextRefreshTimestamp < nextRefreshTimestamp) {
+      if (nextRefreshTimestamp === 0 || (tempNextRefreshTimestamp > 0 && tempNextRefreshTimestamp < nextRefreshTimestamp)) {
         nextRefreshTimestamp = tempNextRefreshTimestamp;
       }
     });
 
     if (nextRefreshTimestamp > 0) {
       const timeout = nextRefreshTimestamp - timestamp;
-      setTimeout(this.onTimer, timeout);
+      this.timer = setTimeout(this.onTimer, timeout);
     }
   }
 
