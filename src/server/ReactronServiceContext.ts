@@ -24,7 +24,7 @@ export class ReactronServiceContext implements IReactronServiceContext {
     return this.moduleContext.moduleStorage;
   }
 
-  public get moduleApiRouter(): express.Router{
+  public get moduleApiRouter(): express.Router {
     return this.moduleContext.moduleApiRouter;
   }
 
@@ -49,7 +49,14 @@ export class ReactronServiceContext implements IReactronServiceContext {
     const method = router[route.method.toLowerCase()].bind(router);
     const internalHandler: RouteHandler<TParams, TBody, TResponse> = async (req, res, next) => {
       try {
-        this.log.debug('Call route: ' + route.method + ' ' + route.path);
+        let data: any = undefined;
+        if (req.params) {
+          data = { ...data, params: req.params };
+        }
+        if (req.body) {
+          data = { ...data, body: req.body };
+        }
+        this.log.debug('Call route: ' + route.method + ' ' + route.path, data);
         await handler(req, res, next);
       } catch (error) {
         this.log.error('Error in route: ' + route.method + ' ' + route.path, error);
