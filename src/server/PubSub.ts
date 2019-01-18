@@ -1,10 +1,11 @@
-import { IPubSub, IPubSubEvent, PubSubListener } from '@schirkan/reactron-interfaces';
+import { IPubSub, IPubSubEvent, PubSubListener, topicNames } from '@schirkan/reactron-interfaces';
 import * as Emitter from 'events';
 
 export class PubSub implements IPubSub {
   private __EMITTER__ = new Emitter.EventEmitter();
 
   public subscribe(eventName: string, listener: PubSubListener) {
+    console.log('subscribe: ' + eventName);
     this.__EMITTER__.on(eventName, listener);
   }
 
@@ -17,6 +18,9 @@ export class PubSub implements IPubSub {
   }
 
   public publish(eventName: string, ...args: any[]): void {
+    if (eventName !== topicNames.log) {
+      console.log('publish: ' + eventName, args);
+    }
     const event: IPubSubEvent = { name: eventName };
     this.__EMITTER__.emit(eventName, event, ...args);
   }

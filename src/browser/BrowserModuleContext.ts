@@ -10,13 +10,15 @@ const moduleStoreCache: { [key: string]: ElectronStore } = {};
 const serviceCache: { [key: string]: any } = {};
 let settings: ISystemSettings;
 
-export const initModuleContext = async () => {
+export const initSettings = async () => {
   if (!settings) {
     settings = await apiClient.getSettings();
   }
+}
 
+export const initModuleContext = async () => {
   // check if env is electron
-  if ((window as any).require) {
+  if (!electron && (window as any).require) {
     electron = (window as any).require('electron');
     backendService = electron.remote.require('./dist/server/BackendService').BackendService.instance;
     topics = backendService.topics;

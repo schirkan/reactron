@@ -133,6 +133,7 @@ export class ServiceManager implements IServiceManager {
   private setOptionsInternal(serviceRepositoryItem: IServiceRepositoryItem, options: any): Promise<ICommandResult> {
     return command('setOptions', serviceRepositoryItem.moduleName + '.' + serviceRepositoryItem.name, async () => {
       if (serviceRepositoryItem.instance.setOptions) {
+        serviceRepositoryItem.context.log.debug('setOptions');
         await serviceRepositoryItem.instance.setOptions(options);
       }
     });

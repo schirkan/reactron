@@ -3,7 +3,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { inernalModuleContext } from '../../inernalModuleContext';
+import inernalModuleContext from '../../inernalModuleContext';
 import { apiClient } from '../../ApiClient';
 import Loading from '../Loading/Loading';
 import PageNotFound from '../PageNotFound/PageNotFound';
@@ -31,8 +31,8 @@ export default class App extends React.Component<any, IAppState> {
     this.onKeyDown = this.onKeyDown.bind(this);
   }
 
-  public componentDidMount() {
-    this.init();
+  public async componentDidMount() {
+    await this.init();
     this.subscribeTopics();
     document.addEventListener('keydown', this.onKeyDown);
   }
@@ -51,26 +51,28 @@ export default class App extends React.Component<any, IAppState> {
 
   private subscribeTopics() {
     // register page/component change event
-    if (inernalModuleContext.topics) {
-      inernalModuleContext.topics.subscribe(topicNames.pagesUpdated, this.triggerReload);
-      inernalModuleContext.topics.subscribe(topicNames.componentsUpdated, this.triggerReload);
-      inernalModuleContext.topics.subscribe(topicNames.systemSettingsUpdated, this.triggerReload);
+    if (inernalModuleContext.instance.topics) {
+      inernalModuleContext.instance.topics.subscribe(topicNames.pagesUpdated, this.triggerReload);
+      inernalModuleContext.instance.topics.subscribe(topicNames.componentsUpdated, this.triggerReload);
+      inernalModuleContext.instance.topics.subscribe(topicNames.systemSettingsUpdated, this.triggerReload);
     }
   }
 
   private unsubscribeTopics() {
-    if (inernalModuleContext.topics) {
-      inernalModuleContext.topics.unsubscribe(topicNames.pagesUpdated, this.triggerReload);
-      inernalModuleContext.topics.unsubscribe(topicNames.componentsUpdated, this.triggerReload);
-      inernalModuleContext.topics.unsubscribe(topicNames.systemSettingsUpdated, this.triggerReload);
+    if (inernalModuleContext.instance.topics) {
+      inernalModuleContext.instance.topics.unsubscribe(topicNames.pagesUpdated, this.triggerReload);
+      inernalModuleContext.instance.topics.unsubscribe(topicNames.componentsUpdated, this.triggerReload);
+      inernalModuleContext.instance.topics.unsubscribe(topicNames.systemSettingsUpdated, this.triggerReload);
     }
   }
 
   private async init() {
+    // init inernalModuleContext
+    await inernalModuleContext.init();
+
     // load settings
-    const settings = await apiClient.getSettings();
-    moment.locale(settings.lang);
-    numeral.locale(settings.lang);
+    moment.locale(inernalModuleContext.instance.settings.lang);
+    numeral.locale(inernalModuleContext.instance.settings.lang);
 
     // load pages
     const pages = await apiClient.getWebPages();

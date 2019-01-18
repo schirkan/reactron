@@ -51,7 +51,6 @@ exports.command = function (commandName, args, callback) { return __awaiter(_thi
                     timestampEnd: 0,
                     data: undefined
                 };
-                console.log('Start Command: ' + result.command + ' ' + result.args);
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
@@ -85,7 +84,7 @@ exports.command = function (commandName, args, callback) { return __awaiter(_thi
                 return [3 /*break*/, 4];
             case 4:
                 result.timestampEnd = Date.now();
-                console.log('End Command: ' + result.command + ' ' + result.args + ' ' + (result.success ? 'success' : 'error'));
+                // console.log('End Command: ' + result.command + ' ' + result.args + ' ' + (result.success ? 'success' : 'error'));
                 return [2 /*return*/, result];
         }
     });

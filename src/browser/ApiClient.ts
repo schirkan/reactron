@@ -1,5 +1,5 @@
 import { ApiRoute, routes } from '../common/apiRoutes';
-import { inernalModuleContext } from './inernalModuleContext';
+import inernalModuleContext from './inernalModuleContext';
 
 export class ApiClient {
   public getAllServices = apiCall(routes.getServices, true);
@@ -65,7 +65,7 @@ const apiCall = <TParams, TBody, TResponse>(
         path = path.replace(':' + key, params[key]);
       });
     }
-    return fetch(inernalModuleContext.moduleApiPath + path, {
+    return fetch(inernalModuleContext.instance.moduleApiPath + path, {
       method,
       body: data && JSON.stringify(data),
       headers: {

@@ -14,7 +14,7 @@ export const command = async <T = void>(commandName: string | undefined, args: a
         data: undefined as any
     } as ICommandResultWithData<T>;
 
-    console.log('Start Command: ' + result.command + ' ' + result.args);
+    // console.log('Start Command: ' + result.command + ' ' + result.args);
 
     try {
         const callbackResult = await Promise.resolve(callback(result) as any);
@@ -44,7 +44,7 @@ export const command = async <T = void>(commandName: string | undefined, args: a
 
     result.timestampEnd = Date.now();
 
-    console.log('End Command: ' + result.command + ' ' + result.args + ' ' + (result.success ? 'success' : 'error'));
+    // console.log('End Command: ' + result.command + ' ' + result.args + ' ' + (result.success ? 'success' : 'error'));
 
     return result;
 }

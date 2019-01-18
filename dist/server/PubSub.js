@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var reactron_interfaces_1 = require("@schirkan/reactron-interfaces");
 var Emitter = require("events");
 var PubSub = /** @class */ (function () {
     function PubSub() {
         this.__EMITTER__ = new Emitter.EventEmitter();
     }
     PubSub.prototype.subscribe = function (eventName, listener) {
+        console.log('subscribe: ' + eventName);
         this.__EMITTER__.on(eventName, listener);
     };
     PubSub.prototype.once = function (eventName, listener) {
@@ -20,6 +22,9 @@ var PubSub = /** @class */ (function () {
             args[_i - 1] = arguments[_i];
         }
         var _a;
+        if (eventName !== reactron_interfaces_1.topicNames.log) {
+            console.log('publish: ' + eventName, args);
+        }
         var event = { name: eventName };
         (_a = this.__EMITTER__).emit.apply(_a, [eventName, event].concat(args));
     };

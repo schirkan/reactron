@@ -255,6 +255,7 @@ var ServiceManager = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!serviceRepositoryItem.instance.setOptions) return [3 /*break*/, 2];
+                        serviceRepositoryItem.context.log.debug('setOptions');
                         return [4 /*yield*/, serviceRepositoryItem.instance.setOptions(options)];
                     case 1:
                         _a.sent();

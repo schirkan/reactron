@@ -2,7 +2,6 @@ import { IExtraWebComponentProps, IReactronComponentContext, IReactronComponentD
 import classname from 'classnames';
 import * as React from 'react';
 import { apiClient } from '../../ApiClient';
-import { initModuleContext } from '../../BrowserModuleContext';
 import { componentLoader } from '../../ComponentLoader';
 import { WebComponentContext } from '../../WebComponentContext';
 import { WebComponentContextType } from '../../WebComponentContext';
@@ -76,9 +75,6 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
         this.setState({ componentFound: false });
         return;
       }
-
-      // load settings
-      await initModuleContext();
 
       this.setState({
         componentContext: new WebComponentContext(webComponentOptions.moduleName, webComponentOptions.componentName),

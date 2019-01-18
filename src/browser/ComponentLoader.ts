@@ -11,8 +11,7 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import * as ReactRouterDom from 'react-router-dom';
 import { apiClient } from './ApiClient';
-import { inernalModuleContext } from './inernalModuleContext';
-import { components as internalComponents } from "./internalModule";
+import { components as internalComponents } from './internalModule';
 
 // tslint:disable:no-string-literal
 
@@ -31,8 +30,8 @@ externalModules['@fortawesome/free-regular-svg-icons'] = RegularIcons;
 externalModules['@fortawesome/free-brands-svg-icons'] = BrandIcons;
 externalModules['@fortawesome/react-fontawesome'] = FontAwesome;
 
-if (inernalModuleContext.electron) {
-  externalModules['electron'] = inernalModuleContext.electron;
+if ((window as any).require) {
+  externalModules['electron'] = (window as any).require('electron');
 }
 
 Object.keys(externalModules).forEach(key => {
