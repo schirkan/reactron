@@ -1,54 +1,52 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
-var path = require("path");
-var ExpressApp = /** @class */ (function () {
-    function ExpressApp(config) {
+const express = require("express");
+const path = require("path");
+class ExpressApp {
+    constructor(config) {
         this.config = config;
     }
-    ExpressApp.prototype.start = function () {
-        var _this = this;
+    start() {
         console.log('ExpressApp is starting');
-        return new Promise(function (resolve) {
-            _this.express = express();
+        return new Promise((resolve) => {
+            this.express = express();
             // parse application/x-www-form-urlencoded
-            _this.express.use(express.urlencoded({ extended: false }));
+            this.express.use(express.urlencoded({ extended: false }));
             // parse application/json
-            _this.express.use(express.json());
-            _this.apiRouter = express.Router();
+            this.express.use(express.json());
+            this.apiRouter = express.Router();
             // log calls
-            _this.apiRouter.use(function (req, res, next) {
+            this.apiRouter.use((req, res, next) => {
                 console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
                 next();
             });
-            _this.express.use('/api', _this.apiRouter);
-            _this.express.use('/modules', express.static(_this.config.root + '/modules'));
-            _this.express.use('/node_modules', express.static(_this.config.root + '/node_modules'));
-            _this.express.use('/', express.static(_this.config.root + '/build'));
+            this.express.use('/api', this.apiRouter);
+            this.express.use('/modules', express.static(this.config.root + '/modules'));
+            this.express.use('/node_modules', express.static(this.config.root + '/node_modules'));
+            this.express.use('/', express.static(this.config.root + '/build'));
             // for react router
-            _this.express.get('/*', function (req, res) {
-                res.sendFile(path.join(_this.config.root + '/build/index.html'), function (err) {
+            this.express.get('/*', (req, res) => {
+                res.sendFile(path.join(this.config.root + '/build/index.html'), (err) => {
                     if (err) {
                         res.status(500).send(err);
                     }
                 });
             });
             // start listening
-            _this.server = _this.express.listen(_this.config.backendPort, function () {
-                console.log('ExpressApp is listening on Port ' + _this.config.backendPort);
+            this.server = this.express.listen(this.config.backendPort, () => {
+                console.log('ExpressApp is listening on Port ' + this.config.backendPort);
                 resolve();
             });
         });
-    };
-    ExpressApp.prototype.registerErrorHandler = function () {
-        this.apiRouter.use(function (err, req, res, next) {
+    }
+    registerErrorHandler() {
+        this.apiRouter.use((err, req, res, next) => {
             res.status(500).send(err);
         });
-        this.express.use(function (err, req, res, next) {
+        this.express.use((err, req, res, next) => {
             res.status(500).send(err);
         });
-    };
-    return ExpressApp;
-}());
+    }
+}
 exports.ExpressApp = ExpressApp;
 //# sourceMappingURL=ExpressApp.js.map

@@ -4,6 +4,7 @@ import * as RegularIcons from '@fortawesome/free-regular-svg-icons';
 import * as SolidIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import { IComponentLoader, IModuleRepositoryItem, IReactronComponentDefinition } from '@schirkan/reactron-interfaces';
+import * as reactronInterfaces from '@schirkan/reactron-interfaces';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import numeral from 'numeral';
@@ -29,6 +30,7 @@ externalModules['@fortawesome/free-solid-svg-icons'] = SolidIcons;
 externalModules['@fortawesome/free-regular-svg-icons'] = RegularIcons;
 externalModules['@fortawesome/free-brands-svg-icons'] = BrandIcons;
 externalModules['@fortawesome/react-fontawesome'] = FontAwesome;
+externalModules['@schirkan/reactron-interfaces'] = reactronInterfaces;
 
 if ((window as any).require) {
   externalModules['electron'] = (window as any).require('electron');

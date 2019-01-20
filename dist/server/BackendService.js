@@ -7,52 +7,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var electron_1 = require("electron");
-var path = require("path");
-var ElectronApp_1 = require("./ElectronApp");
-var ExpressApp_1 = require("./ExpressApp");
-var ModuleLoader_1 = require("./ModuleLoader");
-var ModuleManager_1 = require("./ModuleManager");
-var ModuleRepository_1 = require("./ModuleRepository");
-var PubSub_1 = require("./PubSub");
-var ServiceManager_1 = require("./ServiceManager");
-var ServiceOptionsRepository_1 = require("./ServiceOptionsRepository");
-var ServiceRepository_1 = require("./ServiceRepository");
-var SystemCommand_1 = require("./SystemCommand");
-var SystemSettingsManager_1 = require("./SystemSettingsManager");
-var WebComponentsManager_1 = require("./WebComponentsManager");
-var WebPageManager_1 = require("./WebPageManager");
-var LogManager_1 = require("./LogManager");
-var BackendService = /** @class */ (function () {
-    function BackendService(config) {
+const electron_1 = require("electron");
+const path = require("path");
+const ElectronApp_1 = require("./ElectronApp");
+const ExpressApp_1 = require("./ExpressApp");
+const ModuleLoader_1 = require("./ModuleLoader");
+const ModuleManager_1 = require("./ModuleManager");
+const ModuleRepository_1 = require("./ModuleRepository");
+const PubSub_1 = require("./PubSub");
+const ServiceManager_1 = require("./ServiceManager");
+const ServiceOptionsRepository_1 = require("./ServiceOptionsRepository");
+const ServiceRepository_1 = require("./ServiceRepository");
+const SystemCommand_1 = require("./SystemCommand");
+const SystemSettingsManager_1 = require("./SystemSettingsManager");
+const WebComponentsManager_1 = require("./WebComponentsManager");
+const WebPageManager_1 = require("./WebPageManager");
+const LogManager_1 = require("./LogManager");
+class BackendService {
+    constructor(config) {
         this.config = config;
         this.topics = new PubSub_1.PubSub();
         this.moduleRepository = new ModuleRepository_1.ModuleRepository();
@@ -68,34 +41,24 @@ var BackendService = /** @class */ (function () {
         this.settings = new SystemSettingsManager_1.SystemSettingsManager(this.topics, this.config.defaultSystemSettings);
         this.logManager = new LogManager_1.LogManager(this.topics);
     }
-    BackendService.prototype.exit = function () {
+    exit() {
         this.electronApp.mainWindow.close();
         electron_1.app.quit();
-    };
-    BackendService.prototype.restart = function () {
+    }
+    restart() {
         electron_1.app.relaunch();
         electron_1.app.quit();
-    };
-    BackendService.prototype.reset = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var appPath, cwd, result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        appPath = electron_1.app.getPath('userData');
-                        cwd = path.join(appPath, '../');
-                        return [4 /*yield*/, SystemCommand_1.SystemCommand.run('rimraf ' + appPath, cwd)];
-                    case 1:
-                        result = _a.sent();
-                        console.log(result);
-                        electron_1.app.relaunch();
-                        electron_1.app.quit();
-                        return [2 /*return*/];
-                }
-            });
+    }
+    reset() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const appPath = electron_1.app.getPath('userData');
+            const cwd = path.join(appPath, '../');
+            const result = yield SystemCommand_1.SystemCommand.run('rimraf ' + appPath, cwd);
+            console.log(result);
+            electron_1.app.relaunch();
+            electron_1.app.quit();
         });
-    };
-    return BackendService;
-}());
+    }
+}
 exports.BackendService = BackendService;
 //# sourceMappingURL=BackendService.js.map

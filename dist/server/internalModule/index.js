@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var AppController_1 = require("./AppController");
-var ModuleController_1 = require("./ModuleController");
-var ServiceController_1 = require("./ServiceController");
-var SettingsController_1 = require("./SettingsController");
-var WebComponentController_1 = require("./WebComponentController");
-var WebPageController_1 = require("./WebPageController");
-var RefreshController_1 = require("./RefreshController");
-var LogController_1 = require("./LogController");
+const AppController_1 = require("./AppController");
+const ModuleController_1 = require("./ModuleController");
+const ServiceController_1 = require("./ServiceController");
+const SettingsController_1 = require("./SettingsController");
+const WebComponentController_1 = require("./WebComponentController");
+const WebPageController_1 = require("./WebPageController");
+const RefreshController_1 = require("./RefreshController");
+const LogController_1 = require("./LogController");
 exports.services = [{
         name: 'ModuleController',
         displayName: 'Modules API',

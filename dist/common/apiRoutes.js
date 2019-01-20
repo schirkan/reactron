@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ApiRoute = /** @class */ (function () {
-    function ApiRoute(path, method) {
+class ApiRoute {
+    constructor(path, method) {
         this.path = path;
         this.method = method;
     }
-    return ApiRoute;
-}());
+}
 exports.ApiRoute = ApiRoute;
 exports.routes = {
     getServices: new ApiRoute('/service/', 'get'),

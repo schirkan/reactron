@@ -1,37 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var reactron_interfaces_1 = require("@schirkan/reactron-interfaces");
-var Emitter = require("events");
-var PubSub = /** @class */ (function () {
-    function PubSub() {
+const reactron_interfaces_1 = require("@schirkan/reactron-interfaces");
+const Emitter = require("events");
+class PubSub {
+    constructor() {
         this.__EMITTER__ = new Emitter.EventEmitter();
     }
-    PubSub.prototype.subscribe = function (eventName, listener) {
+    subscribe(eventName, listener) {
         console.log('subscribe: ' + eventName);
         this.__EMITTER__.on(eventName, listener);
-    };
-    PubSub.prototype.once = function (eventName, listener) {
+    }
+    once(eventName, listener) {
         this.__EMITTER__.once(eventName, listener);
-    };
-    PubSub.prototype.unsubscribe = function (eventName, listener) {
+    }
+    unsubscribe(eventName, listener) {
         this.__EMITTER__.removeListener(eventName, listener);
-    };
-    PubSub.prototype.publish = function (eventName) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var _a;
+    }
+    publish(eventName, ...args) {
         if (eventName !== reactron_interfaces_1.topicNames.log) {
             console.log('publish: ' + eventName, args);
         }
-        var event = { name: eventName };
-        (_a = this.__EMITTER__).emit.apply(_a, [eventName, event].concat(args));
-    };
-    PubSub.prototype.clearAllSubscriptions = function () {
+        const event = { name: eventName };
+        this.__EMITTER__.emit(eventName, event, ...args);
+    }
+    clearAllSubscriptions() {
         this.__EMITTER__.removeAllListeners();
-    };
-    return PubSub;
-}());
+    }
+}
 exports.PubSub = PubSub;
 //# sourceMappingURL=PubSub.js.map

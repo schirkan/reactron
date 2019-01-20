@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createConfig = function (root) {
-    var isDev = process.env.NODE_ENV === 'development';
+exports.createConfig = (root) => {
+    const isDev = process.env.NODE_ENV === 'development';
     return {
-        root: root,
-        isDev: isDev,
+        root,
+        isDev,
         frontendPort: 3000,
         backendPort: isDev ? 5000 : 3000,
         defaultSystemSettings: {

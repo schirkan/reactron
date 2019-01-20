@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var child_process_1 = require("child_process");
-var SystemCommand = /** @class */ (function () {
-    function SystemCommand() {
-    }
-    SystemCommand.run = function (command, cwd) {
-        return new Promise(function (resolve, reject) {
+const child_process_1 = require("child_process");
+class SystemCommand {
+    static run(command, cwd) {
+        return new Promise((resolve, reject) => {
             console.log('runCommand: ' + cwd + ' ' + command);
-            var result = {
-                command: command,
+            const result = {
+                command,
                 args: cwd,
                 children: [],
                 log: [],
@@ -16,7 +14,7 @@ var SystemCommand = /** @class */ (function () {
                 timestampStart: Date.now(),
                 timestampEnd: 0
             };
-            child_process_1.exec(command, { cwd: cwd }, function (error, stdout, stderr) {
+            child_process_1.exec(command, { cwd }, (error, stdout, stderr) => {
                 if (stdout) {
                     result.log.push(stdout.trim());
                 }
@@ -34,8 +32,7 @@ var SystemCommand = /** @class */ (function () {
                 }
             });
         });
-    };
-    return SystemCommand;
-}());
+    }
+}
 exports.SystemCommand = SystemCommand;
 //# sourceMappingURL=SystemCommand.js.map
