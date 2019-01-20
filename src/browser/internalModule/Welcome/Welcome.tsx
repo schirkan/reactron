@@ -6,7 +6,7 @@ import { apiClient } from '../../ApiClient';
 import RoundButton from '../../components/RoundButton/RoundButton';
 import logo from './logo.svg';
 
-import './Welcome.css';
+import './Welcome.scss';
 
 interface IWelcomeState {
   info?: IServerInfo;

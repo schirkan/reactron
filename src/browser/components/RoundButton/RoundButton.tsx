@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { IRoundButtonProps } from './IRoundButtonProps';
-import './RoundButton.css';
+import './RoundButton.scss';
 
 export default class RoundButton extends React.Component<IRoundButtonProps> {
   public render() {

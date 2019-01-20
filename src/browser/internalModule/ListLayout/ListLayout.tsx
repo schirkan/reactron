@@ -3,7 +3,7 @@ import { IListLayoutItemOptions } from "./IListLayoutItemOptions";
 import { IListLayoutOptions } from "./IListLayoutOptions";
 import { IReactronComponentContext } from '@schirkan/reactron-interfaces';
 
-import './ListLayout.css';
+import './ListLayout.scss';
 
 export default class ListLayout extends React.Component<IListLayoutOptions> {
   public context!: IReactronComponentContext;

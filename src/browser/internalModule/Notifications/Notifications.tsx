@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import './Notifications.css';
+import './Notifications.scss';
 
 export default class Notifications extends React.Component<any, any> {
   constructor(props: any) {

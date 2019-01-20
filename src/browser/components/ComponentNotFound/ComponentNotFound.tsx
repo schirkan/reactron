@@ -4,7 +4,7 @@ import * as React from 'react';
 import RoundButton from '../RoundButton/RoundButton';
 import { IComponentNotFoundProps } from './IComponentNotFoundProps';
 
-import './ComponentNotFound.css';
+import './ComponentNotFound.scss';
 
 export default class ComponentNotFound extends React.Component<IComponentNotFoundProps> {
   public static defaultProps: Partial<IComponentNotFoundProps> = {

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import { ICarouselLayoutOptions } from './ICarouselLayoutOptions';
 import { IReactronComponentContext } from '@schirkan/reactron-interfaces';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-import './CarouselLayout.css';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import './CarouselLayout.scss';
 
 export default class CarouselLayout extends React.Component<ICarouselLayoutOptions> {
   public context!: IReactronComponentContext;

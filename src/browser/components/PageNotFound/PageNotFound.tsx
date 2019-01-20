@@ -4,7 +4,7 @@ import * as React from 'react';
 import RoundButton from '../RoundButton/RoundButton';
 import { IPageNotFoundProps } from './IPageNotFoundProps';
 
-import './PageNotFound.css'
+import './PageNotFound.scss'
 
 export default class PageNotFound extends React.Component<IPageNotFoundProps> {
   public render() {

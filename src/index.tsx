@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import App from './browser/components/App/App';
 import ErrorBoundary from './browser/components/ErrorBoundary/ErrorBoundary';
 
-import './index.css';
+import './index.scss';
 
 ReactDOM.render(
   <ErrorBoundary><App /></ErrorBoundary>,

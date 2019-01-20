@@ -9,7 +9,7 @@ import ComponentNotFound from '../ComponentNotFound/ComponentNotFound';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Loading from '../Loading/Loading';
 
-import './WebComponent.css';
+import './WebComponent.scss';
 
 export interface IWebComponentProps extends Partial<IWebComponentOptions>, IExtraWebComponentProps {
 }

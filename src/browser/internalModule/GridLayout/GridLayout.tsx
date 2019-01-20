@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IGridLayoutOptions, IGridLayoutTileOptions } from './IGridLayoutTileOptions';
 import { IReactronComponentContext } from '@schirkan/reactron-interfaces';
 
-import './GridLayout.css';
+import './GridLayout.scss';
 
 export default class GridLayout extends React.Component<IGridLayoutOptions> {
   public context!: IReactronComponentContext;

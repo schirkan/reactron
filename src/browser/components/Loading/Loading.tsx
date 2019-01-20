@@ -4,7 +4,7 @@ import classname from 'classnames';
 import * as React from 'react';
 import { ILoadingProps } from './ILoadingProps';
 
-import './Loading.css';
+import './Loading.scss';
 
 export default class Loading extends React.Component<ILoadingProps> {
   public static defaultProps: Partial<ILoadingProps> = {

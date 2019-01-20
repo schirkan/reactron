@@ -2,7 +2,7 @@ import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { IMarkDownOptions } from './IMarkDownOptions';
 
-import './MarkDown.css';
+import './MarkDown.scss';
 
 export default class MarkDown extends React.Component<IMarkDownOptions> {
   public render() {

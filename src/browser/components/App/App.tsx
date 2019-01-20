@@ -13,7 +13,7 @@ import WebComponent from '../WebComponent/WebComponent';
 import 'moment/min/locales.min';
 import 'numeral/min/locales.min';
 
-import './App.css';
+import './App.scss';
 
 export interface IAppState {
   pages?: IWebPageOptions[];

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IIFrameOptions } from './IIFrameOptions';
 
-import './IFrame.css';
+import './IFrame.scss';
 
 export default class IFrame extends React.Component<IIFrameOptions> {
   public render() {
