@@ -13,7 +13,7 @@ class LogController {
     start(context) {
         return __awaiter(this, void 0, void 0, function* () {
             context.registerRoute(apiRoutes_1.routes.getLogEntries, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const result = yield context.backendService.logManager.readLog(req.params.source);
+                const result = yield context.backendService.logManager.readLog(req.body.source);
                 res.send(result);
             }));
         });

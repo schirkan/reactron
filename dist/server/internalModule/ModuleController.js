@@ -40,7 +40,7 @@ class ModuleController {
                 res.send(results);
             }));
             context.registerRoute(apiRoutes_1.routes.deleteModule, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
+                const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
                 if (moduleRepositoryItem) {
                     const result = yield context.backendService.moduleManager.remove(moduleRepositoryItem);
                     res.send([result]);
@@ -50,7 +50,7 @@ class ModuleController {
                 }
             }));
             context.registerRoute(apiRoutes_1.routes.rebuildModule, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
+                const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
                 if (moduleRepositoryItem) {
                     const resultInstall = yield context.backendService.moduleManager.install(moduleRepositoryItem, false);
                     const resultBuild = yield context.backendService.moduleManager.build(moduleRepositoryItem);
@@ -61,7 +61,7 @@ class ModuleController {
                 }
             }));
             context.registerRoute(apiRoutes_1.routes.updateModule, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
+                const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
                 if (moduleRepositoryItem) {
                     const results = [];
                     if (moduleRepositoryItem.hasUpdate) {

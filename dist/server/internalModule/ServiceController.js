@@ -30,12 +30,30 @@ class ServiceController {
                 res.send(serviceInfos);
             }));
             context.registerRoute(apiRoutes_1.routes.getServiceOptions, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const result = context.backendService.serviceOptionsRepository.get(req.params.moduleName, req.params.serviceName);
+                const result = context.backendService.serviceOptionsRepository.get(req.body.moduleName, req.body.serviceName);
                 res.send(result);
             }));
             context.registerRoute(apiRoutes_1.routes.setServiceOptions, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                yield context.backendService.serviceManager.setOptions(req.params.moduleName, req.params.serviceName, req.body);
+                yield context.backendService.serviceManager.setOptions(req.body.moduleName, req.body.serviceName, req.body.options);
                 res.sendStatus(204);
+            }));
+            context.registerRoute(apiRoutes_1.routes.callServiceMethod, (req, res) => __awaiter(this, void 0, void 0, function* () {
+                const service = context.backendService.serviceManager.get(req.body.moduleName, req.body.serviceName);
+                let method = service && service[req.body.methodName];
+                console.log('callServiceMethod', req.body.args);
+                if (!method) {
+                    res.sendStatus(404);
+                }
+                else {
+                    try {
+                        method = method.bind(service);
+                        const result = yield Promise.resolve(method(...req.body.args));
+                        res.send({ result });
+                    }
+                    catch (error) {
+                        res.send({ error: error && error.message || error });
+                    }
+                }
             }));
         });
     }

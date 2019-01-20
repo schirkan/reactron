@@ -36,7 +36,7 @@ export class ModuleController implements IReactronService {
     });
 
     context.registerRoute(routes.deleteModule, async (req, res) => {
-      const moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
+      const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
       if (moduleRepositoryItem) {
         const result = await context.backendService.moduleManager.remove(moduleRepositoryItem);
         res.send([result]);
@@ -46,7 +46,7 @@ export class ModuleController implements IReactronService {
     });
 
     context.registerRoute(routes.rebuildModule, async (req, res) => {
-      const moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
+      const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
       if (moduleRepositoryItem) {
         const resultInstall = await context.backendService.moduleManager.install(moduleRepositoryItem, false);
         const resultBuild = await context.backendService.moduleManager.build(moduleRepositoryItem);
@@ -57,7 +57,7 @@ export class ModuleController implements IReactronService {
     });
 
     context.registerRoute(routes.updateModule, async (req, res) => {
-      const moduleRepositoryItem = context.backendService.moduleManager.get(req.params.moduleName);
+      const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
       if (moduleRepositoryItem) {
         const results: ICommandResult[] = [];
         if (moduleRepositoryItem.hasUpdate) {

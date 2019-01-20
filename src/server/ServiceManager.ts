@@ -1,9 +1,32 @@
-import { ICommandResult, IFieldDefinition, IReactronService, IReactronServiceDefinition, IServiceManager, IServiceRepositoryItem } from '@schirkan/reactron-interfaces';
+import { ICommandResult, IFieldDefinition, IReactronService, IReactronServiceDefinition, IServiceManager, IServiceRepositoryItem, IReactronServiceContext } from '@schirkan/reactron-interfaces';
 import { command } from './commandResultWrapper';
 import { ModuleRepository } from './ModuleRepository';
 import { ReactronServiceContext } from './ReactronServiceContext';
 import { ServiceOptionsRepository } from './ServiceOptionsRepository';
 import { ServiceRepository } from './ServiceRepository';
+
+// http://2ality.com/2017/11/proxy-method-calls.html
+function traceMethodCalls(obj: any, context: IReactronServiceContext) {
+  const proxy = new Proxy(obj, {
+    get(target, propKey, receiver) {
+      const targetValue = Reflect.get(target, propKey, receiver);
+      if (typeof targetValue === 'function') {
+        return (...args: any[]) => {
+          context.log.debug('CALL ' + propKey.toString(), args);
+          try {
+            return targetValue.apply(proxy, args);            
+          } catch (error) {
+            context.log.debug('ERROR ' + (error && error.message || error));
+            throw error;
+          }
+        }
+      } else {
+        return targetValue;
+      }
+    }
+  })
+  return proxy;
+}
 
 // dependency loader für services
 export class ServiceManager implements IServiceManager {
@@ -14,7 +37,6 @@ export class ServiceManager implements IServiceManager {
   ) { }
 
   public async getAsync(moduleName: string, serviceName: string): Promise<IReactronService | undefined> {
-    console.log('ServiceManager.getAsync: ' + moduleName + '.' + serviceName);
     let serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
     if (!serviceRepositoryItem) {
       const result = await this.loadService(moduleName, serviceName);
@@ -26,7 +48,6 @@ export class ServiceManager implements IServiceManager {
   }
 
   public get(moduleName: string, serviceName: string): IReactronService | undefined {
-    console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
     const serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
     return serviceRepositoryItem && serviceRepositoryItem.instance;
   }
@@ -187,7 +208,7 @@ export class ServiceManager implements IServiceManager {
       const serviceRepositoryItem: IServiceRepositoryItem = {
         ...serviceDefinition,
         moduleName,
-        instance: serviceInstance,
+        instance: serviceInstance, // traceMethodCalls(serviceInstance, serviceContext), // TODO
         context: serviceContext,
         state: 'stopped',
       };

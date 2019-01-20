@@ -56,7 +56,7 @@ export class ReactronServiceContext implements IReactronServiceContext {
         this.log.debug('Call route: ' + route.method + ' ' + route.path, data);
         await handler(req, res, next);
       } catch (error) {
-        this.log.error('Error in route: ' + route.method + ' ' + route.path, error);
+        this.log.error('Error in route: ' + route.method + ' ' + route.path, error && error.message || error);
       }
     };
     method(route.path, internalHandler);

@@ -1,9 +1,16 @@
 import { IBackendService, IModuleContext, IPubSub, ISystemSettings, ElectronStore, topicNames } from "@schirkan/reactron-interfaces";
 import { apiClient } from "./ApiClient";
+import { createRemoteService } from "./RpcClient";
 
 let electron: Electron.AllElectron;
 let backendService: IBackendService;
-let topics: IPubSub | undefined;
+let topics: IPubSub = { // TODO: mock
+  clearAllSubscriptions: () => { },
+  once: () => { },
+  publish: () => { },
+  subscribe: () => { },
+  unsubscribe: () => { }
+};
 let Store: new (options?: any) => ElectronStore;
 
 const moduleStoreCache: { [key: string]: ElectronStore } = {};
@@ -45,7 +52,7 @@ export class BrowserModuleContext implements IModuleContext {
   constructor(public moduleName: string) {
     this.electron = electron;
     this.backendService = backendService;
-    this.topics = topics!;
+    this.topics = topics;
 
     const moduleStoreKey = 'module.' + moduleName;
     if (Store && !moduleStoreCache[moduleStoreKey]) {
@@ -56,16 +63,18 @@ export class BrowserModuleContext implements IModuleContext {
     const escapedModuleName = moduleName.replace('/', '@');
     this.moduleApiPath = '/api/modules/' + escapedModuleName;
 
-    this.getService = <TService>(serviceName: string, explicitModuleName?: string) => {
-      if (!this.backendService) {
-        console.log('Method getService() is not supported in browser environment.');
-        return undefined;
-      }
-      const serviceKey = (explicitModuleName || moduleName) + '.' + serviceName;
-      if (!serviceCache[serviceKey]) {
-        serviceCache[serviceKey] = this.backendService.serviceManager.get(explicitModuleName || moduleName, serviceName);
-      }
-      return serviceCache[serviceKey] as TService | undefined;
+    this.getService = (serviceName: string, explicitModuleName?: string) => {
+      return createRemoteService(serviceName, explicitModuleName || moduleName);
+
+      // if (!this.backendService) {
+      //   console.log('Method getService() is not supported in browser environment.');
+      //   return undefined;
+      // }
+      // const serviceKey = (explicitModuleName || moduleName) + '.' + serviceName;
+      // if (!serviceCache[serviceKey]) {
+      //   serviceCache[serviceKey] = this.backendService.serviceManager.get(explicitModuleName || moduleName, serviceName);
+      // }
+      // return serviceCache[serviceKey] as TService | undefined;
     }
   }
 }

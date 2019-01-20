@@ -10,6 +10,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const commandResultWrapper_1 = require("./commandResultWrapper");
 const ReactronServiceContext_1 = require("./ReactronServiceContext");
+// http://2ality.com/2017/11/proxy-method-calls.html
+function traceMethodCalls(obj, context) {
+    const proxy = new Proxy(obj, {
+        get(target, propKey, receiver) {
+            const targetValue = Reflect.get(target, propKey, receiver);
+            if (typeof targetValue === 'function') {
+                return (...args) => {
+                    context.log.debug('CALL ' + propKey.toString(), args);
+                    try {
+                        return targetValue.apply(proxy, args);
+                    }
+                    catch (error) {
+                        context.log.debug('ERROR ' + (error && error.message || error));
+                        throw error;
+                    }
+                };
+            }
+            else {
+                return targetValue;
+            }
+        }
+    });
+    return proxy;
+}
 // dependency loader für services
 class ServiceManager {
     constructor(serviceRepository, moduleRepository, optionsRepository) {
@@ -19,7 +43,6 @@ class ServiceManager {
     }
     getAsync(moduleName, serviceName) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('ServiceManager.getAsync: ' + moduleName + '.' + serviceName);
             let serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
             if (!serviceRepositoryItem) {
                 const result = yield this.loadService(moduleName, serviceName);
@@ -31,7 +54,6 @@ class ServiceManager {
         });
     }
     get(moduleName, serviceName) {
-        console.log('ServiceManager.get: ' + moduleName + '.' + serviceName);
         const serviceRepositoryItem = this.serviceRepository.get(moduleName, serviceName);
         return serviceRepositoryItem && serviceRepositoryItem.instance;
     }

@@ -9,14 +9,15 @@ class ApiRoute {
 exports.ApiRoute = ApiRoute;
 exports.routes = {
     getServices: new ApiRoute('/service/', 'get'),
-    getServiceOptions: new ApiRoute('/service/:moduleName/:serviceName', 'get'),
-    setServiceOptions: new ApiRoute('/service/:moduleName/:serviceName', 'post'),
+    getServiceOptions: new ApiRoute('/service/getOptions', 'post'),
+    setServiceOptions: new ApiRoute('/service/setOptions', 'post'),
+    callServiceMethod: new ApiRoute('/service/rpc', 'post'),
     getModules: new ApiRoute('/modules/', 'get'),
     addModule: new ApiRoute('/modules/', 'post'),
-    deleteModule: new ApiRoute('/modules/:moduleName', 'delete'),
-    rebuildModule: new ApiRoute('/modules/:moduleName/rebuild', 'post'),
-    updateModule: new ApiRoute('/modules/:moduleName/update', 'post'),
-    checkUpdates: new ApiRoute('/modules/checkUpdates/update', 'get'),
+    deleteModule: new ApiRoute('/modules/delete', 'delete'),
+    rebuildModule: new ApiRoute('/modules/rebuild', 'post'),
+    updateModule: new ApiRoute('/modules/update', 'post'),
+    checkUpdates: new ApiRoute('/modules/checkUpdates', 'post'),
     getWebPages: new ApiRoute('/pages/', 'get'),
     setWebPage: new ApiRoute('/pages/', 'post'),
     deleteWebPage: new ApiRoute('/pages/:id', 'delete'),
@@ -31,6 +32,6 @@ exports.routes = {
     getWebComponentOptions: new ApiRoute('/components/', 'get'),
     setWebComponentOptions: new ApiRoute('/components/', 'post'),
     deleteWebComponentOptions: new ApiRoute('/components/:id', 'delete'),
-    getLogEntries: new ApiRoute('/log/:source', 'get'),
+    getLogEntries: new ApiRoute('/log/entries', 'post'),
 };
 //# sourceMappingURL=apiRoutes.js.map

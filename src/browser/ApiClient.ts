@@ -5,6 +5,7 @@ export class ApiClient {
   public getAllServices = apiCall(routes.getServices, true);
   public getServiceOptions = apiCall(routes.getServiceOptions);
   public setServiceOptions = apiCall(routes.setServiceOptions);
+  public callServiceMethod = apiCall(routes.callServiceMethod);
 
   public getModules = apiCall(routes.getModules, true);
   public addModule = apiCall(routes.addModule);
@@ -65,7 +66,7 @@ const apiCall = <TParams, TBody, TResponse>(
         path = path.replace(':' + key, params[key]);
       });
     }
-    return fetch(inernalModuleContext.instance.moduleApiPath + path, {
+    const p = fetch(inernalModuleContext.instance.moduleApiPath + path, {
       method,
       body: data && JSON.stringify(data),
       headers: {
@@ -84,13 +85,18 @@ const apiCall = <TParams, TBody, TResponse>(
 
         console.log(text);
         throw Error(text);
-      })
-      .then(response => {
-        if (cacheResponse) {
-          cache = response;
-        }
-        return response;
       });
+      // .then(response => {
+      //   if (cacheResponse) {
+      //     cache = response;
+      //   }
+      //   return response;
+      // });
+
+      if (cacheResponse) {
+        cache = p;
+      }
+      return p;
   };
 
   call.clearCache = () => {
