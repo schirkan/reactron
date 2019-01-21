@@ -1,5 +1,5 @@
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
-import { IReactronComponentContext, ILogWriter } from '@schirkan/reactron-interfaces';
+import { IReactronComponentContext, ILogWriter, IWebComponentOptions } from '@schirkan/reactron-interfaces';
 import React from 'react';
 import { BrowserModuleContext } from "./BrowserModuleContext";
 import { componentLoader } from './ComponentLoader';
@@ -8,13 +8,18 @@ import WebComponent, { IWebComponentProps } from "./components/WebComponent/WebC
 import { LogWriter } from '../common/LogWriter';
 
 export class WebComponentContext extends BrowserModuleContext implements IReactronComponentContext {
-  public renderLoading: (text?: string, iconSize?: SizeProp) => any;
-  public renderComponent: (props: IWebComponentProps) => any;
+  public readonly renderLoading: (text?: string, iconSize?: SizeProp) => any;
+  public readonly renderComponent: (props: IWebComponentProps) => any;
   public readonly componentLoader = componentLoader;
   public readonly log: ILogWriter;
+  public readonly componentName: string;
 
-  constructor(moduleName: string, public readonly componentName: string) {
-    super(moduleName);
+  constructor(props: IWebComponentOptions) {
+    super(props.moduleName);
+
+    const logSource = props.id || (props.moduleName + '.' + props.componentName);
+    this.log = new LogWriter(this.backendService && this.backendService.topics, logSource);
+    this.componentName = props.componentName;
 
     this.renderComponent = (props: IWebComponentProps) => {
       const key = props.id + '.' + props.moduleName + '.' + props.componentName;
@@ -24,9 +29,7 @@ export class WebComponentContext extends BrowserModuleContext implements IReactr
     this.renderLoading = (text?: string, iconSize?: SizeProp) => {
       return <Loading text={text} iconSize={iconSize} />;
     };
-
-    this.log = new LogWriter(this.backendService && this.backendService.topics, moduleName + '.' + componentName);
   }
 }
 
-export const WebComponentContextType = React.createContext<IReactronComponentContext>(new WebComponentContext('', ''));
+export const WebComponentContextType = React.createContext<IReactronComponentContext>(new WebComponentContext({ moduleName: '', parentId: '', componentName: '', id: '' }));

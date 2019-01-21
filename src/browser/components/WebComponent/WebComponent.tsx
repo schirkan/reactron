@@ -77,7 +77,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
       }
 
       this.setState({
-        componentContext: new WebComponentContext(webComponentOptions.moduleName, webComponentOptions.componentName),
+        componentContext: new WebComponentContext(webComponentOptions),
         componentDefinition,
         componentOptions: webComponentOptions,
         componentFound: true

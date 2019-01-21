@@ -13,6 +13,7 @@ import * as ReactDom from 'react-dom';
 import * as ReactRouterDom from 'react-router-dom';
 import { apiClient } from './ApiClient';
 import { components as internalComponents } from './internalModule';
+import { frontendService } from './FrontendService';
 
 // tslint:disable:no-string-literal
 
@@ -49,7 +50,8 @@ export class ComponentLoader implements IComponentLoader {
 
   public async getModuleComponents(moduleName: string): Promise<IReactronComponentDefinition[] | undefined> {
     if (!this.moduleComponents[moduleName]) {
-      const modules = await apiClient.getModules();
+      // const modules = await apiClient.getModules();
+      const modules = await frontendService.modules.getModules();
       const m = modules.find(x => x.name === moduleName);
 
       if (!m) {
@@ -93,7 +95,9 @@ export class ComponentLoader implements IComponentLoader {
     if (this.allComponentsLoaded) {
       return this.moduleComponents;
     }
-    const modules = await apiClient.getModules();
+    // const modules = await apiClient.getModules();
+    const modules = await frontendService.modules.getModules();
+
     for (const m of modules) {
       await this.registerModuleComponents(m);
     }
