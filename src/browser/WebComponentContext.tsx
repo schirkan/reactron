@@ -18,7 +18,7 @@ export class WebComponentContext extends BrowserModuleContext implements IReactr
     super(props.moduleName);
 
     const logSource = props.id || (props.moduleName + '.' + props.componentName);
-    this.log = new LogWriter(this.backendService && this.backendService.topics, logSource);
+    this.log = new LogWriter(this.topics, logSource);
     this.componentName = props.componentName;
 
     this.renderComponent = (props: IWebComponentProps) => {

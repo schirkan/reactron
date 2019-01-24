@@ -8,14 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const apiRoutes_1 = require("../../common/apiRoutes");
+const BackendService_1 = require("../BackendService");
 class LogController {
-    start(context) {
+    start() {
+        return __awaiter(this, void 0, void 0, function* () { });
+    }
+    getLogEntries(source) {
         return __awaiter(this, void 0, void 0, function* () {
-            context.registerRoute(apiRoutes_1.routes.getLogEntries, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const result = yield context.backendService.logManager.readLog(req.body.source);
-                res.send(result);
-            }));
+            return BackendService_1.BackendService.instance.logManager.readLog(source);
         });
     }
 }

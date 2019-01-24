@@ -1,9 +1,9 @@
-import { IBackendService, IModuleContext, IPubSub, ISystemSettings, ElectronStore, topicNames } from "@schirkan/reactron-interfaces";
-import { apiClient } from "./ApiClient";
+import { IModuleContext, IPubSub, ISystemSettings, ElectronStore, topicNames, IPubSubEvent } from "@schirkan/reactron-interfaces";
 import { createRemoteService } from "./RpcClient";
+import { services } from "./ReactronServicesFrontend";
 
 let electron: Electron.AllElectron;
-let backendService: IBackendService;
+let settings: ISystemSettings;
 let topics: IPubSub = { // TODO: mock
   clearAllSubscriptions: () => { },
   once: () => { },
@@ -13,69 +13,59 @@ let topics: IPubSub = { // TODO: mock
 };
 let Store: new (options?: any) => ElectronStore;
 
-const moduleStoreCache: { [key: string]: ElectronStore } = {};
-const serviceCache: { [key: string]: any } = {};
-let settings: ISystemSettings;
-
-export const initSettings = async () => {
-  if (!settings) {
-    settings = await apiClient.getSettings();
-  }
-}
-
-export const initModuleContext = async () => {
-  // check if env is electron
-  if (!electron && (window as any).require) {
-    electron = (window as any).require('electron');
-    backendService = electron.remote.require('./dist/server/BackendService').BackendService.instance;
-    topics = backendService.topics;
-    Store = electron.remote.require('electron-store');
-
-    // on settings change
-    topics.subscribe(topicNames.systemSettingsUpdated, (event, data: ISystemSettings) => {
-      settings = data;
-    });
-  }
-}
-
 export class BrowserModuleContext implements IModuleContext {
-  public readonly electron: Electron.AllElectron;
-  public readonly backendService: IBackendService;
-  public readonly topics: IPubSub;
-  public readonly moduleStorage: ElectronStore;
-  public readonly moduleApiPath: string;
-  public getService: <TService = any>(serviceName: string, moduleName?: string | undefined) => TService | undefined;
-  public get settings(): Readonly<ISystemSettings> {
-    return settings;
-  }
+  public static inernalModuleContext: BrowserModuleContext;
+  private static moduleStoreCache: { [key: string]: ElectronStore } = {};
+  private static serviceCache: { [key: string]: any } = {};
 
   constructor(public moduleName: string) {
-    this.electron = electron;
-    this.backendService = backendService;
-    this.topics = topics;
-
-    const moduleStoreKey = 'module.' + moduleName;
-    if (Store && !moduleStoreCache[moduleStoreKey]) {
-      moduleStoreCache[moduleStoreKey] = new Store({ name: 'module.' + moduleName });
-    }
-    this.moduleStorage = moduleStoreCache[moduleStoreKey];
-
-    const escapedModuleName = moduleName.replace('/', '@');
+    const escapedModuleName = (moduleName || '').replace('/', '@');
     this.moduleApiPath = '/api/modules/' + escapedModuleName;
+  }
 
-    this.getService = (serviceName: string, explicitModuleName?: string) => {
-      return createRemoteService(serviceName, explicitModuleName || moduleName);
+  public readonly services = services;
+  public readonly moduleApiPath: string;
+  public get electron(): Electron.AllElectron { return electron };
+  public get topics(): IPubSub { return topics; }
+  public get settings(): Readonly<ISystemSettings> { return settings; }
 
-      // if (!this.backendService) {
-      //   console.log('Method getService() is not supported in browser environment.');
-      //   return undefined;
-      // }
-      // const serviceKey = (explicitModuleName || moduleName) + '.' + serviceName;
-      // if (!serviceCache[serviceKey]) {
-      //   serviceCache[serviceKey] = this.backendService.serviceManager.get(explicitModuleName || moduleName, serviceName);
-      // }
-      // return serviceCache[serviceKey] as TService | undefined;
+  public get moduleStorage(): ElectronStore {
+    const moduleStoreKey = 'module.' + this.moduleName;
+    if (Store && !BrowserModuleContext.moduleStoreCache[moduleStoreKey]) {
+      BrowserModuleContext.moduleStoreCache[moduleStoreKey] = new Store({ name: moduleStoreKey });
+    }
+    return BrowserModuleContext.moduleStoreCache[moduleStoreKey];
+  }
+
+  public async getService<TService = any>(serviceName: string, explicitModuleName?: string): Promise<TService | undefined> {
+    const moduleName = explicitModuleName || this.moduleName;
+    const serviceKey = serviceName + '.' + moduleName;
+    if (!BrowserModuleContext.serviceCache[serviceKey]) {
+      BrowserModuleContext.serviceCache[serviceKey] = createRemoteService<TService>(serviceName, moduleName);
+    }
+    return BrowserModuleContext.serviceCache[serviceKey];
+  }
+
+  public static async init(): Promise<void> {
+    // check if env is electron
+    if (!electron && (window as any).require) {
+      electron = (window as any).require('electron');
+      const backendService = electron.remote.require('./dist/server/BackendService').BackendService.instance;
+      topics = backendService.topics;
+      Store = electron.remote.require('electron-store');
+
+      // subscribe settings change
+      topics.subscribe(topicNames.systemSettingsUpdated, (event: IPubSubEvent, data: ISystemSettings) => {
+        settings = data;
+      });
+    }
+
+    // init internal module
+    BrowserModuleContext.inernalModuleContext = new BrowserModuleContext('reactron');
+
+    // load settings
+    if (!settings) {
+      settings = await services.application.getSettings();
     }
   }
 }
-

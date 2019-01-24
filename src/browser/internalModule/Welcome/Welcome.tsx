@@ -2,9 +2,9 @@ import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import { IServerInfo } from '@schirkan/reactron-interfaces';
 import * as React from 'react';
-import { apiClient } from '../../ApiClient';
 import RoundButton from '../../components/RoundButton/RoundButton';
 import logo from './logo.svg';
+import { services } from '../../ReactronServicesFrontend';
 
 import './Welcome.scss';
 
@@ -19,7 +19,7 @@ export default class Welcome extends React.Component<any, IWelcomeState> {
   }
 
   public componentDidMount() {
-    apiClient.getServerInfo().then(info => {
+    services.application.getServerInfo().then(info => {
       this.setState({ info });
     });
   }

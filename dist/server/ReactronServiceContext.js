@@ -13,32 +13,51 @@ const BackendService_1 = require("./BackendService");
 const LogWriter_1 = require("./../common/LogWriter");
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
+class ReactronServices {
+    get modules() {
+        if (!this._modules) {
+            this._modules = BackendService_1.BackendService.instance.serviceManager.get('reactron', 'ModuleController');
+        }
+        return this._modules;
+    }
+    get application() {
+        if (!this._application) {
+            this._application = BackendService_1.BackendService.instance.serviceManager.get('reactron', 'AppController');
+        }
+        return this._application;
+    }
+    get log() {
+        if (!this._log) {
+            this._log = BackendService_1.BackendService.instance.serviceManager.get('reactron', 'LogController');
+        }
+        return this._log;
+    }
+    get services() {
+        if (!this._services) {
+            this._services = BackendService_1.BackendService.instance.serviceManager.get('reactron', 'ServiceController');
+        }
+        return this._services;
+    }
+    get components() {
+        if (!this._components) {
+            this._components = BackendService_1.BackendService.instance.serviceManager.get('reactron', 'WebComponentController');
+        }
+        return this._components;
+    }
+    get pages() {
+        if (!this._pages) {
+            this._pages = BackendService_1.BackendService.instance.serviceManager.get('reactron', 'WebPageController');
+        }
+        return this._pages;
+    }
+}
+ReactronServices.instance = new ReactronServices();
 class ReactronServiceContext {
     constructor(moduleName, serviceName) {
         this.moduleName = moduleName;
         this.serviceName = serviceName;
-        this.backendService = BackendService_1.BackendService.instance;
-        this.registerRoute = (route, handler) => {
-            this.log.debug('Register route: ' + route.method + ' ' + route.path);
-            const router = this.moduleApiRouter;
-            const method = router[route.method.toLowerCase()].bind(router);
-            const internalHandler = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-                try {
-                    let data = undefined;
-                    if (req.params && Object.keys(req.params).length) {
-                        data = req.params;
-                    }
-                    this.log.debug('Call route: ' + route.method + ' ' + route.path, data);
-                    yield handler(req, res, next);
-                }
-                catch (error) {
-                    this.log.error('Error in route: ' + route.method + ' ' + route.path, error && error.message || error);
-                }
-            });
-            method(route.path, internalHandler);
-        };
-        this.moduleContext = InternalModuleContext.getModuleContext(this.backendService, this.moduleName);
-        this.log = new LogWriter_1.LogWriter(this.backendService.topics, moduleName + '.' + serviceName);
+        this.moduleContext = InternalModuleContext.getModuleContext(this.moduleName);
+        this.log = new LogWriter_1.LogWriter(BackendService_1.BackendService.instance.topics, moduleName + '.' + serviceName);
         // this.log.debug('Module Api Path: ' + this.moduleContext.moduleApiPath);
     }
     get moduleStorage() {
@@ -47,15 +66,19 @@ class ReactronServiceContext {
     get moduleApiRouter() {
         return this.moduleContext.moduleApiRouter;
     }
+    get topics() {
+        return BackendService_1.BackendService.instance.topics;
+    }
     get settings() {
-        return this.backendService.settings.get();
+        return BackendService_1.BackendService.instance.settings.get();
     }
+    get services() {
+        return ReactronServices.instance;
+    }
+    ;
     getService(serviceName, moduleName) {
-        return this.backendService.serviceManager.get(moduleName || this.moduleName, serviceName);
-    }
-    getServiceAsync(serviceName, moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.backendService.serviceManager.getAsync(moduleName || this.moduleName, serviceName);
+            return yield BackendService_1.BackendService.instance.serviceManager.getAsync(moduleName || this.moduleName, serviceName);
         });
     }
     static getServiceContext(moduleName, serviceName) {
@@ -70,18 +93,18 @@ class ReactronServiceContext {
 ReactronServiceContext.serviceContexts = [];
 exports.ReactronServiceContext = ReactronServiceContext;
 class InternalModuleContext {
-    constructor(backendService, moduleName) {
+    constructor(moduleName) {
         this.moduleName = moduleName;
         this.moduleStorage = new Store({ name: 'module.' + moduleName });
         this.moduleApiRouter = express.Router();
         const escapedModuleName = moduleName.replace('/', '@');
         this.moduleApiPath = '/modules/' + escapedModuleName;
-        backendService.expressApp.apiRouter.use(this.moduleApiPath, this.moduleApiRouter);
+        BackendService_1.BackendService.instance.expressApp.apiRouter.use(this.moduleApiPath, this.moduleApiRouter);
     }
-    static getModuleContext(backendService, moduleName) {
+    static getModuleContext(moduleName) {
         let context = InternalModuleContext.moduleContexts.find(x => x.moduleName === moduleName);
         if (!context) {
-            context = new InternalModuleContext(backendService, moduleName);
+            context = new InternalModuleContext(moduleName);
             InternalModuleContext.moduleContexts.push(context);
         }
         return context;

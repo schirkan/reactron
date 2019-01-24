@@ -1,7 +1,6 @@
-import { IReactronService, IServerInfo } from '@schirkan/reactron-interfaces';
+import { IServerInfo, IReactronServiceContext, IAppController, ISystemSettings } from '@schirkan/reactron-interfaces';
 import * as os from 'os';
-import { routes } from '../../common/apiRoutes';
-import { ReactronServiceContext } from '../ReactronServiceContext';
+import { BackendService } from '../BackendService';
 
 // tslint:disable-next-line:no-var-requires
 const osCommand = require('electron-shutdown-command');
@@ -38,45 +37,48 @@ const getMemoryInfo = () => {
   return { free: os.freemem(), total: os.totalmem() };
 };
 
-export class AppController implements IReactronService {
-  public async start(context: ReactronServiceContext): Promise<void> {
-    context.registerRoute(routes.getServerInfo, (req, res) => {
-      const moduleInfo = context.backendService.moduleRepository.get('reactron');
-      const result: IServerInfo = {
-        hostname: os.hostname(),
-        ip: getIPAddress(),
-        cpu: getCpuInfo(),
-        memory: getMemoryInfo(),
-        version: moduleInfo && moduleInfo.version || ''
-      };
-      res.send(result);
-    });
+export class AppController implements IAppController {
+  public async start(): Promise<void> { }
 
-    context.registerRoute(routes.exitApplication, (req, res) => {
-      res.sendStatus(204);
-      context.backendService.exit();
-    });
+  public async getServerInfo(): Promise<IServerInfo> {
+    const moduleInfo = BackendService.instance.moduleRepository.get('reactron');
+    const result: IServerInfo = {
+      hostname: os.hostname(),
+      ip: getIPAddress(),
+      cpu: getCpuInfo(),
+      memory: getMemoryInfo(),
+      version: moduleInfo && moduleInfo.version || ''
+    };
+    return result;
+  }
 
-    context.registerRoute(routes.restartApplication, (req, res) => {
-      res.sendStatus(204);
-      context.backendService.restart();
-    });
+  public async exitApplication(): Promise<void> {
+    BackendService.instance.exit();
+  }
 
-    context.registerRoute(routes.shutdownSystem, (req, res) => {
-      res.sendStatus(204);
-      osCommand.shutdown();
-      context.backendService.exit();
-    });
+  public async restartApplication(): Promise<void> {
+    BackendService.instance.restart();
+  }
 
-    context.registerRoute(routes.rebootSystem, (req, res) => {
-      res.sendStatus(204);
-      osCommand.reboot();
-      context.backendService.exit();
-    });
+  public async shutdownSystem(): Promise<void> {
+    osCommand.shutdown();
+    BackendService.instance.exit();
+  }
 
-    context.registerRoute(routes.resetApplication, (req, res) => {
-      res.sendStatus(204);
-      context.backendService.reset();
-    });
+  public async rebootSystem(): Promise<void> {
+    osCommand.reboot();
+    BackendService.instance.exit();
+  }
+
+  public async resetApplication(): Promise<void> {
+    BackendService.instance.reset();
+  }
+
+  public async getSettings(): Promise<ISystemSettings> {
+    return await BackendService.instance.settings.get();
+  }
+
+  public async setSettings(settings: ISystemSettings): Promise<void> {
+    return BackendService.instance.settings.set(settings);
   }
 }

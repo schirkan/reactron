@@ -1,8 +1,7 @@
-import { IReactronServiceDefinition } from "@schirkan/reactron-interfaces";
+import { IReactronServiceDefinition, IReactronService, IReactronServiceContext } from "@schirkan/reactron-interfaces";
 import { AppController } from "./AppController";
 import { ModuleController } from "./ModuleController";
 import { ServiceController } from "./ServiceController";
-import { SettingsController } from "./SettingsController";
 import { WebComponentController } from "./WebComponentController";
 import { WebPageController } from "./WebPageController";
 import { RefreshController } from "./RefreshController";
@@ -28,11 +27,6 @@ export const services: IReactronServiceDefinition[] = [{
   displayName: 'WebComponents API',
   description: 'API Controller for WebComponents',
   service: WebComponentController
-}, {
-  name: 'SettingsController',
-  displayName: 'SystemSettings API',
-  description: 'API Controller for SystemSettings',
-  service: SettingsController
 }, {
   name: 'AppController',
   displayName: 'Application API',

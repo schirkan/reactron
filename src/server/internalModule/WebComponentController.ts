@@ -1,22 +1,18 @@
-import { IReactronService } from '@schirkan/reactron-interfaces';
-import { routes } from '../../common/apiRoutes';
-import { ReactronServiceContext } from '../ReactronServiceContext';
+import { IWebComponentController, IWebComponentOptions } from '@schirkan/reactron-interfaces';
+import { BackendService } from '../BackendService';
 
-export class WebComponentController implements IReactronService {
-  public async start(context: ReactronServiceContext): Promise<void> {
-    context.registerRoute(routes.getWebComponentOptions, async (req, res) => {
-      const result = context.backendService.webComponentsManager.getAll();
-      res.send(result);
-    });
+export class WebComponentController implements IWebComponentController {
+  public async start(): Promise<void> { }
 
-    context.registerRoute(routes.setWebComponentOptions, async (req, res) => {
-      const item = context.backendService.webComponentsManager.createOrUpdate(req.body);
-      res.send(item);
-    });
+  public async getWebComponentOptions(): Promise<IWebComponentOptions[]> {
+    return BackendService.instance.webComponentsManager.getAll();
+  }
 
-    context.registerRoute(routes.deleteWebComponentOptions, async (req, res) => {
-      context.backendService.webComponentsManager.remove(req.params.id);
-      res.sendStatus(204);
-    });
+  public async setWebComponentOptions(options: IWebComponentOptions): Promise<IWebComponentOptions> {
+    return BackendService.instance.webComponentsManager.createOrUpdate(options);
+  }
+
+  public async deleteWebComponentOptions(id: string): Promise<void> {
+    return BackendService.instance.webComponentsManager.remove(id);
   }
 }

@@ -18,29 +18,57 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apiRoutes_1 = require("../../common/apiRoutes");
+const BackendService_1 = require("../BackendService");
 class ServiceController {
-    start(context) {
+    constructor(context) {
+        this.context = context;
+        this.registerRoute = (route, handler) => {
+            this.context.log.debug('Register route: ' + route.method + ' ' + route.path);
+            const router = this.context.moduleApiRouter;
+            const method = router[route.method.toLowerCase()].bind(router);
+            const internalHandler = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    let data = undefined;
+                    if (req.params && Object.keys(req.params).length) {
+                        data = req.params;
+                    }
+                    this.context.log.debug('Call route: ' + route.method + ' ' + route.path, data);
+                    yield handler(req, res, next);
+                }
+                catch (error) {
+                    this.context.log.error('Error in route: ' + route.method + ' ' + route.path, error && error.message || error);
+                }
+            });
+            method(route.path, internalHandler);
+        };
+    }
+    getAllServices() {
         return __awaiter(this, void 0, void 0, function* () {
-            context.registerRoute(apiRoutes_1.routes.getServices, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const result = yield context.backendService.serviceRepository.getAll();
-                const serviceInfos = result.map(item => {
-                    const { instance, service, context } = item, serviceInfo = __rest(item, ["instance", "service", "context"]);
-                    return serviceInfo;
-                });
-                res.send(serviceInfos);
-            }));
-            context.registerRoute(apiRoutes_1.routes.getServiceOptions, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const result = context.backendService.serviceOptionsRepository.get(req.body.moduleName, req.body.serviceName);
-                res.send(result);
-            }));
-            context.registerRoute(apiRoutes_1.routes.setServiceOptions, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                yield context.backendService.serviceManager.setOptions(req.body.moduleName, req.body.serviceName, req.body.options);
-                res.sendStatus(204);
-            }));
-            context.registerRoute(apiRoutes_1.routes.callServiceMethod, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const service = context.backendService.serviceManager.get(req.body.moduleName, req.body.serviceName);
+            const result = yield BackendService_1.BackendService.instance.serviceRepository.getAll();
+            const serviceInfos = result.map(item => {
+                const { instance, service, context } = item, serviceInfo = __rest(item, ["instance", "service", "context"]);
+                return serviceInfo;
+            });
+            return serviceInfos;
+        });
+    }
+    getServiceOptions(moduleName, serviceName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return BackendService_1.BackendService.instance.serviceOptionsRepository.get(moduleName, serviceName);
+        });
+    }
+    setServiceOptions(moduleName, serviceName, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield BackendService_1.BackendService.instance.serviceManager.setOptions(moduleName, serviceName, options);
+        });
+    }
+    start() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.registerRoute(apiRoutes_1.routes.callServiceMethod, (req, res) => __awaiter(this, void 0, void 0, function* () {
+                const service = BackendService_1.BackendService.instance.serviceManager.get(req.body.moduleName, req.body.serviceName);
                 let method = service && service[req.body.methodName];
-                console.log('callServiceMethod', req.body.args);
+                // TODO
+                // console.log('callServiceMethod', req.body.args);
                 if (!method) {
                     res.sendStatus(404);
                 }

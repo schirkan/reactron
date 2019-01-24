@@ -1,34 +1,34 @@
-import { IReactronService, IServiceRepositoryItem } from '@schirkan/reactron-interfaces';
-import { routes } from '../../common/apiRoutes';
-import { ReactronServiceContext } from '../ReactronServiceContext';
+import { IServiceRepositoryItem, IServiceController, IReactronServiceContext } from '@schirkan/reactron-interfaces';
+import { routes, ApiRoute } from '../../common/apiRoutes';
+import { BackendService } from '../BackendService';
+import * as express from 'express';
 
-export class ServiceController implements IReactronService {
-  public async start(context: ReactronServiceContext): Promise<void> {
-    context.registerRoute(routes.getServices, async (req, res) => {
-      const result = await context.backendService.serviceRepository.getAll();
-      const serviceInfos = result.map(item => {
-        const { instance, service, context, ...serviceInfo } = item;
-        return serviceInfo as IServiceRepositoryItem;
-      });
-      res.send(serviceInfos);
+export class ServiceController implements IServiceController {
+  constructor(private context: IReactronServiceContext) { }
+
+  public async getAllServices(): Promise<IServiceRepositoryItem[]> {
+    const result = await BackendService.instance.serviceRepository.getAll();
+    const serviceInfos = result.map(item => {
+      const { instance, service, context, ...serviceInfo } = item;
+      return serviceInfo as IServiceRepositoryItem;
     });
+    return serviceInfos
+  }
 
-    context.registerRoute(routes.getServiceOptions, async (req, res) => {
-      const result = context.backendService.serviceOptionsRepository.get(req.body.moduleName, req.body.serviceName);
-      res.send(result);
-    });
+  public async getServiceOptions(moduleName: string, serviceName: string): Promise<any> {
+    return BackendService.instance.serviceOptionsRepository.get(moduleName, serviceName);
+  }
 
-    context.registerRoute(routes.setServiceOptions, async (req, res) => {
-      await context.backendService.serviceManager.setOptions(req.body.moduleName, req.body.serviceName, req.body.options);
-      res.sendStatus(204);
-    });
+  public async setServiceOptions(moduleName: string, serviceName: string, options: object): Promise<void> {
+    return await BackendService.instance.serviceManager.setOptions(moduleName, serviceName, options);
+  }
 
-    context.registerRoute(routes.callServiceMethod, async (req, res) => {
-      const service = context.backendService.serviceManager.get(req.body.moduleName, req.body.serviceName);
+  public async start(): Promise<void> {
+    this.registerRoute(routes.callServiceMethod, async (req, res) => {
+      const service = BackendService.instance.serviceManager.get(req.body.moduleName, req.body.serviceName);
       let method = service && service[req.body.methodName];
-
-      console.log('callServiceMethod', req.body.args);
-
+      // TODO
+      // console.log('callServiceMethod', req.body.args);
       if (!method) {
         res.sendStatus(404);
       } else {
@@ -42,4 +42,28 @@ export class ServiceController implements IReactronService {
       }
     });
   }
+
+  private registerRoute = <TParams, TBody, TResponse>(
+    route: ApiRoute<TParams, TBody, TResponse>,
+    handler: RouteHandler<TParams, TBody, TResponse>
+  ): void => {
+    this.context.log.debug('Register route: ' + route.method + ' ' + route.path);
+    const router = this.context.moduleApiRouter;
+    const method = router[route.method.toLowerCase()].bind(router);
+    const internalHandler: RouteHandler<TParams, TBody, TResponse> = async (req, res, next) => {
+      try {
+        let data: any = undefined;
+        if (req.params && Object.keys(req.params).length) {
+          data = req.params;
+        }
+        this.context.log.debug('Call route: ' + route.method + ' ' + route.path, data);
+        await handler(req, res, next);
+      } catch (error) {
+        this.context.log.error('Error in route: ' + route.method + ' ' + route.path, error && error.message || error);
+      }
+    };
+    method(route.path, internalHandler);
+  };
 }
+
+type RouteHandler<TParams, TBody, TResponse> = (req: { params: TParams, body: TBody }, res: express.Response & { send: (body?: TResponse) => void }, next: express.NextFunction) => void | Promise<void>;

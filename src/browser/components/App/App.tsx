@@ -3,8 +3,9 @@ import moment from 'moment';
 import numeral from 'numeral';
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import inernalModuleContext from '../../inernalModuleContext';
-import { apiClient } from '../../ApiClient';
+import { BrowserModuleContext } from '../../BrowserModuleContext';
+import { componentLoader } from '../../ComponentLoader';
+import { services } from '../../ReactronServicesFrontend';
 import Loading from '../Loading/Loading';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import WebComponent from '../WebComponent/WebComponent';
@@ -51,31 +52,34 @@ export default class App extends React.Component<any, IAppState> {
 
   private subscribeTopics() {
     // register page/component change event
-    if (inernalModuleContext.instance.topics) {
-      inernalModuleContext.instance.topics.subscribe(topicNames.pagesUpdated, this.triggerReload);
-      inernalModuleContext.instance.topics.subscribe(topicNames.componentsUpdated, this.triggerReload);
-      inernalModuleContext.instance.topics.subscribe(topicNames.systemSettingsUpdated, this.triggerReload);
+    if (BrowserModuleContext.inernalModuleContext.topics) {
+      BrowserModuleContext.inernalModuleContext.topics.subscribe(topicNames.pagesUpdated, this.triggerReload);
+      BrowserModuleContext.inernalModuleContext.topics.subscribe(topicNames.componentsUpdated, this.triggerReload);
+      BrowserModuleContext.inernalModuleContext.topics.subscribe(topicNames.systemSettingsUpdated, this.triggerReload);
     }
   }
 
   private unsubscribeTopics() {
-    if (inernalModuleContext.instance.topics) {
-      inernalModuleContext.instance.topics.unsubscribe(topicNames.pagesUpdated, this.triggerReload);
-      inernalModuleContext.instance.topics.unsubscribe(topicNames.componentsUpdated, this.triggerReload);
-      inernalModuleContext.instance.topics.unsubscribe(topicNames.systemSettingsUpdated, this.triggerReload);
+    if (BrowserModuleContext.inernalModuleContext.topics) {
+      BrowserModuleContext.inernalModuleContext.topics.unsubscribe(topicNames.pagesUpdated, this.triggerReload);
+      BrowserModuleContext.inernalModuleContext.topics.unsubscribe(topicNames.componentsUpdated, this.triggerReload);
+      BrowserModuleContext.inernalModuleContext.topics.unsubscribe(topicNames.systemSettingsUpdated, this.triggerReload);
     }
   }
 
   private async init() {
-    // init inernalModuleContext
-    await inernalModuleContext.init();
+    // init BrowserModuleContext
+    await BrowserModuleContext.init();
 
     // load settings
-    moment.locale(inernalModuleContext.instance.settings.lang);
-    numeral.locale(inernalModuleContext.instance.settings.lang);
+    moment.locale(BrowserModuleContext.inernalModuleContext.settings.lang);
+    numeral.locale(BrowserModuleContext.inernalModuleContext.settings.lang);
+
+    // load all modules
+    await componentLoader.getAllComponents();
 
     // load pages
-    const pages = await apiClient.getWebPages();
+    const pages = await services.pages.getWebPages();
     return this.setState({ pages });
   }
 
@@ -86,7 +90,7 @@ export default class App extends React.Component<any, IAppState> {
 
   private reload() {
     console.log('reload');
-    apiClient.clearCache();
+    services.clearCache();
     this.init();
   }
 

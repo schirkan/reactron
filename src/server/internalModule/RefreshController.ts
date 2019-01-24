@@ -1,33 +1,28 @@
-import { IReactronService, topicNames } from '@schirkan/reactron-interfaces';
-import { ReactronServiceContext } from '../ReactronServiceContext';
+import { IReactronService, topicNames, IReactronServiceContext } from '@schirkan/reactron-interfaces';
 
 export class RefreshController implements IReactronService {
-  private context!: ReactronServiceContext;
   private timer?: any;
-
-  constructor() {
+  
+  constructor(private context: IReactronServiceContext) {
     this.restart = this.restart.bind(this);
     this.onTimer = this.onTimer.bind(this);
   }
 
-  public async start(context: ReactronServiceContext): Promise<void> {
-    this.context = context;
-
+  public async start(): Promise<void> {
     // subscribe to settings changes
-    this.context.backendService.topics.subscribe(topicNames.systemSettingsUpdated, this.restart);
-
+    this.context.topics.subscribe(topicNames.systemSettingsUpdated, this.restart);
     this.startAutoRefresh();
   }
 
   public async stop() {
-    this.context.backendService.topics.unsubscribe(topicNames.systemSettingsUpdated, this.restart);
+    this.context.topics.unsubscribe(topicNames.systemSettingsUpdated, this.restart);
     this.stopAutoRefresh();
   }
 
   private onTimer() {
     this.context.log.debug('onTimer');
     clearTimeout(this.timer);
-    this.context.backendService.topics.publish(topicNames.refresh);
+    this.context.topics.publish(topicNames.refresh);
     this.setNextTimer();
   }
 

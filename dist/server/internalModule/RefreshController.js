@@ -10,28 +10,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const reactron_interfaces_1 = require("@schirkan/reactron-interfaces");
 class RefreshController {
-    constructor() {
+    constructor(context) {
+        this.context = context;
         this.restart = this.restart.bind(this);
         this.onTimer = this.onTimer.bind(this);
     }
-    start(context) {
+    start() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.context = context;
             // subscribe to settings changes
-            this.context.backendService.topics.subscribe(reactron_interfaces_1.topicNames.systemSettingsUpdated, this.restart);
+            this.context.topics.subscribe(reactron_interfaces_1.topicNames.systemSettingsUpdated, this.restart);
             this.startAutoRefresh();
         });
     }
     stop() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.context.backendService.topics.unsubscribe(reactron_interfaces_1.topicNames.systemSettingsUpdated, this.restart);
+            this.context.topics.unsubscribe(reactron_interfaces_1.topicNames.systemSettingsUpdated, this.restart);
             this.stopAutoRefresh();
         });
     }
     onTimer() {
         this.context.log.debug('onTimer');
         clearTimeout(this.timer);
-        this.context.backendService.topics.publish(reactron_interfaces_1.topicNames.refresh);
+        this.context.topics.publish(reactron_interfaces_1.topicNames.refresh);
         this.setNextTimer();
     }
     setNextTimer() {

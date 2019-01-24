@@ -1,22 +1,70 @@
-import { IReactronServiceContext, ISystemSettings, ElectronStore, ILogWriter, IBackendService, IModuleContext } from '@schirkan/reactron-interfaces';
+import { IReactronServiceContext, ISystemSettings, ElectronStore, ILogWriter, IBackendService, IReactronServices, IPubSub, IModuleController, IAppController, ILogController, IServiceController, IWebComponentController, IWebPageController } from '@schirkan/reactron-interfaces';
 import * as express from 'express';
 import { BackendService } from './BackendService';
 import { LogWriter } from './../common/LogWriter';
-import { ApiRoute } from '../common/apiRoutes';
 
 // tslint:disable-next-line:no-var-requires
 const Store = require('electron-store');
 
-type RouteHandler<TParams, TBody, TResponse> = (req: { params: TParams, body: TBody }, res: express.Response & { send: (body?: TResponse) => void }, next: express.NextFunction) => void | Promise<void>;
+class ReactronServices implements IReactronServices {
+  private _modules?: IModuleController;
+  public get modules() {
+    if (!this._modules) {
+      this._modules = BackendService.instance.serviceManager.get('reactron', 'ModuleController') as IModuleController;
+    }
+    return this._modules;
+  }
+
+  private _application?: IAppController;
+  public get application() {
+    if (!this._application) {
+      this._application = BackendService.instance.serviceManager.get('reactron', 'AppController') as IAppController;
+    }
+    return this._application;
+  }
+
+  private _log?: ILogController;
+  public get log() {
+    if (!this._log) {
+      this._log = BackendService.instance.serviceManager.get('reactron', 'LogController') as ILogController;
+    }
+    return this._log;
+  }
+
+  private _services?: IServiceController;
+  public get services() {
+    if (!this._services) {
+      this._services = BackendService.instance.serviceManager.get('reactron', 'ServiceController') as IServiceController;
+    }
+    return this._services;
+  }
+
+  private _components?: IWebComponentController;
+  public get components() {
+    if (!this._components) {
+      this._components = BackendService.instance.serviceManager.get('reactron', 'WebComponentController') as IWebComponentController;
+    }
+    return this._components;
+  }
+
+  private _pages?: IWebPageController;
+  public get pages() {
+    if (!this._pages) {
+      this._pages = BackendService.instance.serviceManager.get('reactron', 'WebPageController') as IWebPageController;
+    }
+    return this._pages;
+  }
+
+  public static instance = new ReactronServices();
+}
 
 export class ReactronServiceContext implements IReactronServiceContext {
   private moduleContext: InternalModuleContext;
-  public readonly backendService: BackendService = BackendService.instance;
   public readonly log: ILogWriter;
 
   constructor(public moduleName: string, public serviceName: string) {
-    this.moduleContext = InternalModuleContext.getModuleContext(this.backendService, this.moduleName);
-    this.log = new LogWriter(this.backendService.topics, moduleName + '.' + serviceName);
+    this.moduleContext = InternalModuleContext.getModuleContext(this.moduleName);
+    this.log = new LogWriter(BackendService.instance.topics, moduleName + '.' + serviceName);
     // this.log.debug('Module Api Path: ' + this.moduleContext.moduleApiPath);
   }
 
@@ -28,39 +76,21 @@ export class ReactronServiceContext implements IReactronServiceContext {
     return this.moduleContext.moduleApiRouter;
   }
 
+  public get topics(): Readonly<IPubSub> {
+    return BackendService.instance.topics;
+  }
+
   public get settings(): Readonly<ISystemSettings> {
-    return this.backendService.settings.get();
+    return BackendService.instance.settings.get();
   }
 
-  public getService<TService = any>(serviceName: string, moduleName?: string): TService | undefined {
-    return this.backendService.serviceManager.get(moduleName || this.moduleName, serviceName) as unknown as TService | undefined;
-  }
-
-  public async getServiceAsync<TService = any>(serviceName: string, moduleName?: string): Promise<TService | undefined> {
-    return await this.backendService.serviceManager.getAsync(moduleName || this.moduleName, serviceName) as unknown as TService | undefined;
-  }
-
-  public registerRoute = <TParams, TBody, TResponse>(
-    route: ApiRoute<TParams, TBody, TResponse>,
-    handler: RouteHandler<TParams, TBody, TResponse>
-  ): void => {
-    this.log.debug('Register route: ' + route.method + ' ' + route.path);
-    const router = this.moduleApiRouter;
-    const method = router[route.method.toLowerCase()].bind(router);
-    const internalHandler: RouteHandler<TParams, TBody, TResponse> = async (req, res, next) => {
-      try {
-        let data: any = undefined;
-        if (req.params && Object.keys(req.params).length) {
-          data = req.params;
-        }
-        this.log.debug('Call route: ' + route.method + ' ' + route.path, data);
-        await handler(req, res, next);
-      } catch (error) {
-        this.log.error('Error in route: ' + route.method + ' ' + route.path, error && error.message || error);
-      }
-    };
-    method(route.path, internalHandler);
+  public get services(): IReactronServices {
+    return ReactronServices.instance
   };
+
+  public async getService<TService = any>(serviceName: string, moduleName?: string): Promise<TService | undefined> {
+    return await BackendService.instance.serviceManager.getAsync(moduleName || this.moduleName, serviceName) as unknown as TService | undefined;
+  }
 
   private static serviceContexts: ReactronServiceContext[] = [];
 
@@ -79,22 +109,22 @@ class InternalModuleContext {
   public readonly moduleApiPath: string;
   public readonly moduleApiRouter: express.Router;
 
-  constructor(backendService: IBackendService, public moduleName: string) {
+  constructor(public moduleName: string) {
     this.moduleStorage = new Store({ name: 'module.' + moduleName });
     this.moduleApiRouter = express.Router();
 
     const escapedModuleName = moduleName.replace('/', '@');
     this.moduleApiPath = '/modules/' + escapedModuleName;
 
-    backendService.expressApp.apiRouter.use(this.moduleApiPath, this.moduleApiRouter);
+    BackendService.instance.expressApp.apiRouter.use(this.moduleApiPath, this.moduleApiRouter);
   }
 
   private static moduleContexts: InternalModuleContext[] = [];
 
-  public static getModuleContext(backendService: IBackendService, moduleName: string) {
+  public static getModuleContext(moduleName: string) {
     let context = InternalModuleContext.moduleContexts.find(x => x.moduleName === moduleName);
     if (!context) {
-      context = new InternalModuleContext(backendService, moduleName);
+      context = new InternalModuleContext(moduleName);
       InternalModuleContext.moduleContexts.push(context);
     }
     return context;

@@ -8,22 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const apiRoutes_1 = require("../../common/apiRoutes");
+const BackendService_1 = require("../BackendService");
 class WebPageController {
-    start(context) {
+    start() {
+        return __awaiter(this, void 0, void 0, function* () { });
+    }
+    deleteWebPage(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            context.registerRoute(apiRoutes_1.routes.getWebPages, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const result = context.backendService.webPageManager.getAll();
-                res.send(result);
-            }));
-            context.registerRoute(apiRoutes_1.routes.setWebPage, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const item = context.backendService.webPageManager.createOrUpdate(req.body);
-                res.send(item);
-            }));
-            context.registerRoute(apiRoutes_1.routes.deleteWebPage, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                context.backendService.webPageManager.remove(req.params.id);
-                res.sendStatus(204);
-            }));
+            return BackendService_1.BackendService.instance.webPageManager.remove(id);
+        });
+    }
+    getWebPages() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return BackendService_1.BackendService.instance.webPageManager.getAll();
+        });
+    }
+    setWebPage(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return BackendService_1.BackendService.instance.webPageManager.createOrUpdate(options);
         });
     }
 }

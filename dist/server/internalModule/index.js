@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AppController_1 = require("./AppController");
 const ModuleController_1 = require("./ModuleController");
 const ServiceController_1 = require("./ServiceController");
-const SettingsController_1 = require("./SettingsController");
 const WebComponentController_1 = require("./WebComponentController");
 const WebPageController_1 = require("./WebPageController");
 const RefreshController_1 = require("./RefreshController");
@@ -28,11 +27,6 @@ exports.services = [{
         displayName: 'WebComponents API',
         description: 'API Controller for WebComponents',
         service: WebComponentController_1.WebComponentController
-    }, {
-        name: 'SettingsController',
-        displayName: 'SystemSettings API',
-        description: 'API Controller for SystemSettings',
-        service: SettingsController_1.SettingsController
     }, {
         name: 'AppController',
         displayName: 'Application API',

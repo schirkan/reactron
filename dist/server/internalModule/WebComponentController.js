@@ -8,22 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const apiRoutes_1 = require("../../common/apiRoutes");
+const BackendService_1 = require("../BackendService");
 class WebComponentController {
-    start(context) {
+    start() {
+        return __awaiter(this, void 0, void 0, function* () { });
+    }
+    getWebComponentOptions() {
         return __awaiter(this, void 0, void 0, function* () {
-            context.registerRoute(apiRoutes_1.routes.getWebComponentOptions, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const result = context.backendService.webComponentsManager.getAll();
-                res.send(result);
-            }));
-            context.registerRoute(apiRoutes_1.routes.setWebComponentOptions, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const item = context.backendService.webComponentsManager.createOrUpdate(req.body);
-                res.send(item);
-            }));
-            context.registerRoute(apiRoutes_1.routes.deleteWebComponentOptions, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                context.backendService.webComponentsManager.remove(req.params.id);
-                res.sendStatus(204);
-            }));
+            return BackendService_1.BackendService.instance.webComponentsManager.getAll();
+        });
+    }
+    setWebComponentOptions(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return BackendService_1.BackendService.instance.webComponentsManager.createOrUpdate(options);
+        });
+    }
+    deleteWebComponentOptions(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return BackendService_1.BackendService.instance.webComponentsManager.remove(id);
         });
     }
 }

@@ -8,31 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const apiRoutes_1 = require("../../common/apiRoutes");
+const BackendService_1 = require("../BackendService");
 class ModuleController {
-    constructor(context) {
-        this.context = context;
+    start() {
+        return __awaiter(this, void 0, void 0, function* () { });
     }
     getModules() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.context.backendService.moduleManager.getAll();
+            return BackendService_1.BackendService.instance.moduleManager.getAll();
         });
     }
     addModule(repository) {
         return __awaiter(this, void 0, void 0, function* () {
             const results = [];
-            const resultAdd = yield this.context.backendService.moduleManager.add(repository);
+            const resultAdd = yield BackendService_1.BackendService.instance.moduleManager.add(repository);
             results.push(resultAdd);
             if (resultAdd.success && resultAdd.data) {
                 const moduleRepositoryItem = resultAdd.data;
                 if (moduleRepositoryItem.isBuilded) {
-                    const resultInstall = yield this.context.backendService.moduleManager.install(moduleRepositoryItem, true);
+                    const resultInstall = yield BackendService_1.BackendService.instance.moduleManager.install(moduleRepositoryItem, true);
                     results.push(resultInstall);
                 }
                 else {
-                    const resultInstall = yield this.context.backendService.moduleManager.install(moduleRepositoryItem, false);
+                    const resultInstall = yield BackendService_1.BackendService.instance.moduleManager.install(moduleRepositoryItem, false);
                     results.push(resultInstall);
-                    const resultBuild = yield this.context.backendService.moduleManager.build(moduleRepositoryItem);
+                    const resultBuild = yield BackendService_1.BackendService.instance.moduleManager.build(moduleRepositoryItem);
                     results.push(resultBuild);
                 }
             }
@@ -41,9 +41,9 @@ class ModuleController {
     }
     deleteModule(moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const moduleRepositoryItem = this.context.backendService.moduleManager.get(moduleName);
+            const moduleRepositoryItem = BackendService_1.BackendService.instance.moduleManager.get(moduleName);
             if (moduleRepositoryItem) {
-                const result = yield this.context.backendService.moduleManager.remove(moduleRepositoryItem);
+                const result = yield BackendService_1.BackendService.instance.moduleManager.remove(moduleRepositoryItem);
                 return [result];
             }
             else {
@@ -53,10 +53,10 @@ class ModuleController {
     }
     rebuildModule(moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const moduleRepositoryItem = this.context.backendService.moduleManager.get(moduleName);
+            const moduleRepositoryItem = BackendService_1.BackendService.instance.moduleManager.get(moduleName);
             if (moduleRepositoryItem) {
-                const resultInstall = yield this.context.backendService.moduleManager.install(moduleRepositoryItem, false);
-                const resultBuild = yield this.context.backendService.moduleManager.build(moduleRepositoryItem);
+                const resultInstall = yield BackendService_1.BackendService.instance.moduleManager.install(moduleRepositoryItem, false);
+                const resultBuild = yield BackendService_1.BackendService.instance.moduleManager.build(moduleRepositoryItem);
                 return [resultInstall, resultBuild];
             }
             else {
@@ -66,20 +66,20 @@ class ModuleController {
     }
     updateModule(moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const moduleRepositoryItem = this.context.backendService.moduleManager.get(moduleName);
+            const moduleRepositoryItem = BackendService_1.BackendService.instance.moduleManager.get(moduleName);
             if (moduleRepositoryItem) {
                 const results = [];
                 if (moduleRepositoryItem.hasUpdate) {
-                    const resultUpdate = yield this.context.backendService.moduleManager.update(moduleRepositoryItem);
+                    const resultUpdate = yield BackendService_1.BackendService.instance.moduleManager.update(moduleRepositoryItem);
                     results.push(resultUpdate);
                     if (moduleRepositoryItem.isBuilded) {
-                        const resultInstall = yield this.context.backendService.moduleManager.install(moduleRepositoryItem, true);
+                        const resultInstall = yield BackendService_1.BackendService.instance.moduleManager.install(moduleRepositoryItem, true);
                         results.push(resultInstall);
                     }
                     else {
-                        const resultInstall = yield this.context.backendService.moduleManager.install(moduleRepositoryItem, false);
+                        const resultInstall = yield BackendService_1.BackendService.instance.moduleManager.install(moduleRepositoryItem, false);
                         results.push(resultInstall);
-                        const resultBuild = yield this.context.backendService.moduleManager.build(moduleRepositoryItem);
+                        const resultBuild = yield BackendService_1.BackendService.instance.moduleManager.build(moduleRepositoryItem);
                         results.push(resultBuild);
                     }
                 }
@@ -92,85 +92,8 @@ class ModuleController {
     }
     checkUpdates() {
         return __awaiter(this, void 0, void 0, function* () {
-            const resultCheckUpdates = yield this.context.backendService.moduleManager.checkUpdates();
+            const resultCheckUpdates = yield BackendService_1.BackendService.instance.moduleManager.checkUpdates();
             return [resultCheckUpdates];
-        });
-    }
-    // -----------------
-    start(context) {
-        return __awaiter(this, void 0, void 0, function* () {
-            context.registerRoute(apiRoutes_1.routes.getModules, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const modules = context.backendService.moduleManager.getAll();
-                res.send(modules);
-            }));
-            context.registerRoute(apiRoutes_1.routes.checkUpdates, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const resultCheckUpdates = yield context.backendService.moduleManager.checkUpdates();
-                res.send([resultCheckUpdates]);
-            }));
-            context.registerRoute(apiRoutes_1.routes.addModule, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const results = [];
-                const resultAdd = yield context.backendService.moduleManager.add(req.body.repository);
-                results.push(resultAdd);
-                if (resultAdd.success && resultAdd.data) {
-                    const moduleRepositoryItem = resultAdd.data;
-                    if (moduleRepositoryItem.isBuilded) {
-                        const resultInstall = yield context.backendService.moduleManager.install(moduleRepositoryItem, true);
-                        results.push(resultInstall);
-                    }
-                    else {
-                        const resultInstall = yield context.backendService.moduleManager.install(moduleRepositoryItem, false);
-                        results.push(resultInstall);
-                        const resultBuild = yield context.backendService.moduleManager.build(moduleRepositoryItem);
-                        results.push(resultBuild);
-                    }
-                }
-                res.send(results);
-            }));
-            context.registerRoute(apiRoutes_1.routes.deleteModule, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
-                if (moduleRepositoryItem) {
-                    const result = yield context.backendService.moduleManager.remove(moduleRepositoryItem);
-                    res.send([result]);
-                }
-                else {
-                    res.sendStatus(404);
-                }
-            }));
-            context.registerRoute(apiRoutes_1.routes.rebuildModule, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
-                if (moduleRepositoryItem) {
-                    const resultInstall = yield context.backendService.moduleManager.install(moduleRepositoryItem, false);
-                    const resultBuild = yield context.backendService.moduleManager.build(moduleRepositoryItem);
-                    res.send([resultInstall, resultBuild]);
-                }
-                else {
-                    res.sendStatus(404);
-                }
-            }));
-            context.registerRoute(apiRoutes_1.routes.updateModule, (req, res) => __awaiter(this, void 0, void 0, function* () {
-                const moduleRepositoryItem = context.backendService.moduleManager.get(req.body.moduleName);
-                if (moduleRepositoryItem) {
-                    const results = [];
-                    if (moduleRepositoryItem.hasUpdate) {
-                        const resultUpdate = yield context.backendService.moduleManager.update(moduleRepositoryItem);
-                        results.push(resultUpdate);
-                        if (moduleRepositoryItem.isBuilded) {
-                            const resultInstall = yield context.backendService.moduleManager.install(moduleRepositoryItem, true);
-                            results.push(resultInstall);
-                        }
-                        else {
-                            const resultInstall = yield context.backendService.moduleManager.install(moduleRepositoryItem, false);
-                            results.push(resultInstall);
-                            const resultBuild = yield context.backendService.moduleManager.build(moduleRepositoryItem);
-                            results.push(resultBuild);
-                        }
-                    }
-                    res.send(results);
-                }
-                else {
-                    res.sendStatus(404);
-                }
-            }));
         });
     }
 }
