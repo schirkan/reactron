@@ -146,7 +146,7 @@ class ServiceManager {
             }
             catch (error) {
                 serviceRepositoryItem.state = 'error';
-                serviceRepositoryItem.context.log.error('State: error starting service', error);
+                serviceRepositoryItem.context.log.error('State: error starting service', JSON.stringify(error, Object.getOwnPropertyNames(error)));
                 result.log.push('Error starting service: ' + serviceKey);
             }
         }));

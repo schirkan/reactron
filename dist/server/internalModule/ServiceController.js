@@ -79,7 +79,7 @@ class ServiceController {
                         res.send({ result });
                     }
                     catch (error) {
-                        res.send({ error: error && error.message || error });
+                        res.send({ error: JSON.stringify(error, Object.getOwnPropertyNames(error)) }); // error && error.message || error
                     }
                 }
             }));

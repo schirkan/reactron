@@ -37,7 +37,7 @@ export class ServiceController implements IServiceController {
           const result = await Promise.resolve(method(...req.body.args));
           res.send({ result });
         } catch (error) {
-          res.send({ error: error && error.message || error });
+          res.send({ error: JSON.stringify(error, Object.getOwnPropertyNames(error)) }); // error && error.message || error
         }
       }
     });
