@@ -24,6 +24,10 @@ const callServiceMethod = async (data: ICallServiceMethodRequest): Promise<ICall
 export const createRemoteService = <TService>(serviceName: string, moduleName: string): TService => {
   const proxy = new Proxy({}, {
     get: (target, prop: string) => {
+      if (prop === 'then') {
+        return null; // I'm not a Thenable
+      }
+
       return async (...args: any[]) => {
         const response = await callServiceMethod({ serviceName, moduleName, methodName: prop, args });
         console.log('get ' + moduleName + '.' + serviceName + '.' + prop, { args, response });

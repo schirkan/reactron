@@ -43,7 +43,7 @@ export class BrowserModuleContext implements IModuleContext {
     if (!BrowserModuleContext.serviceCache[serviceKey]) {
       BrowserModuleContext.serviceCache[serviceKey] = createRemoteService<TService>(serviceName, moduleName);
     }
-    return BrowserModuleContext.serviceCache[serviceKey];
+    return Promise.resolve(BrowserModuleContext.serviceCache[serviceKey]);
   }
 
   public static async init(): Promise<void> {
