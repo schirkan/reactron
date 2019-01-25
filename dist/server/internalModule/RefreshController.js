@@ -62,12 +62,12 @@ class RefreshController {
             return false;
         }
         else if (from < to) {
-            if (from >= value || to <= value) {
+            if (value >= from && value <= to) {
                 return true;
             }
         }
         else {
-            if (from <= value || to >= value) {
+            if (value >= from || value <= to) {
                 return true;
             }
         }

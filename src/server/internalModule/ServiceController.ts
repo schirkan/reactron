@@ -33,6 +33,7 @@ export class ServiceController implements IServiceController {
         const method: Function = service && service[data.methodName];
         if (!method) {
           response = { error: 'RPC method not found' };
+          this.context.log.error('RPC method not found: ' + req.params.id, data);
         } else {
           const result = await Promise.resolve(method.apply(service, data.args));
           response = { result };

@@ -11,31 +11,35 @@ const callServiceMethod = async (data: IRpcRequest): Promise<IRpcResponse> => {
     headers: { "Content-Type": "application/json; charset=utf-8", }
   };
 
+  let text: string | undefined = undefined;
   let result: IRpcResponse | undefined = undefined;
   let error: any;
 
   try {
     const response = await fetch(url, options);
-    const text = await response.text();
+    text = await response.text();
     if (response.status.toString().startsWith('2')) {
       result = text ? JSON.parse(text) : undefined;
       if (result && result.error) {
-        throw new Error(result.error);
+        error = new Error(result.error);
       }
-      return result && result.result;
     } else {
-      console.log(text);
-      throw Error(text);
+      error = new Error(text);
     }
   } catch (err) {
     error = err;
-    throw err;
-  } finally {
-    if (error) {
-      console.error('RPC ' + id, { args: data.args, result, error: error && error.message || error });
+  }
+
+  if (error) {
+    if (result) {
+      console.error('RPC ' + id, { args: data.args, result });
     } else {
-      console.log('RPC ' + id, { args: data.args, result });
+      console.error('RPC ' + id, { args: data.args, result: text, error: error && error.message || error });
     }
+    throw error;
+  } else {
+    console.log('RPC ' + id, { args: data.args, result });
+    return result && result.result;
   }
 };
 

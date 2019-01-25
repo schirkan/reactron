@@ -8,18 +8,36 @@ export class LogWriter implements ILogWriter {
   }
 
   public error(message: string, data?: any): void {
-    this.log('error', message, data);
+    this.log('error', message, LogWriter.prepareData(data));
   }
 
   public warning(message: string, data?: any): void {
-    this.log('warning', message, data);
+    this.log('warning', message, LogWriter.prepareData(data));
   }
 
   public info(message: string, data?: any): void {
-    this.log('information', message, data);
+    this.log('information', message, LogWriter.prepareData(data));
   }
 
   public debug(message: string, data?: any): void {
-    this.log('debug', message, data);
+    this.log('debug', message, LogWriter.prepareData(data));
+  }
+
+  private static prepareData(data?: any) {
+    if (data instanceof Error) {
+      return {
+        // Pull all enumerable properties, supporting properties on custom Errors
+        ...data,
+        // Explicitly pull Error's non-enumerable properties
+        name: data.name,
+        message: data.message,
+        stack: data.stack
+      };
+      // return JSON.stringify(error, Object.getOwnPropertyNames(error))
+    }
+    // if (typeof data === 'object') {
+    //   return { ...data }; // copy
+    // }
+    return data;
   }
 }

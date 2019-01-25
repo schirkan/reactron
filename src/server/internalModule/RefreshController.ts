@@ -2,7 +2,7 @@ import { IReactronService, topicNames, IReactronServiceContext } from '@schirkan
 
 export class RefreshController implements IReactronService {
   private timer?: any;
-  
+
   constructor(private context: IReactronServiceContext) {
     this.restart = this.restart.bind(this);
     this.onTimer = this.onTimer.bind(this);
@@ -55,11 +55,11 @@ export class RefreshController implements IReactronService {
     if (from === to) {
       return false;
     } else if (from < to) {
-      if (from >= value || to <= value) {
+      if (value >= from && value <= to) {
         return true;
       }
     } else {
-      if (from <= value || to >= value) {
+      if (value >= from || value <= to) {
         return true;
       }
     }

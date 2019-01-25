@@ -17,12 +17,13 @@ function traceMethodCalls(obj, context) {
             const targetValue = Reflect.get(target, propKey, receiver);
             if (typeof targetValue === 'function') {
                 return (...args) => {
-                    context.log.debug('CALL ' + propKey.toString(), args);
+                    context.log.debug('CALL ' + propKey.toString(), args.length ? args : undefined);
                     try {
-                        return targetValue.apply(proxy, args);
+                        // return targetValue.apply(proxy, args);
+                        return targetValue.apply(target, args);
                     }
                     catch (error) {
-                        context.log.debug('ERROR ' + (error && error.message || error));
+                        context.log.debug('ERROR ' + (error && error.message || error), error);
                         throw error;
                     }
                 };
@@ -197,7 +198,7 @@ class ServiceManager {
                 this.optionsRepository.set(moduleName, serviceName, serviceOptions);
                 console.log('Initializing Service Options for ' + serviceKey, serviceOptions);
             }
-            const serviceRepositoryItem = Object.assign({}, serviceDefinition, { moduleName, instance: serviceInstance, context: serviceContext, state: 'stopped' });
+            const serviceRepositoryItem = Object.assign({}, serviceDefinition, { moduleName, instance: traceMethodCalls(serviceInstance, serviceContext), context: serviceContext, state: 'stopped' });
             this.serviceRepository.add(serviceRepositoryItem);
             result.children.push(yield this.setOptionsInternal(serviceRepositoryItem, serviceOptions));
             result.children.push(yield this.startService(serviceRepositoryItem));

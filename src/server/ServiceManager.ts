@@ -12,11 +12,12 @@ function traceMethodCalls(obj: any, context: IReactronServiceContext) {
       const targetValue = Reflect.get(target, propKey, receiver);
       if (typeof targetValue === 'function') {
         return (...args: any[]) => {
-          context.log.debug('CALL ' + propKey.toString(), args);
+          context.log.debug('CALL ' + propKey.toString(), args.length ? args : undefined);
           try {
-            return targetValue.apply(proxy, args);            
+            // return targetValue.apply(proxy, args);
+            return targetValue.apply(target, args);
           } catch (error) {
-            context.log.debug('ERROR ' + (error && error.message || error));
+            context.log.debug('ERROR ' + (error && error.message || error), error);
             throw error;
           }
         }
@@ -208,7 +209,7 @@ export class ServiceManager implements IServiceManager {
       const serviceRepositoryItem: IServiceRepositoryItem = {
         ...serviceDefinition,
         moduleName,
-        instance: serviceInstance, // traceMethodCalls(serviceInstance, serviceContext), // TODO
+        instance: traceMethodCalls(serviceInstance, serviceContext), // TODO serviceInstance, //
         context: serviceContext,
         state: 'stopped',
       };
