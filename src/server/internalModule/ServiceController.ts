@@ -1,7 +1,6 @@
 import { IServiceRepositoryItem, IServiceController, IReactronServiceContext } from '@schirkan/reactron-interfaces';
-import { routes, ApiRoute } from '../../common/apiRoutes';
+import { rpcPath, IRpcRequest, IRpcResponse } from '../../common/rpc';
 import { BackendService } from '../BackendService';
-import * as express from 'express';
 
 export class ServiceController implements IServiceController {
   constructor(private context: IReactronServiceContext) { }
@@ -24,46 +23,26 @@ export class ServiceController implements IServiceController {
   }
 
   public async start(): Promise<void> {
-    this.registerRoute(routes.callServiceMethod, async (req, res) => {
-      const service = BackendService.instance.serviceManager.get(req.body.moduleName, req.body.serviceName);
-      let method = service && service[req.body.methodName];
-      // TODO
-      // console.log('callServiceMethod', req.body.args);
-      if (!method) {
-        res.sendStatus(404);
-      } else {
-        try {
-          method = method.bind(service);
-          const result = await Promise.resolve(method(...req.body.args));
-          res.send({ result });
-        } catch (error) {
-          res.send({ error: JSON.stringify(error, Object.getOwnPropertyNames(error)) }); // error && error.message || error
+    this.context.log.debug('Register route: ' + rpcPath);
+
+    this.context.moduleApiRouter.post(rpcPath + '/:id', async (req, res) => {
+      let response: IRpcResponse;
+      try {
+        const data = req.body as IRpcRequest;
+        const service = BackendService.instance.serviceManager.get(data.moduleName, data.serviceName);
+        const method: Function = service && service[data.methodName];
+        if (!method) {
+          response = { error: 'RPC method not found' };
+        } else {
+          const result = await Promise.resolve(method.apply(service, data.args));
+          response = { result };
         }
+      } catch (error) {
+        response = { error: error && error.message || error };
+        // const newError = JSON.stringify(error, Object.getOwnPropertyNames(error));
+        // this.context.log.error('Error in route: ' + rpcPath, newError);
       }
+      res.send(response);
     });
   }
-
-  private registerRoute = <TParams, TBody, TResponse>(
-    route: ApiRoute<TParams, TBody, TResponse>,
-    handler: RouteHandler<TParams, TBody, TResponse>
-  ): void => {
-    this.context.log.debug('Register route: ' + route.method + ' ' + route.path);
-    const router = this.context.moduleApiRouter;
-    const method = router[route.method.toLowerCase()].bind(router);
-    const internalHandler: RouteHandler<TParams, TBody, TResponse> = async (req, res, next) => {
-      try {
-        let data: any = undefined;
-        if (req.params && Object.keys(req.params).length) {
-          data = req.params;
-        }
-        this.context.log.debug('Call route: ' + route.method + ' ' + route.path, data);
-        await handler(req, res, next);
-      } catch (error) {
-        this.context.log.error('Error in route: ' + route.method + ' ' + route.path, error && error.message || error);
-      }
-    };
-    method(route.path, internalHandler);
-  };
 }
-
-type RouteHandler<TParams, TBody, TResponse> = (req: { params: TParams, body: TBody }, res: express.Response & { send: (body?: TResponse) => void }, next: express.NextFunction) => void | Promise<void>;

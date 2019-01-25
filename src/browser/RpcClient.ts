@@ -1,24 +1,42 @@
 import { BrowserModuleContext } from "./BrowserModuleContext";
-import { routes, ICallServiceMethodRequest, ICallServiceMethodResponse } from "../common/apiRoutes";
+import { rpcPath, IRpcRequest, IRpcResponse } from "../common/rpc";
 
-const callServiceMethod = async (data: ICallServiceMethodRequest): Promise<ICallServiceMethodResponse> => {
-  const route = routes.callServiceMethod;
-  const method = route.method.toLocaleLowerCase();
-  const url = BrowserModuleContext.inernalModuleContext.moduleApiPath + route.path;
-
+const callServiceMethod = async (data: IRpcRequest): Promise<IRpcResponse> => {
+  const id = data.moduleName + '.' + data.serviceName + '.' + data.methodName;
+  const urlId = id.replace('/', '@');
+  const url = BrowserModuleContext.inernalModuleContext.moduleApiPath + rpcPath + '/' + urlId;
   const options: RequestInit = {
-    method,
+    method: 'POST',
     body: data && JSON.stringify(data),
     headers: { "Content-Type": "application/json; charset=utf-8", }
   };
 
-  const response = await fetch(url, options);
-  const text = await response.text();
-  if (response.status.toString().startsWith('2')) {
-    return text ? JSON.parse(text) : undefined;
+  let result: IRpcResponse | undefined = undefined;
+  let error: any;
+
+  try {
+    const response = await fetch(url, options);
+    const text = await response.text();
+    if (response.status.toString().startsWith('2')) {
+      result = text ? JSON.parse(text) : undefined;
+      if (result && result.error) {
+        throw new Error(result.error);
+      }
+      return result && result.result;
+    } else {
+      console.log(text);
+      throw Error(text);
+    }
+  } catch (err) {
+    error = err;
+    throw err;
+  } finally {
+    if (error) {
+      console.error('RPC ' + id, { args: data.args, result, error: error && error.message || error });
+    } else {
+      console.log('RPC ' + id, { args: data.args, result });
+    }
   }
-  console.log(text);
-  throw Error(text);
 };
 
 export const createRemoteService = <TService>(serviceName: string, moduleName: string): TService => {
@@ -27,15 +45,7 @@ export const createRemoteService = <TService>(serviceName: string, moduleName: s
       if (prop === 'then') {
         return null; // I'm not a Thenable
       }
-
-      return async (...args: any[]) => {
-        const response = await callServiceMethod({ serviceName, moduleName, methodName: prop, args });
-        console.log('get ' + moduleName + '.' + serviceName + '.' + prop, { args, response });
-        if (response.error) {
-          throw new Error(response.error);
-        }
-        return response.result;
-      }
+      return (...args: any[]) => callServiceMethod({ serviceName, moduleName, methodName: prop, args });
     }
   });
   return proxy as TService;
