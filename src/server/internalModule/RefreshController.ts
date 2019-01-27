@@ -39,6 +39,9 @@ export class RefreshController implements IReactronService {
         tempNextRefreshTimestamp = timestamp + (item.interval * 60 * 1000);
       } else {
         tempNextRefreshTimestamp = timestampToday + (+item.from * 60 * 1000);
+        if (timeInMinutes > item.from) {
+          tempNextRefreshTimestamp += 24 * 60 * 60 * 1000;
+        }
       }
       if (nextRefreshTimestamp === 0 || (tempNextRefreshTimestamp > 0 && tempNextRefreshTimestamp < nextRefreshTimestamp)) {
         nextRefreshTimestamp = tempNextRefreshTimestamp;
