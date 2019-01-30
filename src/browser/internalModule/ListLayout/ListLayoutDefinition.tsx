@@ -23,8 +23,8 @@ export const listLayoutDefinition: IReactronComponentDefinition = {
       ],
       inputControl: (props: IInputComponentProps<IListLayoutItemOptions>) => {
         const item = props.value || {};
-        const style = { width: '100%', textOverflow: 'ellipsis', overflow: 'hidden' };
-        return (<div style={style}>[ {item.content} ]</div>);
+        const WebComponentTitle: any = props.getDefaultInputControl({ displayName: 'Content', name: 'content', valueType: 'webComponent' });
+        return <WebComponentTitle {...props} value={item.content} />;
       }
     }
   ]

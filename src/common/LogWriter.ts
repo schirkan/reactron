@@ -33,11 +33,7 @@ export class LogWriter implements ILogWriter {
         message: data.message,
         stack: data.stack
       };
-      // return JSON.stringify(error, Object.getOwnPropertyNames(error))
     }
-    // if (typeof data === 'object') {
-    //   return { ...data }; // copy
-    // }
     return data;
   }
 }
