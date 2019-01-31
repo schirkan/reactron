@@ -13,17 +13,17 @@ class WebComponentController {
     start() {
         return __awaiter(this, void 0, void 0, function* () { });
     }
-    getWebComponentOptions() {
+    getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return BackendService_1.BackendService.instance.webComponentsManager.getAll();
         });
     }
-    setWebComponentOptions(options) {
+    createOrUpdate(options) {
         return __awaiter(this, void 0, void 0, function* () {
             return BackendService_1.BackendService.instance.webComponentsManager.createOrUpdate(options);
         });
     }
-    deleteWebComponentOptions(id) {
+    delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return BackendService_1.BackendService.instance.webComponentsManager.remove(id);
         });

@@ -46,7 +46,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
 
       if (this.props.id) {
         // nur mit der ID lesen
-        const allComponentOptions = await services.components.getWebComponentOptions();
+        const allComponentOptions = await services.components.getAll();
         webComponentOptions = allComponentOptions.find(x => x.id === this.props.id);
       } else if (this.props.moduleName && this.props.componentName) {
         webComponentOptions = {

@@ -13,19 +13,19 @@ class WebPageController {
     start() {
         return __awaiter(this, void 0, void 0, function* () { });
     }
-    deleteWebPage(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return BackendService_1.BackendService.instance.webPageManager.remove(id);
-        });
-    }
-    getWebPages() {
+    getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return BackendService_1.BackendService.instance.webPageManager.getAll();
         });
     }
-    setWebPage(options) {
+    createOrUpdate(options) {
         return __awaiter(this, void 0, void 0, function* () {
             return BackendService_1.BackendService.instance.webPageManager.createOrUpdate(options);
+        });
+    }
+    delete(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return BackendService_1.BackendService.instance.webPageManager.remove(id);
         });
     }
 }

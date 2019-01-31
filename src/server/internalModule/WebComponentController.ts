@@ -4,15 +4,15 @@ import { BackendService } from '../BackendService';
 export class WebComponentController implements IWebComponentController {
   public async start(): Promise<void> { }
 
-  public async getWebComponentOptions(): Promise<IWebComponentOptions[]> {
+  public async getAll(): Promise<IWebComponentOptions[]> {
     return BackendService.instance.webComponentsManager.getAll();
   }
 
-  public async setWebComponentOptions(options: IWebComponentOptions): Promise<IWebComponentOptions> {
+  public async createOrUpdate(options: IWebComponentOptions): Promise<IWebComponentOptions> {
     return BackendService.instance.webComponentsManager.createOrUpdate(options);
   }
 
-  public async deleteWebComponentOptions(id: string): Promise<void> {
+  public async delete(id: string): Promise<void> {
     return BackendService.instance.webComponentsManager.remove(id);
   }
 }

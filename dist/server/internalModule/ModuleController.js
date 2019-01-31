@@ -13,12 +13,12 @@ class ModuleController {
     start() {
         return __awaiter(this, void 0, void 0, function* () { });
     }
-    getModules() {
+    getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return BackendService_1.BackendService.instance.moduleManager.getAll();
         });
     }
-    addModule(repository) {
+    add(repository) {
         return __awaiter(this, void 0, void 0, function* () {
             const results = [];
             const resultAdd = yield BackendService_1.BackendService.instance.moduleManager.add(repository);
@@ -39,7 +39,7 @@ class ModuleController {
             return results;
         });
     }
-    deleteModule(moduleName) {
+    remove(moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
             const moduleRepositoryItem = BackendService_1.BackendService.instance.moduleManager.get(moduleName);
             if (moduleRepositoryItem) {
@@ -51,7 +51,7 @@ class ModuleController {
             }
         });
     }
-    rebuildModule(moduleName) {
+    rebuild(moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
             const moduleRepositoryItem = BackendService_1.BackendService.instance.moduleManager.get(moduleName);
             if (moduleRepositoryItem) {
@@ -64,7 +64,7 @@ class ModuleController {
             }
         });
     }
-    updateModule(moduleName) {
+    update(moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
             const moduleRepositoryItem = BackendService_1.BackendService.instance.moduleManager.get(moduleName);
             if (moduleRepositoryItem) {

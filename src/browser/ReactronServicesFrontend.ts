@@ -26,23 +26,23 @@ export class ReactronServicesFrontend implements IReactronServices {
   }
 
   public readonly modules: IModuleController = {
-    getModules: () => {
-      return this._modulesCache || (this._modulesCache = this.moduleController.getModules());
+    getAll: () => {
+      return this._modulesCache || (this._modulesCache = this.moduleController.getAll());
     },
-    addModule: (repository: string) => {
+    add: (repository: string) => {
       delete this._modulesCache;
-      return this.moduleController.addModule(repository);
+      return this.moduleController.add(repository);
     },
-    deleteModule: (moduleName: string) => {
+    remove: (moduleName: string) => {
       delete this._modulesCache;
-      return this.moduleController.deleteModule(moduleName);
+      return this.moduleController.remove(moduleName);
     },
-    updateModule: (moduleName: string) => {
+    update: (moduleName: string) => {
       delete this._modulesCache;
-      return this.moduleController.updateModule(moduleName);
+      return this.moduleController.update(moduleName);
     },
     checkUpdates: this.moduleController.checkUpdates,
-    rebuildModule: this.moduleController.rebuildModule,
+    rebuild: this.moduleController.rebuild,
   };
 
   public readonly application: IAppController = {
@@ -81,30 +81,30 @@ export class ReactronServicesFrontend implements IReactronServices {
   };
 
   public readonly components: IWebComponentController = {
-    getWebComponentOptions: () => {
-      return this._componentsCache || (this._componentsCache = this.webComponentController.getWebComponentOptions());
+    getAll: () => {
+      return this._componentsCache || (this._componentsCache = this.webComponentController.getAll());
     },
-    setWebComponentOptions: (options: IWebComponentOptions) => {
+    createOrUpdate: (options: IWebComponentOptions) => {
       delete this._componentsCache;
-      return this.webComponentController.setWebComponentOptions(options);
+      return this.webComponentController.createOrUpdate(options);
     },
-    deleteWebComponentOptions: (id: string) => {
+    delete: (id: string) => {
       delete this._componentsCache;
-      return this.webComponentController.deleteWebComponentOptions(id);
+      return this.webComponentController.delete(id);
     },
   }
 
   public readonly pages: IWebPageController = {
-    getWebPages: () => {
-      return this._pagesCache || (this._pagesCache = this.webPageController.getWebPages());
+    getAll: () => {
+      return this._pagesCache || (this._pagesCache = this.webPageController.getAll());
     },
-    setWebPage: (options: IWebPageOptions) => {
+    createOrUpdate: (options: IWebPageOptions) => {
       delete this._pagesCache;
-      return this.webPageController.setWebPage(options);
+      return this.webPageController.createOrUpdate(options);
     },
-    deleteWebPage: (id: string) => {
+    delete: (id: string) => {
       delete this._pagesCache;
-      return this.webPageController.deleteWebPage(id);
+      return this.webPageController.delete(id);
     },
   };
 }

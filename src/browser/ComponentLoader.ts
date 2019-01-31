@@ -49,7 +49,7 @@ export class ComponentLoader implements IComponentLoader {
 
   public async getModuleComponents(moduleName: string): Promise<IReactronComponentDefinition[] | undefined> {
     if (!this.moduleComponents[moduleName]) {      
-      const modules = await services.modules.getModules();
+      const modules = await services.modules.getAll();
       const m = modules.find(x => x.name === moduleName);
 
       if (!m) {
@@ -94,7 +94,7 @@ export class ComponentLoader implements IComponentLoader {
       return this.moduleComponents;
     }
     
-    const modules = await services.modules.getModules();
+    const modules = await services.modules.getAll();
 
     for (const m of modules) {
       await this.registerModuleComponents(m);

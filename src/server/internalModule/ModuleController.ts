@@ -4,11 +4,11 @@ import { BackendService } from '../BackendService';
 export class ModuleController implements IModuleController {
   public async start(): Promise<void> { }
 
-  public async getModules() {
+  public async getAll() {
     return BackendService.instance.moduleManager.getAll();
   }
 
-  public async addModule(repository: string) {
+  public async add(repository: string) {
     const results: ICommandResult[] = [];
     const resultAdd = await BackendService.instance.moduleManager.add(repository);
     results.push(resultAdd);
@@ -29,7 +29,7 @@ export class ModuleController implements IModuleController {
     return results;
   }
 
-  public async deleteModule(moduleName: string): Promise<ICommandResult[]> {
+  public async remove(moduleName: string): Promise<ICommandResult[]> {
     const moduleRepositoryItem = BackendService.instance.moduleManager.get(moduleName);
     if (moduleRepositoryItem) {
       const result = await BackendService.instance.moduleManager.remove(moduleRepositoryItem);
@@ -39,7 +39,7 @@ export class ModuleController implements IModuleController {
     }
   }
 
-  public async rebuildModule(moduleName: string): Promise<ICommandResult[]> {
+  public async rebuild(moduleName: string): Promise<ICommandResult[]> {
     const moduleRepositoryItem = BackendService.instance.moduleManager.get(moduleName);
     if (moduleRepositoryItem) {
       const resultInstall = await BackendService.instance.moduleManager.install(moduleRepositoryItem, false);
@@ -50,7 +50,7 @@ export class ModuleController implements IModuleController {
     }
   }
 
-  public async updateModule(moduleName: string): Promise<ICommandResult[]> {
+  public async update(moduleName: string): Promise<ICommandResult[]> {
     const moduleRepositoryItem = BackendService.instance.moduleManager.get(moduleName);
     if (moduleRepositoryItem) {
       const results: ICommandResult[] = [];

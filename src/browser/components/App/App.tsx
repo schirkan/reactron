@@ -79,7 +79,7 @@ export default class App extends React.Component<any, IAppState> {
     await componentLoader.getAllComponents();
 
     // load pages
-    const pages = await services.pages.getWebPages();
+    const pages = await services.pages.getAll();
     return this.setState({ pages });
   }
 
