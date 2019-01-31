@@ -23,7 +23,7 @@ export const listLayoutDefinition: IReactronComponentDefinition = {
       inputControl: (props: IInputComponentProps<IListLayoutItemOptions>) => {
         const item = props.value || {};
         const definition = props.getComponentDefinition(item.content);
-        return definition && definition.displayName;
+        return definition && definition.displayName || null;
       }
     }
   ]
