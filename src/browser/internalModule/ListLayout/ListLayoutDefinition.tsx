@@ -1,6 +1,5 @@
 import { IReactronComponentDefinition, IInputComponentProps } from "@schirkan/reactron-interfaces";
 import ListLayout from "./ListLayout";
-import * as React from 'react';
 import { IListLayoutItemOptions } from "./IListLayoutItemOptions";
 
 export const listLayoutDefinition: IReactronComponentDefinition = {
@@ -23,8 +22,8 @@ export const listLayoutDefinition: IReactronComponentDefinition = {
       ],
       inputControl: (props: IInputComponentProps<IListLayoutItemOptions>) => {
         const item = props.value || {};
-        const WebComponentTitle: any = props.getDefaultInputControl({ displayName: 'Content', name: 'content', valueType: 'webComponent' });
-        return <WebComponentTitle {...props} value={item.content} />;
+        const definition = props.getComponentDefinition(item.content);
+        return definition && definition.displayName;
       }
     }
   ]

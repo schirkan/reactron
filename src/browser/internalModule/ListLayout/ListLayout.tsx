@@ -26,7 +26,7 @@ export default class ListLayout extends React.Component<IListLayoutOptions> {
 
   public render() {
     return (
-      <section className="ListLayout">
+      <section className="ListLayout" style={this.props.listStyle}>
         {this.props.items.map(this.renderListItem)}
       </section>
     );

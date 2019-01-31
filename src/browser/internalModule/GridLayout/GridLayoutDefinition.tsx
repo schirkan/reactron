@@ -28,8 +28,9 @@ export const gridLayoutDefinition: IReactronComponentDefinition = {
       inputControl: (props: IInputComponentProps<IGridLayoutTileOptions>) => {
         const tile = props.value || {};
         const style = { width: '100%', textOverflow: 'ellipsis', overflow: 'hidden' };
-        const WebComponentTitle: any = props.getDefaultInputControl({ displayName: 'Content', name: 'content', valueType: 'webComponent' });
-        return <div style={style}>[ {tile.row} | {tile.col} | <WebComponentTitle {...props} value={tile.content} /> ]</div>;
+        const definition = props.getComponentDefinition(tile.content);
+        const componentTitle = definition && definition.displayName;
+        return <div style={style}>[ {tile.row} | {tile.col} | {componentTitle} ]</div>;
       }
     }
   ]
