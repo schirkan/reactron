@@ -19,7 +19,8 @@ import { services } from './ReactronServicesFrontend';
 const SystemJS = (window as any).System as SystemJSLoader.System;
 
 const externalModules = {};
-externalModules['react'] = React;
+
+externalModules['react'] = { default: React, ...React }; // workaround for default export
 externalModules['react-dom'] = ReactDom;
 externalModules['react-router-dom'] = ReactRouterDom;
 externalModules['numeral'] = { default: numeral };
@@ -48,7 +49,7 @@ export class ComponentLoader implements IComponentLoader {
   };
 
   public async getModuleComponents(moduleName: string): Promise<IReactronComponentDefinition[] | undefined> {
-    if (!this.moduleComponents[moduleName]) {      
+    if (!this.moduleComponents[moduleName]) {
       const modules = await services.modules.getAll();
       const m = modules.find(x => x.name === moduleName);
 
@@ -93,7 +94,7 @@ export class ComponentLoader implements IComponentLoader {
     if (this.allComponentsLoaded) {
       return this.moduleComponents;
     }
-    
+
     const modules = await services.modules.getAll();
 
     for (const m of modules) {
