@@ -8,7 +8,7 @@ import WebComponent, { IWebComponentProps } from "./components/WebComponent/WebC
 import { LogWriter } from '../common/LogWriter';
 
 export class WebComponentContext extends BrowserModuleContext implements IReactronComponentContext {
-  public readonly renderLoading: (text?: string, iconSize?: SizeProp) => any;
+  public readonly renderLoading: (text?: string, iconSize?: SizeProp, style?: React.CSSProperties) => any;
   public readonly renderComponent: (props: IWebComponentProps) => any;
   public readonly componentLoader = componentLoader;
   public readonly log: ILogWriter;
@@ -26,8 +26,8 @@ export class WebComponentContext extends BrowserModuleContext implements IReactr
       return <WebComponent {...props} key={key} />;
     };
 
-    this.renderLoading = (text?: string, iconSize?: SizeProp) => {
-      return <Loading text={text} iconSize={iconSize} />;
+    this.renderLoading = (text?: string, iconSize?: SizeProp, style?: React.CSSProperties) => {
+      return <Loading text={text} iconSize={iconSize} style={style} />;
     };
   }
 }

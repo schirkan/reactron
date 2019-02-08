@@ -1,4 +1,4 @@
-import { ILogManager, ILogEntry, IPubSub, topicNames } from "@schirkan/reactron-interfaces";
+import { ILogManager, ILogEntry, IPubSub, topicNames, Severity } from "@schirkan/reactron-interfaces";
 
 export class LogManager implements ILogManager {
   private repository: ILogEntry[] = [];
@@ -7,13 +7,13 @@ export class LogManager implements ILogManager {
     topics.subscribe(topicNames.log, (e, data) => this.writeLog(data));
   }
 
-  public writeLog(sourceOrLogEntry: any, severity?: any, message?: any, data?: any): void {
+  public writeLog(sourceOrLogEntry: any, severity?: Severity, message?: string, data?: any): void {
     if (typeof sourceOrLogEntry === 'string') {
       this.repository.push({
         timestamp: Date.now(),
         source: sourceOrLogEntry,
-        severity,
-        message,
+        severity: severity || 'debug',
+        message: (typeof message === 'string') ? message : JSON.stringify(message),
         data
       });
       console.log(sourceOrLogEntry + ': ' + message); // TODO

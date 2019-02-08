@@ -11,8 +11,8 @@ class LogManager {
             this.repository.push({
                 timestamp: Date.now(),
                 source: sourceOrLogEntry,
-                severity,
-                message,
+                severity: severity || 'debug',
+                message: (typeof message === 'string') ? message : JSON.stringify(message),
                 data
             });
             console.log(sourceOrLogEntry + ': ' + message); // TODO
