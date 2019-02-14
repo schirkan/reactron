@@ -1,1 +1,5 @@
-section.ListLayout {}
+section.ListLayout {
+    .ListItem {
+        overflow: hidden;
+    }
+}
