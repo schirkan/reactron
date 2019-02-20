@@ -1,6 +1,7 @@
 section.GridLayout {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+    display: grid;    
+    grid-template-columns: repeat(auto-fit,minmax(20px,100%));
+    grid-template-rows: repeat(auto-fit,minmax(20px,100%));
     &>.GridTile {
         box-sizing: border-box;
     }
