@@ -28,9 +28,10 @@ export default class Welcome extends React.Component<any, IWelcomeState> {
     let info;
 
     if (this.state.info) {
+      const port = location.port === '80' ? '' : ':' + location.port;
       info = (<div className="info">
         To edit this page click Admin-Button or visit<br /><br />
-        <i>http://{this.state.info.ip}:{location.port}/admin</i>
+        <i>http://{this.state.info.ip}{port}/admin</i>
       </div>);
     }
     return (
