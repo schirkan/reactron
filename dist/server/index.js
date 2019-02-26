@@ -16,7 +16,7 @@ exports.start = (root) => __awaiter(this, void 0, void 0, function* () {
         return;
     }
     console.log('BackendService is starting');
-    const config = config_1.createConfig(root);
+    const config = yield config_1.createConfig(root);
     BackendService_1.BackendService.instance = new BackendService_1.BackendService(config);
     yield BackendService_1.BackendService.instance.expressApp.start();
     yield BackendService_1.BackendService.instance.electronApp.start();

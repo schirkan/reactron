@@ -9,7 +9,7 @@ export const start = async (root: string): Promise<void> => {
 
   console.log('BackendService is starting');
 
-  const config = createConfig(root);
+  const config = await createConfig(root);
   BackendService.instance = new BackendService(config);
 
   await BackendService.instance.expressApp.start();

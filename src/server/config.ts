@@ -1,12 +1,16 @@
 import { IBackendServiceConfig } from '@schirkan/reactron-interfaces';
+import { isPortAvailable } from './lib/isPortAvailable';
 
-export const createConfig = (root: string): IBackendServiceConfig => {
+export const createConfig = async (root: string): Promise<IBackendServiceConfig> => {
   const isDev = process.env.NODE_ENV === 'development';
+  const port80available = await isPortAvailable(80);
+  const defaultPort = port80available ? 80 : 3000;
+
   return {
     root,
     isDev,
-    frontendPort: 3000,
-    backendPort: isDev ? 5000 : 3000,
+    frontendPort: defaultPort,
+    backendPort: isDev ? 5000 : defaultPort,
     defaultSystemSettings: {
       lang: 'en',
       location: '',
