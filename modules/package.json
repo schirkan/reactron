@@ -1,0 +1,7 @@
+{
+    "name": "@reactron/modules",
+    "version": "1.0.0",
+    "dependencies": {
+        "reactron-vrr-departure": "git+https://github.com/schirkan/reactron-vrr-departure.git"
+    }
+}

@@ -57,7 +57,7 @@ class ModuleLoader {
                 return;
             }
             const moduleDefinition = {
-                folder: folderName,
+                displayName: p.displayName || p.name,
                 path: path.join(this.modulesPath, folderName),
                 name: p.name,
                 description: p.description,
