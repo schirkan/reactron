@@ -42,14 +42,14 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
 
   private async loadComponent() {
     try {
-      let webComponentOptions: IWebComponentOptions | undefined;
+      const newState: IWebComponentState = { componentFound: false };
 
       if (this.props.id) {
         // nur mit der ID lesen
         const allComponentOptions = await services.components.getAll();
-        webComponentOptions = allComponentOptions.find(x => x.id === this.props.id);
+        newState.componentOptions = allComponentOptions.find(x => x.id === this.props.id);
       } else if (this.props.moduleName && this.props.componentName) {
-        webComponentOptions = {
+        newState.componentOptions = {
           id: '',
           parentId: '',
           moduleName: this.props.moduleName,
@@ -58,30 +58,19 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
         };
       }
 
-      if (!webComponentOptions) {
-        this.setState({ componentFound: false });
-        return;
+      if (newState.componentOptions) {
+        const moduleComponents = await componentLoader.getModuleComponents(newState.componentOptions.moduleName);
+        if (moduleComponents) {
+          const componentName = newState.componentOptions.componentName;
+          newState.componentDefinition = moduleComponents.find(x => x.name === componentName);
+          if (newState.componentDefinition && newState.componentDefinition.component) {
+            newState.componentContext = new WebComponentContext(newState.componentOptions);
+            newState.componentFound = true;
+          }
+        }
       }
 
-      const moduleComponents = await componentLoader.getModuleComponents(webComponentOptions.moduleName);
-      if (!moduleComponents) {
-        this.setState({ componentFound: false });
-        return;
-      }
-
-      const componentName = webComponentOptions.componentName;
-      const componentDefinition = moduleComponents.find(x => x.name === componentName);
-      if (!componentDefinition || !componentDefinition.component) {
-        this.setState({ componentFound: false });
-        return;
-      }
-
-      this.setState({
-        componentContext: new WebComponentContext(webComponentOptions),
-        componentDefinition,
-        componentOptions: webComponentOptions,
-        componentFound: true
-      });
+      this.setState(newState);
     } catch (error) {
       console.log(error);
       this.setState({ componentFound: false });
@@ -92,7 +81,7 @@ export default class WebComponent extends React.Component<IWebComponentProps, IW
     let content = <Loading center={true} />;
 
     if (this.state.componentFound === false) {
-      content = <ComponentNotFound {...this.props} />;
+      content = <ComponentNotFound {...this.props} {...this.state.componentOptions} />;
     }
 
     if (this.state.componentDefinition && this.state.componentDefinition.component && this.state.componentContext) {

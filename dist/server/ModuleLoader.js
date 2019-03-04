@@ -1,22 +1,22 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
 class ModuleLoader {
     constructor(config) {
         this.config = config;
-        this.modulesPath = path.join(this.config.root, 'modules');
+        this.modulesPath = path.join(this.config.root, 'modules', 'node_modules');
+        this.modulesPackageFile = path.join(this.config.root, 'modules', 'package.json');
+        if (!fs.existsSync(this.modulesPackageFile)) {
+            this.createModulePackageJson();
+        }
     }
     static cleanRepositoryUrl(repository) {
         repository = (repository || '').trim();
+        // remove git+ from start
+        if (repository.startsWith('git+http')) {
+            repository = repository.substr(4);
+        }
         // remove / from end
         if (repository.endsWith('/')) {
             repository = repository.substr(0, repository.length - 1);
@@ -27,71 +27,102 @@ class ModuleLoader {
         }
         return repository;
     }
+    static loadPackageJson(packageFile) {
+        try {
+            const fileContent = fs.readFileSync(packageFile, { encoding: 'utf-8' });
+            const p = JSON.parse(fileContent);
+            console.log('reading ' + packageFile);
+            return p;
+        }
+        catch (error) {
+            console.log('Error reading ' + packageFile, error);
+            return undefined;
+        }
+    }
+    createModulePackageJson() {
+        const content = `{
+  "name": "@schirkan/reactron-modules",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/schirkan/reactron"
+  },
+  "dependencies": {
+  }
+}`;
+        fs.writeFileSync(this.modulesPackageFile, content);
+    }
     loadAllModules() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = [];
-            const items = fs.readdirSync(this.modulesPath);
-            for (const item of items) {
-                const moduleFolderFull = path.join(this.modulesPath, item);
-                if (fs.statSync(moduleFolderFull).isDirectory()) {
-                    const newModule = yield this.loadModule(item);
-                    if (newModule) {
-                        result.push(newModule);
-                    }
+        const result = [];
+        // const items = fs.readdirSync(this.modulesPath);
+        const moduleNames = this.loadModuleNames();
+        console.log('found ' + moduleNames.length + ' modules');
+        for (const moduleName of moduleNames) {
+            const moduleFolderFull = path.join(this.modulesPath, moduleName);
+            if (fs.statSync(moduleFolderFull).isDirectory()) {
+                const newModule = this.loadModule(moduleName);
+                if (newModule) {
+                    result.push(newModule);
                 }
             }
-            return result;
-        });
+        }
+        return result;
+    }
+    loadModuleNames() {
+        const p = ModuleLoader.loadPackageJson(this.modulesPackageFile);
+        return Object.keys(p && p.dependencies || {});
+    }
+    refreshModule(moduleDefinition) {
+        const packageFile = path.join(moduleDefinition.path, 'package.json');
+        const p = ModuleLoader.loadPackageJson(packageFile);
+        moduleDefinition.displayName = p.displayName || p.name,
+            moduleDefinition.description = p.description;
+        moduleDefinition.version = p.version;
+        moduleDefinition.author = p.author;
     }
     loadModule(folderName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const packageFile = path.join(this.modulesPath, folderName, 'package.json');
-            let p;
-            try {
-                const fileContent = fs.readFileSync(packageFile, { encoding: 'utf-8' });
-                p = JSON.parse(fileContent);
-                console.log('reading ' + packageFile);
+        const packageFile = path.join(this.modulesPath, folderName, 'package.json');
+        const p = ModuleLoader.loadPackageJson(packageFile);
+        const moduleDefinition = {
+            name: p.name,
+            displayName: p.displayName || p.name,
+            path: path.join(this.modulesPath, folderName),
+            description: p.description,
+            version: p.version,
+            author: p.author,
+            repository: p.repository && p.repository.url || p.repository,
+            canRemove: true
+        };
+        if (p._requested && p._requested.type === 'git') {
+            moduleDefinition.type = 'git';
+        }
+        else if (p._requested && p._requested.name) {
+            moduleDefinition.type = 'npm';
+        }
+        // TODO other sources
+        // clean repository url
+        moduleDefinition.repository = ModuleLoader.cleanRepositoryUrl(moduleDefinition.repository);
+        if (p.browser) {
+            moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
+            if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+                console.log('Missing browserFile for ' + moduleDefinition.name);
+                moduleDefinition.browserFile = undefined;
             }
-            catch (error) {
-                console.log('Error reading package.json', error);
-                return;
+        }
+        if (p.main) {
+            moduleDefinition.serverFile = path.join(this.modulesPath, folderName, p.main);
+            if (!fs.existsSync(moduleDefinition.serverFile)) {
+                console.log('Missing serverFile for ' + moduleDefinition.name);
+                moduleDefinition.serverFile = undefined;
             }
-            const moduleDefinition = {
-                displayName: p.displayName || p.name,
-                path: path.join(this.modulesPath, folderName),
-                name: p.name,
-                description: p.description,
-                version: p.version,
-                author: p.author,
-                repository: p.repository && p.repository.url || p.repository,
-                isBuilded: true
-            };
-            // clean repository url
-            moduleDefinition.repository = ModuleLoader.cleanRepositoryUrl(moduleDefinition.repository);
-            if (p.browser) {
-                moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
-                if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
-                    moduleDefinition.isBuilded = false;
-                }
-            }
-            if (p.main) {
-                moduleDefinition.serverFile = path.join(this.config.root, 'modules', folderName, p.main);
-                if (!fs.existsSync(moduleDefinition.serverFile)) {
-                    moduleDefinition.isBuilded = false;
-                }
-            }
-            if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
-                console.log('No module in folder ' + folderName);
-                return;
-            }
-            moduleDefinition.canBuild = p.scripts && !!p.scripts.build;
-            moduleDefinition.canInstall = !!((p.dependencies && Object.keys(p.dependencies).length) ||
-                (p.devDependencies && Object.keys(p.devDependencies).length));
-            moduleDefinition.canRemove = true;
-            moduleDefinition.isInstalled = fs.existsSync(path.join(this.config.root, 'modules', folderName, 'node_modules'));
-            console.log('Module loaded: ' + moduleDefinition.name);
-            return moduleDefinition;
-        });
+        }
+        if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
+            console.log('No module in folder ' + folderName);
+            return;
+        }
+        console.log('Module loaded: ' + moduleDefinition.name);
+        return moduleDefinition;
     }
     ;
 }

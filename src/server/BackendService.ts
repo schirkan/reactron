@@ -1,9 +1,8 @@
-import { IBackendService, IBackendServiceConfig, ILogManager } from '@schirkan/reactron-interfaces';
+import { IBackendService, IBackendServiceConfig } from '@schirkan/reactron-interfaces';
 import { app } from 'electron';
 import * as path from 'path';
 import { ElectronApp } from './ElectronApp';
 import { ExpressApp } from './ExpressApp';
-import { ModuleLoader } from './ModuleLoader';
 import { ModuleManager } from './ModuleManager';
 import { ModuleRepository } from './ModuleRepository';
 import { PubSub } from './PubSub';
@@ -25,9 +24,8 @@ export class BackendService implements IBackendService {
   public readonly serviceOptionsRepository = new ServiceOptionsRepository();
   public readonly electronApp = new ElectronApp(this.config);
   public readonly expressApp = new ExpressApp(this.config);
-  public readonly moduleLoader = new ModuleLoader(this.config);
   public readonly serviceManager = new ServiceManager(this.serviceRepository, this.moduleRepository, this.serviceOptionsRepository);
-  public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository, this.moduleLoader);
+  public readonly moduleManager = new ModuleManager(this.config, this.moduleRepository);
   public readonly webPageManager = new WebPageManager(this.topics, this.config.defaultWebPageOptions);
   public readonly webComponentsManager = new WebComponentsManager(this.topics, this.config.defaultWebComponentOptions);
   public readonly settings = new SystemSettingsManager(this.topics, this.config.defaultSystemSettings);

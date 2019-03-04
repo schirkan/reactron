@@ -52,7 +52,7 @@
         "@fortawesome/free-regular-svg-icons": "^5.7.2",
         "@fortawesome/free-solid-svg-icons": "^5.7.2",
         "@fortawesome/react-fontawesome": "0.1.4",
-        "@schirkan/reactron-interfaces": "^2.0.2",
+        "@schirkan/reactron-interfaces": "^2.1.1",
         "@types/classnames": "^2.2.7",
         "@types/electron-devtools-installer": "^2.2.0",
         "@types/electron-store": "^1.3.0",

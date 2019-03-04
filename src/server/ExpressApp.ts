@@ -28,7 +28,7 @@ export class ExpressApp implements IExpressApp {
             });
 
             this.express.use('/api', this.apiRouter);
-            this.express.use('/modules', express.static(this.config.root + '/modules'));
+            this.express.use('/modules', express.static(this.config.root + '/modules/node_modules'));
             this.express.use('/node_modules', express.static(this.config.root + '/node_modules'));
             this.express.use('/', express.static(this.config.root + '/build'));
 

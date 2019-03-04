@@ -101,20 +101,12 @@ else
 fi
 
 cd ~/reactron/modules
-echo -e "\e[96mCloning reactron-admin ...\e[90m"
-if git clone --depth=1 https://github.com/schirkan/reactron-admin; then 
-	echo -e "\e[92mCloning reactron-admin Done!\e[0m"
+npm init -y
+echo -e "\e[96mInstalling reactron-admin ...\e[90m"
+if npm install --save https://github.com/schirkan/reactron-admin; then 
+	echo -e "\e[92mInstalling reactron-admin Done!\e[0m"
 else
-	echo -e "\e[91mUnable to clone reactron-admin."
-	exit;
-fi
-
-cd ~/reactron/modules/reactron-admin
-echo -e "\e[96mInstalling dependencies ...\e[90m"
-if npm install --production; then 
-	echo -e "\e[92mDependencies installation Done!\e[0m"
-else
-	echo -e "\e[91mUnable to install dependencies for reactron-admin!"
+	echo -e "\e[91mUnable to install reactron-admin."
 	exit;
 fi
 

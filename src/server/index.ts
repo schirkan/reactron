@@ -16,14 +16,14 @@ export const start = async (root: string): Promise<void> => {
   await BackendService.instance.electronApp.start();
 
   // register internal module
-  const internalModule = await BackendService.instance.moduleLoader.loadModule('../');
+  const internalModule = BackendService.instance.moduleManager.moduleLoader.loadModule('../../');
   if (internalModule) {
     internalModule.canRemove = false;
     internalModule.serverFile = './internalModule/index'
     BackendService.instance.moduleRepository.add(internalModule);
   }
 
-  await BackendService.instance.moduleManager.loadAllModules();
+  BackendService.instance.moduleManager.loadAllModules();
   await BackendService.instance.serviceManager.startAllServices();
 
   BackendService.instance.expressApp.registerErrorHandler();

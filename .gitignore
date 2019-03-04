@@ -3,7 +3,8 @@
 # dependencies
 node_modules
 
-modules/*/
+modules/*
+!modules/README.md
 
 # misc
 .DS_Store

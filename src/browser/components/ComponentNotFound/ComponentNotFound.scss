@@ -1,12 +1,8 @@
 section.ComponentNotFound {
     padding: 20px;
-    text-align: center;
     background: #ce5454;
     color: white;
-    .text {
-        margin-top: 10px;
-        span+span {
-            margin-left: 6px;
-        }
+    .header {
+        text-align: center;
     }
 }

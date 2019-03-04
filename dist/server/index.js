@@ -21,13 +21,13 @@ exports.start = (root) => __awaiter(this, void 0, void 0, function* () {
     yield BackendService_1.BackendService.instance.expressApp.start();
     yield BackendService_1.BackendService.instance.electronApp.start();
     // register internal module
-    const internalModule = yield BackendService_1.BackendService.instance.moduleLoader.loadModule('../');
+    const internalModule = BackendService_1.BackendService.instance.moduleManager.moduleLoader.loadModule('../../');
     if (internalModule) {
         internalModule.canRemove = false;
         internalModule.serverFile = './internalModule/index';
         BackendService_1.BackendService.instance.moduleRepository.add(internalModule);
     }
-    yield BackendService_1.BackendService.instance.moduleManager.loadAllModules();
+    BackendService_1.BackendService.instance.moduleManager.loadAllModules();
     yield BackendService_1.BackendService.instance.serviceManager.startAllServices();
     BackendService_1.BackendService.instance.expressApp.registerErrorHandler();
     electron_1.app.on('before-quit', () => BackendService_1.BackendService.instance.serviceManager.stopAllServices());

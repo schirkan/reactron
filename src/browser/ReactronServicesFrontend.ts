@@ -41,8 +41,11 @@ export class ReactronServicesFrontend implements IReactronServices {
       delete this._modulesCache;
       return this.moduleController.update(moduleName);
     },
+    updateAll: () => {
+      delete this._modulesCache;
+      return this.moduleController.updateAll();
+    },
     checkUpdates: this.moduleController.checkUpdates,
-    rebuild: this.moduleController.rebuild,
   };
 
   public readonly application: IAppController = {
