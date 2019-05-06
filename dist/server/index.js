@@ -21,7 +21,7 @@ exports.start = (root) => __awaiter(this, void 0, void 0, function* () {
     yield BackendService_1.BackendService.instance.expressApp.start();
     yield BackendService_1.BackendService.instance.electronApp.start();
     // register internal module
-    const internalModule = BackendService_1.BackendService.instance.moduleManager.moduleLoader.loadModule('../../');
+    const internalModule = BackendService_1.BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
     if (internalModule) {
         internalModule.canRemove = false;
         internalModule.serverFile = './internalModule/index';

@@ -1,0 +1,220 @@
+import { IBackendServiceConfig, ICommandResult, ICommandResultWithData, IModuleRepositoryItem } from '@schirkan/reactron-interfaces';
+import * as fs from 'fs';
+import * as path from 'path';
+import { command } from '../commandResultWrapper';
+import { ModuleRepository } from "../ModuleRepository";
+import { SystemCommand } from "../SystemCommand";
+import { IModuleHandler } from './IModuleHandler';
+import { refreshModule, loadPackageJson, cleanRepositoryUrl } from '../ModuleHelper';
+
+export class LocalModuleHandler implements IModuleHandler {
+  private modulesRootPath: string;
+
+  constructor(
+    private config: IBackendServiceConfig,
+    private moduleRepository: ModuleRepository,
+  ) {
+    this.modulesRootPath = path.join(this.config.root, 'modules');
+  }
+
+  public loadAllModules(): IModuleRepositoryItem[] {
+    const result: IModuleRepositoryItem[] = [];
+    const moduleNames = this.loadModuleNames();
+    console.log('found ' + moduleNames.length + ' modules');
+    for (const moduleName of moduleNames) {
+      const moduleFolderFull = path.join(this.modulesRootPath, moduleName);
+      if (fs.statSync(moduleFolderFull).isDirectory()) {
+        const newModule = this.loadModule(moduleName);
+        if (newModule) {
+          result.push(newModule);
+        }
+      }
+    }
+    return result;
+  }
+
+  private loadModuleNames(): string[] {
+    const items = fs.readdirSync(this.modulesRootPath);
+    return items.filter(x => x !== 'node_modules' && !x.startsWith('.'));
+  }
+
+  public loadModule(folderName: string): IModuleRepositoryItem | undefined {
+    const packageFile = path.join(this.modulesRootPath, folderName, 'package.json');
+    if (!fs.existsSync(packageFile)) {
+      return;
+    }
+    const p = loadPackageJson(packageFile);
+
+    const moduleDefinition = {
+      name: p.name,
+      displayName: p.displayName || p.name,
+      path: path.join(this.modulesRootPath, folderName),
+      description: p.description,
+      version: p.version,
+      author: p.author,
+      repository: p.repository && p.repository.url || p.repository,
+      canRemove: true,
+      type: 'local'
+    } as IModuleRepositoryItem;
+
+    if (moduleDefinition.repository && moduleDefinition.repository.includes('github')) { // TODO
+      moduleDefinition.type = 'git';
+    }
+
+    // clean repository url
+    moduleDefinition.repository = cleanRepositoryUrl(moduleDefinition.repository);
+
+    if (p.browser) {
+      moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
+      if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+        console.log('Missing browserFile for ' + moduleDefinition.name);
+        moduleDefinition.browserFile = undefined;
+      }
+    }
+
+    if (p.main) {
+      moduleDefinition.serverFile = path.join(this.modulesRootPath, folderName, p.main);
+      if (!fs.existsSync(moduleDefinition.serverFile)) {
+        console.log('Missing serverFile for ' + moduleDefinition.name);
+        moduleDefinition.serverFile = undefined;
+      }
+    }
+
+    if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
+      console.log('No module in folder ' + folderName);
+      return;
+    }
+
+    console.log('Module loaded: ' + moduleDefinition.name);
+    return moduleDefinition;
+  };
+
+  public add(repository: string): Promise<ICommandResultWithData<IModuleRepositoryItem | undefined>> {
+    return command<IModuleRepositoryItem | undefined>('add', repository, async (result) => {
+      // clean repository url
+      repository = cleanRepositoryUrl(repository);
+
+      if (!repository) {
+        throw new Error('Invalid repository');
+      }
+
+      const parts = repository.split('/');
+      if (parts.length < 2) {
+        throw new Error('Invalid repository');
+      }
+      const folderName = parts[parts.length - 1];
+
+      // check destination folder 
+      const fullModulePath = path.join(this.modulesRootPath, folderName);
+      if (!this.isDirEmpty(fullModulePath)) {
+        throw new Error('Destination folder already exists');
+      }
+
+      const gitCloneResult = await SystemCommand.run('git clone ' + repository + ' ' + folderName, this.modulesRootPath);
+      result.children.push(gitCloneResult);
+
+      let moduleDefinition: IModuleRepositoryItem | undefined;
+
+      if (gitCloneResult.success) {        
+        moduleDefinition = await this.loadModule(folderName);
+        if (moduleDefinition) {
+          const installResult = await SystemCommand.run('npm install --production', moduleDefinition.path);
+          result.children.push(installResult);
+
+          this.moduleRepository.add(moduleDefinition);
+        }
+      }
+
+      return moduleDefinition;
+    });
+  }
+
+  public update(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
+    return command('update', moduleDefinition && moduleDefinition.name, async (result) => {
+      if (!this.canHandleModule(moduleDefinition) || moduleDefinition.type !== 'git') {
+        throw new Error('Can not update module');
+      }
+
+      const updateResult = await SystemCommand.run('git fetch --all && git reset --hard origin/master', moduleDefinition.path);
+      result.children.push(updateResult);
+
+      if (updateResult.success) {
+        moduleDefinition.hasUpdate = false;
+        refreshModule(moduleDefinition);
+        const installResult = await SystemCommand.run('npm install --production', moduleDefinition.path);
+        result.children.push(installResult);
+      }
+    });
+  }
+
+  public remove(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
+    return command('remove', moduleDefinition && moduleDefinition.name, async () => {
+      if (!this.canHandleModule(moduleDefinition)) {
+        throw new Error('Can not remove module');
+      }
+
+      const result = await SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
+      if (result.success) {
+        this.moduleRepository.remove(moduleDefinition.name);
+      }
+      return result;
+    });
+  }
+
+  private canHandleModule(moduleDefinition: IModuleRepositoryItem): boolean {
+    return !!moduleDefinition && !!moduleDefinition.name &&
+      (moduleDefinition.type === 'local' || moduleDefinition.type === 'git');
+  }
+
+  public canAdd(repository: string): Promise<boolean> {
+    return Promise.resolve(
+      repository.startsWith('http://') && repository.includes('github')
+    );
+  }
+
+  public canRemove(moduleDefinition: IModuleRepositoryItem): Promise<boolean> {
+    return Promise.resolve(this.canHandleModule(moduleDefinition));
+  }
+
+  public canUpdate(moduleDefinition: IModuleRepositoryItem): Promise<boolean> {
+    return Promise.resolve(
+      this.canHandleModule(moduleDefinition) && moduleDefinition.type === 'git'
+    );
+  }
+
+  public hasUpdate(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResultWithData<boolean>> {
+    return command<boolean>('checkUpdate', moduleDefinition && moduleDefinition.name, async (result) => {
+      if (!this.canHandleModule(moduleDefinition)) {
+        return false;
+      }
+
+      if (moduleDefinition.type === 'local') {
+        return false;
+      } else if (moduleDefinition.type === 'git') {
+        const result1 = await SystemCommand.run('git remote -v update', moduleDefinition.path);
+        result.children.push(result1);
+        if (result1.success === false) {
+          return false;
+        }
+
+        const result2 = await SystemCommand.run('git rev-list HEAD...origin/master --count', moduleDefinition.path);
+        result.children.push(result2);
+        if (result2.success === false) {
+          return false;
+        }
+
+        return result2.log[0] !== '0';
+      }
+      return false;
+    });
+  }
+
+  private isDirEmpty(dirname: string): boolean {
+    try {
+      const files = fs.readdirSync(dirname);
+      return !files.length;
+    } catch (error) {
+      return true;
+    }
+  }
+}

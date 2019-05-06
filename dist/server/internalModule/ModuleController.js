@@ -20,22 +20,8 @@ class ModuleController {
     }
     add(repository) {
         return __awaiter(this, void 0, void 0, function* () {
-            const results = [];
-            const resultAdd = yield BackendService_1.BackendService.instance.moduleManager.add(repository);
-            results.push(resultAdd);
-            // if (resultAdd.success && resultAdd.data) {
-            //   const moduleRepositoryItem = resultAdd.data;
-            //   if (moduleRepositoryItem.isBuilded) {
-            //     const resultInstall = await BackendService.instance.moduleManager.install(moduleRepositoryItem, true);
-            //     results.push(resultInstall);
-            //   } else {
-            //     const resultInstall = await BackendService.instance.moduleManager.install(moduleRepositoryItem, false);
-            //     results.push(resultInstall);
-            //     const resultBuild = await BackendService.instance.moduleManager.build(moduleRepositoryItem);
-            //     results.push(resultBuild);
-            //   }
-            // }
-            return results;
+            const result = yield BackendService_1.BackendService.instance.moduleManager.add(repository);
+            return [result];
         });
     }
     remove(moduleName) {
@@ -50,16 +36,6 @@ class ModuleController {
             }
         });
     }
-    // public async rebuild(moduleName: string): Promise<ICommandResult[]> {
-    //   const moduleRepositoryItem = BackendService.instance.moduleManager.get(moduleName);
-    //   if (moduleRepositoryItem) {
-    //     const resultInstall = await BackendService.instance.moduleManager.install(moduleRepositoryItem, false);
-    //     const resultBuild = await BackendService.instance.moduleManager.build(moduleRepositoryItem);
-    //     return [resultInstall, resultBuild];
-    //   } else {
-    //     throw new Error('not found');
-    //   }
-    // }
     updateAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const resultUpdateAll = yield BackendService_1.BackendService.instance.moduleManager.updateAll();
@@ -74,15 +50,6 @@ class ModuleController {
                 if (moduleRepositoryItem.hasUpdate) {
                     const resultUpdate = yield BackendService_1.BackendService.instance.moduleManager.update(moduleRepositoryItem);
                     results.push(resultUpdate);
-                    // if (moduleRepositoryItem.isBuilded) {
-                    //   const resultInstall = await BackendService.instance.moduleManager.install(moduleRepositoryItem, true);
-                    //   results.push(resultInstall);
-                    // } else {
-                    //   const resultInstall = await BackendService.instance.moduleManager.install(moduleRepositoryItem, false);
-                    //   results.push(resultInstall);
-                    //   const resultBuild = await BackendService.instance.moduleManager.build(moduleRepositoryItem);
-                    //   results.push(resultBuild);
-                    // }
                 }
                 return results;
             }

@@ -16,7 +16,7 @@ export const start = async (root: string): Promise<void> => {
   await BackendService.instance.electronApp.start();
 
   // register internal module
-  const internalModule = BackendService.instance.moduleManager.moduleLoader.loadModule('../../');
+  const internalModule = BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
   if (internalModule) {
     internalModule.canRemove = false;
     internalModule.serverFile = './internalModule/index'
