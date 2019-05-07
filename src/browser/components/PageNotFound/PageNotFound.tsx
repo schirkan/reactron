@@ -2,9 +2,12 @@ import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import RoundButton from '../RoundButton/RoundButton';
-import { IPageNotFoundProps } from './IPageNotFoundProps';
 
 import './PageNotFound.scss'
+
+export interface IPageNotFoundProps {
+  location: any;
+}
 
 export default class PageNotFound extends React.Component<IPageNotFoundProps> {
   public render() {

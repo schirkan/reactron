@@ -84,4 +84,4 @@ export const createRemoteService = <TService>(serviceName: string, moduleName: s
     }
   });
   return proxy as TService;
-}
+};

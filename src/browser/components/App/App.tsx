@@ -43,6 +43,7 @@ export default class App extends React.Component<any, IAppState> {
     document.removeEventListener('keydown', this.onKeyDown);
   }
 
+  // navigate to admin page on Ctrl + Alt + A
   private onKeyDown(e: KeyboardEvent) {
     const evtobj = window.event ? window.event as KeyboardEvent : e;
     if (evtobj.keyCode === 65 && evtobj.ctrlKey && evtobj.altKey) {

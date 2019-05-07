@@ -97,9 +97,12 @@ export class ComponentLoader implements IComponentLoader {
 
     const modules = await services.modules.getAll();
 
-    for (const m of modules) {
-      await this.registerModuleComponents(m);
-    }
+    const tasks = modules.map(m => this.registerModuleComponents(m));
+    await Promise.all(tasks);
+    // for (const m of modules) {
+    //   await this.registerModuleComponents(m);
+    // }
+
     this.allComponentsLoaded = true;
     return this.moduleComponents;
   }

@@ -17,8 +17,8 @@ export class NpmModuleHandler implements IModuleHandler {
     private moduleRepository: ModuleRepository,
   ) {
     this.modulesRootPath = path.join(this.config.root, 'modules');
-    this.modulesPath = path.join(this.config.root, 'modules', 'node_modules');
-    this.modulesPackageFile = path.join(this.config.root, 'modules', 'package.json');
+    this.modulesPath = path.join(this.modulesRootPath, 'node_modules');
+    this.modulesPackageFile = path.join(this.modulesRootPath, 'package.json');
     if (!fs.existsSync(this.modulesPackageFile)) {
       this.createModulePackageJson();
     }

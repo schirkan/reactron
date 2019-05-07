@@ -1,10 +1,17 @@
+import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import * as SvgIcons from '@fortawesome/free-solid-svg-icons';
 import * as FontAwesome from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import RoundButton from '../RoundButton/RoundButton';
-import { IComponentNotFoundProps } from './IComponentNotFoundProps';
 
 import './ComponentNotFound.scss';
+
+export interface IComponentNotFoundProps {
+  id?: string;
+  componentName?: string;
+  moduleName?: string;
+  iconSize?: SizeProp;
+}
 
 export default class ComponentNotFound extends React.Component<IComponentNotFoundProps> {
   public static defaultProps: Partial<IComponentNotFoundProps> = {
