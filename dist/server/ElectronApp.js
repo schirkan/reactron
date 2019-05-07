@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const electron_devtools_installer_1 = require("electron-devtools-installer");
 class ElectronApp {
     constructor(config) {
         this.config = config;
@@ -27,9 +26,12 @@ class ElectronApp {
                     resolve = null;
                 }
             };
-            electron_devtools_installer_1.default(electron_devtools_installer_1.REACT_DEVELOPER_TOOLS)
-                .then((name) => console.log(`Added Extension:  ${name}`))
-                .catch((err) => console.log('An error occurred: ', err));
+            if (process.env.NODE_ENV === 'development') {
+                const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+                installExtension(REACT_DEVELOPER_TOOLS)
+                    .then((name) => console.log(`Added Extension:  ${name}`))
+                    .catch((err) => console.log('An error occurred: ', err));
+            }
             electron_1.app.on('ready', createWindow.bind(this));
             electron_1.app.on('window-all-closed', () => {
                 // On OS X it is common for applications and their menu bar

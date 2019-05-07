@@ -1,7 +1,7 @@
 import { IBackendServiceConfig, IElectronApp } from '@schirkan/reactron-interfaces';
 import { app, BrowserWindow, screen } from "electron";
-import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
- 
+import { node } from 'prop-types';
+
 export class ElectronApp implements IElectronApp {
     public mainWindow!: Electron.BrowserWindow;
 
@@ -28,11 +28,14 @@ export class ElectronApp implements IElectronApp {
                     resolve = null;
                 }
             };
-
-            installExtension(REACT_DEVELOPER_TOOLS)
-                .then((name: string) => console.log(`Added Extension:  ${name}`))
-                .catch((err: any) => console.log('An error occurred: ', err));
             
+            if (process.env.NODE_ENV === 'development') {
+                const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+                installExtension(REACT_DEVELOPER_TOOLS)
+                    .then((name: string) => console.log(`Added Extension:  ${name}`))
+                    .catch((err: any) => console.log('An error occurred: ', err));
+            }
+
             app.on('ready', createWindow.bind(this));
 
             app.on('window-all-closed', () => {
