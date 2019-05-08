@@ -37,7 +37,8 @@ export class LocalModuleHandler implements IModuleHandler {
   }
 
   public loadModule(folderName: string): IModuleRepositoryItem | undefined {
-    const packageFile = path.join(this.config.modulesRootPath, folderName, 'package.json');
+    const modulePath =  path.join(this.config.modulesRootPath, folderName);
+    const packageFile = path.join(modulePath, 'package.json');
     if (!fs.existsSync(packageFile)) {
       return;
     }
@@ -46,7 +47,7 @@ export class LocalModuleHandler implements IModuleHandler {
     const moduleDefinition = {
       name: p.name,
       displayName: p.displayName || p.name,
-      path: path.join(this.config.modulesRootPath, folderName),
+      path: modulePath,
       description: p.description,
       version: p.version,
       author: p.author,
@@ -54,6 +55,7 @@ export class LocalModuleHandler implements IModuleHandler {
       canRemove: true,
       type: 'local'
     } as IModuleRepositoryItem;
+    const escapedModuleName = moduleDefinition.name.replace('/', '@');
 
     if (moduleDefinition.repository && moduleDefinition.repository.includes('github')) { // TODO
       moduleDefinition.type = 'git';
@@ -63,15 +65,15 @@ export class LocalModuleHandler implements IModuleHandler {
     moduleDefinition.repository = cleanRepositoryUrl(moduleDefinition.repository);
 
     if (p.browser) {
-      moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
-      if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+      moduleDefinition.browserFile = path.join('modules', escapedModuleName, p.browser);
+      if (!fs.existsSync(path.join(modulePath, p.browser))) {
         console.log('Missing browserFile for ' + moduleDefinition.name);
         moduleDefinition.browserFile = undefined;
       }
     }
 
     if (p.main) {
-      moduleDefinition.serverFile = path.join(this.config.modulesRootPath, folderName, p.main);
+      moduleDefinition.serverFile = path.join(modulePath, p.main);
       if (!fs.existsSync(moduleDefinition.serverFile)) {
         console.log('Missing serverFile for ' + moduleDefinition.name);
         moduleDefinition.serverFile = undefined;

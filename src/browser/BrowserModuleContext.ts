@@ -20,7 +20,7 @@ export class BrowserModuleContext implements IModuleContext {
 
   constructor(public moduleName: string) {
     const escapedModuleName = (moduleName || '').replace('/', '@');
-    this.moduleApiPath = '/api/modules/' + escapedModuleName;
+    this.moduleApiPath = '/api/' + escapedModuleName;
   }
 
   public readonly services = services;

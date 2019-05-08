@@ -54,17 +54,13 @@ export class ReactronServiceContext implements IReactronServiceContext {
 
 class InternalModuleContext {
   public readonly moduleStorage: ElectronStore;
-  public readonly moduleApiPath: string;
   public readonly moduleApiRouter: express.Router;
 
   constructor(public moduleName: string) {
     this.moduleStorage = new Store({ name: 'module.' + moduleName });
     this.moduleApiRouter = express.Router();
-
     const escapedModuleName = moduleName.replace('/', '@');
-    this.moduleApiPath = '/modules/' + escapedModuleName;
-
-    BackendService.instance.expressApp.apiRouter.use(this.moduleApiPath, this.moduleApiRouter);
+    BackendService.instance.expressApp.apiRouter.use(escapedModuleName, this.moduleApiRouter);
   }
 
   private static moduleContexts: InternalModuleContext[] = [];

@@ -58,7 +58,8 @@ class NpmModuleHandler {
         return Object.keys(p && p.dependencies || {});
     }
     loadModule(folderName) {
-        const packageFile = path.join(this.modulesPath, folderName, 'package.json');
+        const modulePath = path.join(this.modulesPath, folderName);
+        const packageFile = path.join(modulePath, 'package.json');
         if (!fs.existsSync(packageFile)) {
             return;
         }
@@ -73,6 +74,7 @@ class NpmModuleHandler {
             repository: p.repository && p.repository.url || p.repository,
             canRemove: true
         };
+        const escapedModuleName = moduleDefinition.name.replace('/', '@');
         if (p._requested && p._requested.type === 'git') {
             moduleDefinition.type = 'npm+git';
         }
@@ -83,8 +85,8 @@ class NpmModuleHandler {
         // clean repository url
         moduleDefinition.repository = ModuleHelper_1.cleanRepositoryUrl(moduleDefinition.repository);
         if (p.browser) {
-            moduleDefinition.browserFile = path.join('modules', 'node_modules', folderName, p.browser);
-            if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+            moduleDefinition.browserFile = path.join('modules', escapedModuleName, p.browser);
+            if (!fs.existsSync(path.join(modulePath, p.browser))) {
                 console.log('Missing browserFile for ' + moduleDefinition.name);
                 moduleDefinition.browserFile = undefined;
             }

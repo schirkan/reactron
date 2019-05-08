@@ -28,8 +28,8 @@ export class ModuleManager {
       for (const m of modules) {
         this.moduleRepository.add(m);
         const escapedModuleName = m.name.replace('/', '@');
-        const expressInstance = BackendService.instance.expressApp.express;
-        expressInstance.use('/modules/' + escapedModuleName, express.static(m.path));
+        const modulesRouter = BackendService.instance.expressApp.modulesRouter;
+        modulesRouter.use('/' + escapedModuleName, express.static(m.path));
       }
     });
   }

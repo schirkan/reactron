@@ -23,12 +23,13 @@ class ExpressApp {
                 next();
             });
             // static files
-            const buildFolder = path.join(this.config.root, 'build');
-            const indexFile = path.join(buildFolder, 'index.html');
-            this.express.use('/modules', express.static(this.config.modulesRootPath));
+            this.modulesRouter = express.Router();
+            this.express.use('/modules', this.modulesRouter);
             this.express.use('/node_modules', express.static(this.config.nodeModulesPath)); // only for systemjs files
+            const buildFolder = path.join(this.config.root, 'build');
             this.express.use('/', express.static(buildFolder));
             // for react router
+            const indexFile = path.join(buildFolder, 'index.html');
             this.express.get('/*', (req, res) => {
                 res.sendFile(indexFile, (err) => err && res.status(500).send(err));
             });

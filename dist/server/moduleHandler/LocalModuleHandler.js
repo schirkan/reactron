@@ -39,7 +39,8 @@ class LocalModuleHandler {
         return items.filter(x => x !== 'node_modules' && !x.startsWith('.'));
     }
     loadModule(folderName) {
-        const packageFile = path.join(this.config.modulesRootPath, folderName, 'package.json');
+        const modulePath = path.join(this.config.modulesRootPath, folderName);
+        const packageFile = path.join(modulePath, 'package.json');
         if (!fs.existsSync(packageFile)) {
             return;
         }
@@ -47,7 +48,7 @@ class LocalModuleHandler {
         const moduleDefinition = {
             name: p.name,
             displayName: p.displayName || p.name,
-            path: path.join(this.config.modulesRootPath, folderName),
+            path: modulePath,
             description: p.description,
             version: p.version,
             author: p.author,
@@ -55,20 +56,21 @@ class LocalModuleHandler {
             canRemove: true,
             type: 'local'
         };
+        const escapedModuleName = moduleDefinition.name.replace('/', '@');
         if (moduleDefinition.repository && moduleDefinition.repository.includes('github')) { // TODO
             moduleDefinition.type = 'git';
         }
         // clean repository url
         moduleDefinition.repository = ModuleHelper_1.cleanRepositoryUrl(moduleDefinition.repository);
         if (p.browser) {
-            moduleDefinition.browserFile = path.join('modules', folderName, p.browser);
-            if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+            moduleDefinition.browserFile = path.join('modules', escapedModuleName, p.browser);
+            if (!fs.existsSync(path.join(modulePath, p.browser))) {
                 console.log('Missing browserFile for ' + moduleDefinition.name);
                 moduleDefinition.browserFile = undefined;
             }
         }
         if (p.main) {
-            moduleDefinition.serverFile = path.join(this.config.modulesRootPath, folderName, p.main);
+            moduleDefinition.serverFile = path.join(modulePath, p.main);
             if (!fs.existsSync(moduleDefinition.serverFile)) {
                 console.log('Missing serverFile for ' + moduleDefinition.name);
                 moduleDefinition.serverFile = undefined;

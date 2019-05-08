@@ -59,8 +59,7 @@ class InternalModuleContext {
         this.moduleStorage = new Store({ name: 'module.' + moduleName });
         this.moduleApiRouter = express.Router();
         const escapedModuleName = moduleName.replace('/', '@');
-        this.moduleApiPath = '/modules/' + escapedModuleName;
-        BackendService_1.BackendService.instance.expressApp.apiRouter.use(this.moduleApiPath, this.moduleApiRouter);
+        BackendService_1.BackendService.instance.expressApp.apiRouter.use(escapedModuleName, this.moduleApiRouter);
     }
     static getModuleContext(moduleName) {
         let context = InternalModuleContext.moduleContexts.find(x => x.moduleName === moduleName);

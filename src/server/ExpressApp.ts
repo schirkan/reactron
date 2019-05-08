@@ -2,12 +2,12 @@ import { IBackendServiceConfig, IExpressApp } from '@schirkan/reactron-interface
 import * as express from 'express';
 import * as http from 'http';
 import * as path from 'path';
-import * as fs from 'fs';
 
 export class ExpressApp implements IExpressApp {
   public express!: express.Application;
   public server!: http.Server;
   public apiRouter!: express.Router;
+  public modulesRouter!: express.Router;
 
   constructor(private config: IBackendServiceConfig) { }
 
@@ -24,7 +24,7 @@ export class ExpressApp implements IExpressApp {
       // api router
       this.apiRouter = express.Router();
       this.express.use('/api', this.apiRouter);
-      
+
       // log api calls
       this.apiRouter.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
@@ -32,13 +32,14 @@ export class ExpressApp implements IExpressApp {
       });
 
       // static files
-      const buildFolder = path.join(this.config.root, 'build');
-      const indexFile = path.join(buildFolder, 'index.html');
-      this.express.use('/modules', express.static(this.config.modulesRootPath));
+      this.modulesRouter = express.Router();
+      this.express.use('/modules', this.modulesRouter);
       this.express.use('/node_modules', express.static(this.config.nodeModulesPath)); // only for systemjs files
+      const buildFolder = path.join(this.config.root, 'build');
       this.express.use('/', express.static(buildFolder));
 
       // for react router
+      const indexFile = path.join(buildFolder, 'index.html');
       this.express.get('/*', (req: express.Request, res: express.Response) => {
         res.sendFile(indexFile, (err: any) => err && res.status(500).send(err));
       })

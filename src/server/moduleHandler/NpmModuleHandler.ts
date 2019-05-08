@@ -60,7 +60,8 @@ export class NpmModuleHandler implements IModuleHandler {
   }
 
   public loadModule(folderName: string): IModuleRepositoryItem | undefined {
-    const packageFile = path.join(this.modulesPath, folderName, 'package.json');
+    const modulePath =  path.join(this.modulesPath, folderName);
+    const packageFile = path.join(modulePath, 'package.json');
     if (!fs.existsSync(packageFile)) {
       return;
     }
@@ -76,6 +77,7 @@ export class NpmModuleHandler implements IModuleHandler {
       repository: p.repository && p.repository.url || p.repository,
       canRemove: true
     } as IModuleRepositoryItem;
+    const escapedModuleName = moduleDefinition.name.replace('/', '@');
 
     if (p._requested && p._requested.type === 'git') {
       moduleDefinition.type = 'npm+git';
@@ -89,8 +91,8 @@ export class NpmModuleHandler implements IModuleHandler {
     moduleDefinition.repository = cleanRepositoryUrl(moduleDefinition.repository);
 
     if (p.browser) {
-      moduleDefinition.browserFile = path.join('modules', 'node_modules', folderName, p.browser);
-      if (!fs.existsSync(path.join(this.config.root, moduleDefinition.browserFile))) {
+      moduleDefinition.browserFile = path.join('modules', escapedModuleName, p.browser);
+      if (!fs.existsSync(path.join(modulePath, p.browser))) {
         console.log('Missing browserFile for ' + moduleDefinition.name);
         moduleDefinition.browserFile = undefined;
       }
