@@ -7,8 +7,7 @@ import { SystemCommand } from "../SystemCommand";
 import { IModuleHandler } from './IModuleHandler';
 import { refreshModule, loadPackageJson, cleanRepositoryUrl } from '../ModuleHelper';
 
-export class NpmModuleHandler implements IModuleHandler {
-  private modulesRootPath: string;
+export class NpmModuleHandler implements IModuleHandler {  
   private modulesPath: string;
   private modulesPackageFile: string;
 
@@ -16,13 +15,12 @@ export class NpmModuleHandler implements IModuleHandler {
     private config: IBackendServiceConfig,
     private moduleRepository: ModuleRepository,
   ) {
-    this.modulesRootPath = path.join(this.config.root, 'modules');
-    this.modulesPath = path.join(this.modulesRootPath, 'node_modules');
-    this.modulesPackageFile = path.join(this.modulesRootPath, 'package.json');
+    this.modulesPath = path.join(this.config.modulesRootPath, 'node_modules');
+    this.modulesPackageFile = path.join(this.config.modulesRootPath, 'package.json');
     if (!fs.existsSync(this.modulesPackageFile)) {
       this.createModulePackageJson();
     }
-    SystemCommand.run('npm config set loglevel warn', this.modulesRootPath);
+    SystemCommand.run('npm config set loglevel warn', this.config.modulesRootPath);
   }
 
   private createModulePackageJson() {
@@ -117,14 +115,10 @@ export class NpmModuleHandler implements IModuleHandler {
 
   public updateAllModules(): Promise<ICommandResult> {
     return command('updateAll', undefined, async (result) => {
-      const result1 = await SystemCommand.run('npm update', this.modulesRootPath);
+      const result1 = await SystemCommand.run('npm update', this.config.modulesRootPath);
       result.children.push(result1);
-      const result2 = await SystemCommand.run('npm audit fix', this.modulesRootPath);
+      const result2 = await SystemCommand.run('npm audit fix', this.config.modulesRootPath);
       result.children.push(result2);
-      const result3 = await command('refreshModules', undefined, async () => {
-        this.moduleRepository.getAll().forEach(m => refreshModule(m));
-      });
-      result.children.push(result3);
     });
   }
 
@@ -142,7 +136,7 @@ export class NpmModuleHandler implements IModuleHandler {
         throw new Error('Module already exists: ' + existingModule.name);
       }
 
-      const npmInstallResult = await SystemCommand.run('npm i --save ' + repository, this.modulesRootPath);
+      const npmInstallResult = await SystemCommand.run('npm i --save ' + repository, this.config.modulesRootPath);
       result.children.push(npmInstallResult);
 
       let moduleDefinition: IModuleRepositoryItem | undefined;
@@ -172,9 +166,9 @@ export class NpmModuleHandler implements IModuleHandler {
 
       let updateResult: ICommandResult;
       if (moduleDefinition.type === 'npm') {
-        updateResult = await SystemCommand.run('npm install --save ' + moduleDefinition.name + '@' + moduleDefinition.updateVersion, this.modulesRootPath);
+        updateResult = await SystemCommand.run('npm install --save ' + moduleDefinition.name + '@' + moduleDefinition.updateVersion, this.config.modulesRootPath);
       } else {
-        updateResult = await SystemCommand.run('npm update ' + moduleDefinition.name, this.modulesRootPath);
+        updateResult = await SystemCommand.run('npm update ' + moduleDefinition.name, this.config.modulesRootPath);
       }
 
       if (updateResult.success) {
@@ -192,7 +186,7 @@ export class NpmModuleHandler implements IModuleHandler {
         throw new Error('Can not remove module');
       }
 
-      const result = await SystemCommand.run('npm un ' + moduleDefinition.name, this.modulesRootPath);
+      const result = await SystemCommand.run('npm un ' + moduleDefinition.name, this.config.modulesRootPath);
       if (result.success) {
         this.moduleRepository.remove(moduleDefinition.name);
       }
@@ -224,7 +218,7 @@ export class NpmModuleHandler implements IModuleHandler {
       }
 
       if (moduleDefinition.type === 'npm') {
-        const npmViewVersionResult = await SystemCommand.run('npm view ' + moduleDefinition.name + ' version', this.modulesRootPath);
+        const npmViewVersionResult = await SystemCommand.run('npm view ' + moduleDefinition.name + ' version', this.config.modulesRootPath);
         result.children.push(npmViewVersionResult);
         if (npmViewVersionResult.success === false) {
           return false;
@@ -242,7 +236,7 @@ export class NpmModuleHandler implements IModuleHandler {
         if (localHash && localHash.length > 40) {
           localHash = localHash.substr(localHash.length - 40); // get SHA-1 from git url
 
-          const gitRemoteResult = await SystemCommand.run('git ls-remote ' + moduleDefinition.repository, this.modulesRootPath);
+          const gitRemoteResult = await SystemCommand.run('git ls-remote ' + moduleDefinition.repository, this.config.modulesRootPath);
           result.children.push(gitRemoteResult);
           if (gitRemoteResult.success === false) {
             return false;

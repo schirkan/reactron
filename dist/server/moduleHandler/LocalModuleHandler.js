@@ -17,14 +17,13 @@ class LocalModuleHandler {
     constructor(config, moduleRepository) {
         this.config = config;
         this.moduleRepository = moduleRepository;
-        this.modulesRootPath = path.join(this.config.root, 'modules');
     }
     loadAllModules() {
         const result = [];
         const moduleNames = this.loadModuleNames();
-        console.log('found ' + moduleNames.length + ' modules');
+        console.log('found ' + moduleNames.length + ' items in modules folder');
         for (const moduleName of moduleNames) {
-            const moduleFolderFull = path.join(this.modulesRootPath, moduleName);
+            const moduleFolderFull = path.join(this.config.modulesRootPath, moduleName);
             if (fs.statSync(moduleFolderFull).isDirectory()) {
                 const newModule = this.loadModule(moduleName);
                 if (newModule) {
@@ -32,14 +31,15 @@ class LocalModuleHandler {
                 }
             }
         }
+        console.log(result.length + ' modules loaded');
         return result;
     }
     loadModuleNames() {
-        const items = fs.readdirSync(this.modulesRootPath);
+        const items = fs.readdirSync(this.config.modulesRootPath);
         return items.filter(x => x !== 'node_modules' && !x.startsWith('.'));
     }
     loadModule(folderName) {
-        const packageFile = path.join(this.modulesRootPath, folderName, 'package.json');
+        const packageFile = path.join(this.config.modulesRootPath, folderName, 'package.json');
         if (!fs.existsSync(packageFile)) {
             return;
         }
@@ -47,7 +47,7 @@ class LocalModuleHandler {
         const moduleDefinition = {
             name: p.name,
             displayName: p.displayName || p.name,
-            path: path.join(this.modulesRootPath, folderName),
+            path: path.join(this.config.modulesRootPath, folderName),
             description: p.description,
             version: p.version,
             author: p.author,
@@ -68,7 +68,7 @@ class LocalModuleHandler {
             }
         }
         if (p.main) {
-            moduleDefinition.serverFile = path.join(this.modulesRootPath, folderName, p.main);
+            moduleDefinition.serverFile = path.join(this.config.modulesRootPath, folderName, p.main);
             if (!fs.existsSync(moduleDefinition.serverFile)) {
                 console.log('Missing serverFile for ' + moduleDefinition.name);
                 moduleDefinition.serverFile = undefined;
@@ -95,11 +95,11 @@ class LocalModuleHandler {
             }
             const folderName = parts[parts.length - 1];
             // check destination folder 
-            const fullModulePath = path.join(this.modulesRootPath, folderName);
+            const fullModulePath = path.join(this.config.modulesRootPath, folderName);
             if (!this.isDirEmpty(fullModulePath)) {
                 throw new Error('Destination folder already exists');
             }
-            const gitCloneResult = yield SystemCommand_1.SystemCommand.run('git clone ' + repository + ' ' + folderName, this.modulesRootPath);
+            const gitCloneResult = yield SystemCommand_1.SystemCommand.run('git clone ' + repository + ' ' + folderName, this.config.modulesRootPath);
             result.children.push(gitCloneResult);
             let moduleDefinition;
             if (gitCloneResult.success) {
@@ -133,7 +133,7 @@ class LocalModuleHandler {
             if (!this.canHandleModule(moduleDefinition)) {
                 throw new Error('Can not remove module');
             }
-            const result = yield SystemCommand_1.SystemCommand.run('rimraf ' + moduleDefinition.path, this.modulesRootPath);
+            const result = yield SystemCommand_1.SystemCommand.run('rimraf ' + moduleDefinition.path, this.config.modulesRootPath);
             if (result.success) {
                 this.moduleRepository.remove(moduleDefinition.name);
             }

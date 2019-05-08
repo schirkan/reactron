@@ -1,7 +1,7 @@
 {
     "name": "reactron",
     "displayName": "Reactron Core",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "description": "Dynamic Electron & React Module Loader",
     "keywords": [
         "electron",
@@ -35,8 +35,8 @@
         "test": "react-scripts test --env=jsdom"
     },
     "dependencies": {
-        "electron": "3.0.13",
-        "electron-shutdown-command": "0.0.8",
+        "electron": "^3.1.9",
+        "electron-shutdown-command": "^0.0.8",
         "electron-store": "^2.0.0",
         "express": "^4.16.4",
         "moment": "^2.24.0",
@@ -44,16 +44,16 @@
         "numeral": "^2.0.6",
         "react-responsive-carousel": "^3.1.49",
         "rimraf": "^2.6.3",
-        "@schirkan/reactron-interfaces": "^2.2.0",
+        "@schirkan/reactron-interfaces": "^2.2.2",
         "systemjs": "^3.0.0",
         "uuid": "^3.3.2"
     },
     "devDependencies": {
-        "@fortawesome/fontawesome-svg-core": "^1.2.17",
-        "@fortawesome/free-brands-svg-icons": "^5.8.1",
-        "@fortawesome/free-regular-svg-icons": "^5.8.1",
-        "@fortawesome/free-solid-svg-icons": "^5.8.1",
-        "@fortawesome/react-fontawesome": "0.1.4",
+        "@fortawesome/fontawesome-svg-core": "^1.2.18",
+        "@fortawesome/free-brands-svg-icons": "^5.8.2",
+        "@fortawesome/free-regular-svg-icons": "^5.8.2",
+        "@fortawesome/free-solid-svg-icons": "^5.8.2",
+        "@fortawesome/react-fontawesome": "^0.1.4",
         "@types/classnames": "^2.2.7",
         "@types/electron-devtools-installer": "^2.2.0",
         "@types/electron-store": "^1.3.1",
@@ -62,7 +62,7 @@
         "@types/moment-timezone": "^0.5.12",
         "@types/node": "^12.0.0",
         "@types/numeral": "0.0.25",
-        "@types/react": "^16.8.16",
+        "@types/react": "^16.8.17",
         "@types/react-dom": "^16.8.4",
         "@types/react-fontawesome": "^1.6.4",
         "@types/react-router-dom": "^4.3.3",

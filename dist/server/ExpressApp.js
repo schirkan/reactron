@@ -14,23 +14,23 @@ class ExpressApp {
             this.express.use(express.urlencoded({ extended: false }));
             // parse application/json
             this.express.use(express.json());
+            // api router
             this.apiRouter = express.Router();
-            // log calls
+            this.express.use('/api', this.apiRouter);
+            // log api calls
             this.apiRouter.use((req, res, next) => {
                 console.log('Api call ' + req.method + ' ' + req.originalUrl, req.body);
                 next();
             });
-            this.express.use('/api', this.apiRouter);
-            this.express.use('/modules', express.static(this.config.root + '/modules'));
-            this.express.use('/node_modules', express.static(this.config.root + '/node_modules'));
-            this.express.use('/', express.static(this.config.root + '/build'));
+            // static files
+            const buildFolder = path.join(this.config.root, 'build');
+            const indexFile = path.join(buildFolder, 'index.html');
+            this.express.use('/modules', express.static(this.config.modulesRootPath));
+            this.express.use('/node_modules', express.static(this.config.nodeModulesPath)); // only for systemjs files
+            this.express.use('/', express.static(buildFolder));
             // for react router
             this.express.get('/*', (req, res) => {
-                res.sendFile(path.join(this.config.root + '/build/index.html'), (err) => {
-                    if (err) {
-                        res.status(500).send(err);
-                    }
-                });
+                res.sendFile(indexFile, (err) => err && res.status(500).send(err));
             });
             // start listening
             this.server = this.express.listen(this.config.backendPort, () => {

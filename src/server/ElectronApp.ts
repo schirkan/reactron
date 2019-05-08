@@ -1,6 +1,5 @@
 import { IBackendServiceConfig, IElectronApp } from '@schirkan/reactron-interfaces';
 import { app, BrowserWindow, screen } from "electron";
-import { node } from 'prop-types';
 
 export class ElectronApp implements IElectronApp {
     public mainWindow!: Electron.BrowserWindow;
@@ -29,7 +28,7 @@ export class ElectronApp implements IElectronApp {
                 }
             };
             
-            if (process.env.NODE_ENV === 'development') {
+            if (this.config.isDev) {
                 const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
                 installExtension(REACT_DEVELOPER_TOOLS)
                     .then((name: string) => console.log(`Added Extension:  ${name}`))

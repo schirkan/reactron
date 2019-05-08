@@ -17,13 +17,12 @@ class NpmModuleHandler {
     constructor(config, moduleRepository) {
         this.config = config;
         this.moduleRepository = moduleRepository;
-        this.modulesRootPath = path.join(this.config.root, 'modules');
-        this.modulesPath = path.join(this.modulesRootPath, 'node_modules');
-        this.modulesPackageFile = path.join(this.modulesRootPath, 'package.json');
+        this.modulesPath = path.join(this.config.modulesRootPath, 'node_modules');
+        this.modulesPackageFile = path.join(this.config.modulesRootPath, 'package.json');
         if (!fs.existsSync(this.modulesPackageFile)) {
             this.createModulePackageJson();
         }
-        SystemCommand_1.SystemCommand.run('npm config set loglevel warn', this.modulesRootPath);
+        SystemCommand_1.SystemCommand.run('npm config set loglevel warn', this.config.modulesRootPath);
     }
     createModulePackageJson() {
         const content = `{
@@ -106,14 +105,10 @@ class NpmModuleHandler {
     }
     updateAllModules() {
         return commandResultWrapper_1.command('updateAll', undefined, (result) => __awaiter(this, void 0, void 0, function* () {
-            const result1 = yield SystemCommand_1.SystemCommand.run('npm update', this.modulesRootPath);
+            const result1 = yield SystemCommand_1.SystemCommand.run('npm update', this.config.modulesRootPath);
             result.children.push(result1);
-            const result2 = yield SystemCommand_1.SystemCommand.run('npm audit fix', this.modulesRootPath);
+            const result2 = yield SystemCommand_1.SystemCommand.run('npm audit fix', this.config.modulesRootPath);
             result.children.push(result2);
-            const result3 = yield commandResultWrapper_1.command('refreshModules', undefined, () => __awaiter(this, void 0, void 0, function* () {
-                this.moduleRepository.getAll().forEach(m => ModuleHelper_1.refreshModule(m));
-            }));
-            result.children.push(result3);
         }));
     }
     add(repository) {
@@ -127,7 +122,7 @@ class NpmModuleHandler {
             if (existingModule) {
                 throw new Error('Module already exists: ' + existingModule.name);
             }
-            const npmInstallResult = yield SystemCommand_1.SystemCommand.run('npm i --save ' + repository, this.modulesRootPath);
+            const npmInstallResult = yield SystemCommand_1.SystemCommand.run('npm i --save ' + repository, this.config.modulesRootPath);
             result.children.push(npmInstallResult);
             let moduleDefinition;
             if (npmInstallResult.success) {
@@ -152,10 +147,10 @@ class NpmModuleHandler {
             }
             let updateResult;
             if (moduleDefinition.type === 'npm') {
-                updateResult = yield SystemCommand_1.SystemCommand.run('npm install --save ' + moduleDefinition.name + '@' + moduleDefinition.updateVersion, this.modulesRootPath);
+                updateResult = yield SystemCommand_1.SystemCommand.run('npm install --save ' + moduleDefinition.name + '@' + moduleDefinition.updateVersion, this.config.modulesRootPath);
             }
             else {
-                updateResult = yield SystemCommand_1.SystemCommand.run('npm update ' + moduleDefinition.name, this.modulesRootPath);
+                updateResult = yield SystemCommand_1.SystemCommand.run('npm update ' + moduleDefinition.name, this.config.modulesRootPath);
             }
             if (updateResult.success) {
                 moduleDefinition.hasUpdate = false;
@@ -169,7 +164,7 @@ class NpmModuleHandler {
             if (!this.canHandleModule(moduleDefinition)) {
                 throw new Error('Can not remove module');
             }
-            const result = yield SystemCommand_1.SystemCommand.run('npm un ' + moduleDefinition.name, this.modulesRootPath);
+            const result = yield SystemCommand_1.SystemCommand.run('npm un ' + moduleDefinition.name, this.config.modulesRootPath);
             if (result.success) {
                 this.moduleRepository.remove(moduleDefinition.name);
             }
@@ -195,7 +190,7 @@ class NpmModuleHandler {
                 return false;
             }
             if (moduleDefinition.type === 'npm') {
-                const npmViewVersionResult = yield SystemCommand_1.SystemCommand.run('npm view ' + moduleDefinition.name + ' version', this.modulesRootPath);
+                const npmViewVersionResult = yield SystemCommand_1.SystemCommand.run('npm view ' + moduleDefinition.name + ' version', this.config.modulesRootPath);
                 result.children.push(npmViewVersionResult);
                 if (npmViewVersionResult.success === false) {
                     return false;
@@ -213,7 +208,7 @@ class NpmModuleHandler {
                 let localHash = packageJson && packageJson._resolved && packageJson._resolved;
                 if (localHash && localHash.length > 40) {
                     localHash = localHash.substr(localHash.length - 40); // get SHA-1 from git url
-                    const gitRemoteResult = yield SystemCommand_1.SystemCommand.run('git ls-remote ' + moduleDefinition.repository, this.modulesRootPath);
+                    const gitRemoteResult = yield SystemCommand_1.SystemCommand.run('git ls-remote ' + moduleDefinition.repository, this.config.modulesRootPath);
                     result.children.push(gitRemoteResult);
                     if (gitRemoteResult.success === false) {
                         return false;

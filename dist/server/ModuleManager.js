@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
+const express = require("express");
 const commandResultWrapper_1 = require("./commandResultWrapper");
-const SystemCommand_1 = require("./SystemCommand");
 const NpmModuleHandler_1 = require("./moduleHandler/NpmModuleHandler");
 const LocalModuleHandler_1 = require("./moduleHandler/LocalModuleHandler");
 const ModuleHelper_1 = require("./ModuleHelper");
+const BackendService_1 = require("./BackendService");
 class ModuleManager {
     constructor(config, moduleRepository) {
         this.config = config;
@@ -21,12 +21,17 @@ class ModuleManager {
         this.localModuleHandler = new LocalModuleHandler_1.LocalModuleHandler(config, moduleRepository);
         this.npmModuleHandler = new NpmModuleHandler_1.NpmModuleHandler(config, moduleRepository);
         this.moduleHandler = [this.npmModuleHandler, this.localModuleHandler];
-        this.modulesRootPath = path.join(this.config.root, 'modules');
     }
     loadAllModules() {
         this.moduleHandler.forEach(handler => {
             const modules = handler.loadAllModules();
-            modules.forEach(this.moduleRepository.add);
+            for (const m of modules) {
+                this.moduleRepository.add(m);
+                const escapedModuleName = m.name.replace('/', '@');
+                const expressInstance = BackendService_1.BackendService.instance.expressApp.express;
+                expressInstance.use('/modules/' + escapedModuleName, express.static(m.path));
+            }
+            // modules.forEach(this.moduleRepository.add);
         });
     }
     getAll() {
@@ -64,22 +69,19 @@ class ModuleManager {
     }
     updateAll() {
         return commandResultWrapper_1.command('updateAll', undefined, (result) => __awaiter(this, void 0, void 0, function* () {
-            const result1 = yield SystemCommand_1.SystemCommand.run('npm update', this.modulesRootPath);
-            result.children.push(result1);
-            const result2 = yield SystemCommand_1.SystemCommand.run('npm audit fix', this.modulesRootPath);
-            result.children.push(result2);
-            const result3 = yield commandResultWrapper_1.command('refreshModules', undefined, () => __awaiter(this, void 0, void 0, function* () {
+            // update all modules with updates
+            const modulesWithUpdates = this.moduleRepository.getAll().filter(x => x.hasUpdate);
+            const updateResults = yield Promise.all(modulesWithUpdates.map(m => this.update(m)));
+            result.children.push(...updateResults);
+            // run updateAll methods
+            const updateAllHandler = this.moduleHandler.filter(x => x.updateAllModules !== undefined);
+            const updateAllResults = yield Promise.all(updateAllHandler.map(x => x.updateAllModules()));
+            result.children.push(...updateAllResults);
+            const refreshModulesResult = yield commandResultWrapper_1.command('refreshModules', undefined, () => __awaiter(this, void 0, void 0, function* () {
                 this.moduleRepository.getAll().forEach(m => ModuleHelper_1.refreshModule(m));
             }));
-            result.children.push(result3);
+            result.children.push(refreshModulesResult);
         }));
-        // const moduleRepositoryItems = BackendService.instance.moduleManager.getAll().filter(x => x.hasUpdate);
-        // const results: ICommandResult[] = [];
-        // for (const moduleRepositoryItem of moduleRepositoryItems) {
-        //   const resultUpdate = await BackendService.instance.moduleManager.update(moduleRepositoryItem);
-        //   results.push(resultUpdate);
-        // }
-        // return [];
     }
     update(moduleDefinition) {
         return commandResultWrapper_1.command('update', moduleDefinition && moduleDefinition.name, () => __awaiter(this, void 0, void 0, function* () {
