@@ -15,15 +15,21 @@ export const start = async (root: string): Promise<void> => {
   await BackendService.instance.expressApp.start();
   await BackendService.instance.electronApp.start();
 
-  // register internal module
-  const internalModule = BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
+  BackendService.instance.moduleManager.loadAllModules();
+
+  // internal module
+  let internalModule = BackendService.instance.moduleManager.get('reactron');
+  if (!internalModule) {
+    internalModule = BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
+  }
   if (internalModule) {
     internalModule.canRemove = false;
-    internalModule.serverFile = './internalModule/index'
+    internalModule.serverFile = './internalModule/index';
     BackendService.instance.moduleRepository.add(internalModule);
+  } else {
+    throw new Error('Could not load internalModule');
   }
 
-  BackendService.instance.moduleManager.loadAllModules();
   await BackendService.instance.serviceManager.startAllServices();
 
   BackendService.instance.expressApp.registerErrorHandler();

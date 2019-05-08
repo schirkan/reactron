@@ -30,7 +30,6 @@ exports.createConfig = (root) => __awaiter(this, void 0, void 0, function* () {
     const nodeModulesFolder = findNodeModules(root);
     if (nodeModulesFolder === undefined) {
         throw new Error('nodeModulesFolder is undefined');
-        ;
     }
     return {
         root,

@@ -1,9 +1,7 @@
 import { IBackendServiceConfig, ICommandResult, ICommandResultWithData, IModuleRepositoryItem } from '@schirkan/reactron-interfaces';
-import * as path from 'path';
 import * as express from 'express';
 import { command } from './commandResultWrapper';
 import { ModuleRepository } from "./ModuleRepository";
-import { SystemCommand } from "./SystemCommand";
 import { IModuleHandler } from './moduleHandler/IModuleHandler';
 import { NpmModuleHandler } from './moduleHandler/NpmModuleHandler';
 import { LocalModuleHandler } from './moduleHandler/LocalModuleHandler';
@@ -33,7 +31,6 @@ export class ModuleManager {
         const expressInstance = BackendService.instance.expressApp.express;
         expressInstance.use('/modules/' + escapedModuleName, express.static(m.path));
       }
-      // modules.forEach(this.moduleRepository.add);
     });
   }
 

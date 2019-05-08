@@ -20,14 +20,20 @@ exports.start = (root) => __awaiter(this, void 0, void 0, function* () {
     BackendService_1.BackendService.instance = new BackendService_1.BackendService(config);
     yield BackendService_1.BackendService.instance.expressApp.start();
     yield BackendService_1.BackendService.instance.electronApp.start();
-    // register internal module
-    const internalModule = BackendService_1.BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
+    BackendService_1.BackendService.instance.moduleManager.loadAllModules();
+    // internal module
+    let internalModule = BackendService_1.BackendService.instance.moduleManager.get('reactron');
+    if (!internalModule) {
+        internalModule = BackendService_1.BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
+    }
     if (internalModule) {
         internalModule.canRemove = false;
         internalModule.serverFile = './internalModule/index';
         BackendService_1.BackendService.instance.moduleRepository.add(internalModule);
     }
-    BackendService_1.BackendService.instance.moduleManager.loadAllModules();
+    else {
+        throw new Error('Could not load internalModule');
+    }
     yield BackendService_1.BackendService.instance.serviceManager.startAllServices();
     BackendService_1.BackendService.instance.expressApp.registerErrorHandler();
     electron_1.app.on('before-quit', () => BackendService_1.BackendService.instance.serviceManager.stopAllServices());

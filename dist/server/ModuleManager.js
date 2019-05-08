@@ -31,7 +31,6 @@ class ModuleManager {
                 const expressInstance = BackendService_1.BackendService.instance.expressApp.express;
                 expressInstance.use('/modules/' + escapedModuleName, express.static(m.path));
             }
-            // modules.forEach(this.moduleRepository.add);
         });
     }
     getAll() {
