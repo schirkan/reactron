@@ -25,11 +25,13 @@ exports.start = (root) => __awaiter(this, void 0, void 0, function* () {
     let internalModule = BackendService_1.BackendService.instance.moduleManager.get('reactron');
     if (!internalModule) {
         internalModule = BackendService_1.BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
+        if (internalModule) {
+            BackendService_1.BackendService.instance.moduleRepository.add(internalModule);
+        }
     }
     if (internalModule) {
         internalModule.canRemove = false;
         internalModule.serverFile = './internalModule/index';
-        BackendService_1.BackendService.instance.moduleRepository.add(internalModule);
     }
     else {
         throw new Error('Could not load internalModule');
