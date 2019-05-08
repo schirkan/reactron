@@ -5,7 +5,7 @@ import { ModuleRepository } from "./ModuleRepository";
 import { IModuleHandler } from './moduleHandler/IModuleHandler';
 import { NpmModuleHandler } from './moduleHandler/NpmModuleHandler';
 import { LocalModuleHandler } from './moduleHandler/LocalModuleHandler';
-import { refreshModule } from './ModuleHelper';
+import { refreshModule } from './moduleHandler/ModuleHelper';
 import { BackendService } from './BackendService';
 
 export class ModuleManager {
@@ -19,7 +19,7 @@ export class ModuleManager {
   ) {
     this.localModuleHandler = new LocalModuleHandler(config, moduleRepository);
     this.npmModuleHandler = new NpmModuleHandler(config, moduleRepository);
-    this.moduleHandler = [this.npmModuleHandler, this.localModuleHandler];    
+    this.moduleHandler = [this.npmModuleHandler, this.localModuleHandler];
   }
 
   public loadAllModules(): void {
@@ -66,7 +66,7 @@ export class ModuleManager {
   }
 
   public updateAll(): Promise<ICommandResult> {
-    return command('updateAll', undefined, async (result) => {
+    return command('ModuleManager.updateAll', undefined, async (result) => {
       // update all modules with updates
       const modulesWithUpdates = this.moduleRepository.getAll().filter(x => x.hasUpdate);
       const updateResults = await Promise.all(modulesWithUpdates.map(m => this.update(m)));
@@ -85,7 +85,7 @@ export class ModuleManager {
   }
 
   public update(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
-    return command('update', moduleDefinition && moduleDefinition.name, async () => {
+    return command('ModuleManager.update', moduleDefinition && moduleDefinition.name, async () => {
       if (!moduleDefinition) {
         throw new Error('Can not update module');
       }
@@ -100,7 +100,7 @@ export class ModuleManager {
 
 
   public remove(moduleDefinition: IModuleRepositoryItem): Promise<ICommandResult> {
-    return command('remove', moduleDefinition && moduleDefinition.name, async () => {
+    return command('ModuleManager.remove', moduleDefinition && moduleDefinition.name, async () => {
       if (!moduleDefinition || !moduleDefinition.canRemove) {
         throw new Error('Can not remove module');
       }
@@ -114,7 +114,7 @@ export class ModuleManager {
   }
 
   public checkUpdates(): Promise<ICommandResultWithData<string[]>> {
-    return command<string[]>('checkUpdates', undefined, async (result) => {
+    return command<string[]>('ModuleManager.checkUpdates', undefined, async (result) => {
       const modulesWithUpdate: string[] = [];
       const modules = this.moduleRepository.getAll();
       for (const moduleDefinition of modules) {

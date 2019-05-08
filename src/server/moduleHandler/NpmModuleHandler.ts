@@ -5,9 +5,9 @@ import { command } from '../commandResultWrapper';
 import { ModuleRepository } from "../ModuleRepository";
 import { SystemCommand } from "../SystemCommand";
 import { IModuleHandler } from './IModuleHandler';
-import { refreshModule, loadPackageJson, cleanRepositoryUrl } from '../ModuleHelper';
+import { refreshModule, loadPackageJson, cleanRepositoryUrl, loadModule } from './ModuleHelper';
 
-export class NpmModuleHandler implements IModuleHandler {  
+export class NpmModuleHandler implements IModuleHandler {
   private modulesPath: string;
   private modulesPackageFile: string;
 
@@ -51,6 +51,7 @@ export class NpmModuleHandler implements IModuleHandler {
         }
       }
     }
+    console.log('NpmModuleHandler: ' + result.length + ' modules loaded');
     return result;
   }
 
@@ -60,58 +61,15 @@ export class NpmModuleHandler implements IModuleHandler {
   }
 
   public loadModule(folderName: string): IModuleRepositoryItem | undefined {
-    const modulePath =  path.join(this.modulesPath, folderName);
-    const packageFile = path.join(modulePath, 'package.json');
-    if (!fs.existsSync(packageFile)) {
-      return;
-    }
-    const p = loadPackageJson(packageFile);
+    const modulePath = path.join(this.modulesPath, folderName);
+    const newModule = loadModule(modulePath);
+    const moduleDefinition = newModule && newModule.definition;
 
-    const moduleDefinition = {
-      name: p.name,
-      displayName: p.displayName || p.name,
-      path: path.join(this.modulesPath, folderName),
-      description: p.description,
-      version: p.version,
-      author: p.author,
-      repository: p.repository && p.repository.url || p.repository,
-      canRemove: true
-    } as IModuleRepositoryItem;
-    const escapedModuleName = moduleDefinition.name.replace('/', '@');
-
-    if (p._requested && p._requested.type === 'git') {
-      moduleDefinition.type = 'npm+git';
-    }
-    else if (p._requested && p._requested.name) {
-      moduleDefinition.type = 'npm';
-    }
-    // TODO other sources
-
-    // clean repository url
-    moduleDefinition.repository = cleanRepositoryUrl(moduleDefinition.repository);
-
-    if (p.browser) {
-      moduleDefinition.browserFile = path.join('modules', escapedModuleName, p.browser);
-      if (!fs.existsSync(path.join(modulePath, p.browser))) {
-        console.log('Missing browserFile for ' + moduleDefinition.name);
-        moduleDefinition.browserFile = undefined;
-      }
+    if (moduleDefinition) {
+      const requestedType = newModule && newModule.package && newModule.package._requested && newModule.package._requested.type;
+      moduleDefinition.type = requestedType === 'git' ? 'npm+git' : 'npm';
     }
 
-    if (p.main) {
-      moduleDefinition.serverFile = path.join(this.modulesPath, folderName, p.main);
-      if (!fs.existsSync(moduleDefinition.serverFile)) {
-        console.log('Missing serverFile for ' + moduleDefinition.name);
-        moduleDefinition.serverFile = undefined;
-      }
-    }
-
-    if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
-      console.log('No module in folder ' + folderName);
-      return;
-    }
-
-    console.log('Module loaded: ' + moduleDefinition.name);
     return moduleDefinition;
   }
 

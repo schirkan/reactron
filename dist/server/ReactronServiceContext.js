@@ -36,7 +36,6 @@ class ReactronServiceContext {
     get services() {
         return ReactronServicesBackend_1.ReactronServicesBackend.instance;
     }
-    ;
     getService(serviceName, moduleName) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield BackendService_1.BackendService.instance.serviceManager.getAsync(moduleName || this.moduleName, serviceName);
@@ -59,7 +58,7 @@ class InternalModuleContext {
         this.moduleStorage = new Store({ name: 'module.' + moduleName });
         this.moduleApiRouter = express.Router();
         const escapedModuleName = moduleName.replace('/', '@');
-        BackendService_1.BackendService.instance.expressApp.apiRouter.use(escapedModuleName, this.moduleApiRouter);
+        BackendService_1.BackendService.instance.expressApp.apiRouter.use('/' + escapedModuleName, this.moduleApiRouter);
     }
     static getModuleContext(moduleName) {
         let context = InternalModuleContext.moduleContexts.find(x => x.moduleName === moduleName);

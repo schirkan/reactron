@@ -34,7 +34,7 @@ export class ReactronServiceContext implements IReactronServiceContext {
 
   public get services(): IReactronServices {
     return ReactronServicesBackend.instance;
-  };
+  }
 
   public async getService<TService = any>(serviceName: string, moduleName?: string): Promise<TService | undefined> {
     return await BackendService.instance.serviceManager.getAsync(moduleName || this.moduleName, serviceName) as unknown as TService | undefined;
@@ -60,7 +60,7 @@ class InternalModuleContext {
     this.moduleStorage = new Store({ name: 'module.' + moduleName });
     this.moduleApiRouter = express.Router();
     const escapedModuleName = moduleName.replace('/', '@');
-    BackendService.instance.expressApp.apiRouter.use(escapedModuleName, this.moduleApiRouter);
+    BackendService.instance.expressApp.apiRouter.use('/' + escapedModuleName, this.moduleApiRouter);
   }
 
   private static moduleContexts: InternalModuleContext[] = [];

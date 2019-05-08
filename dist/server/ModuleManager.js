@@ -12,7 +12,7 @@ const express = require("express");
 const commandResultWrapper_1 = require("./commandResultWrapper");
 const NpmModuleHandler_1 = require("./moduleHandler/NpmModuleHandler");
 const LocalModuleHandler_1 = require("./moduleHandler/LocalModuleHandler");
-const ModuleHelper_1 = require("./ModuleHelper");
+const ModuleHelper_1 = require("./moduleHandler/ModuleHelper");
 const BackendService_1 = require("./BackendService");
 class ModuleManager {
     constructor(config, moduleRepository) {
@@ -67,7 +67,7 @@ class ModuleManager {
         });
     }
     updateAll() {
-        return commandResultWrapper_1.command('updateAll', undefined, (result) => __awaiter(this, void 0, void 0, function* () {
+        return commandResultWrapper_1.command('ModuleManager.updateAll', undefined, (result) => __awaiter(this, void 0, void 0, function* () {
             // update all modules with updates
             const modulesWithUpdates = this.moduleRepository.getAll().filter(x => x.hasUpdate);
             const updateResults = yield Promise.all(modulesWithUpdates.map(m => this.update(m)));
@@ -83,7 +83,7 @@ class ModuleManager {
         }));
     }
     update(moduleDefinition) {
-        return commandResultWrapper_1.command('update', moduleDefinition && moduleDefinition.name, () => __awaiter(this, void 0, void 0, function* () {
+        return commandResultWrapper_1.command('ModuleManager.update', moduleDefinition && moduleDefinition.name, () => __awaiter(this, void 0, void 0, function* () {
             if (!moduleDefinition) {
                 throw new Error('Can not update module');
             }
@@ -95,7 +95,7 @@ class ModuleManager {
         }));
     }
     remove(moduleDefinition) {
-        return commandResultWrapper_1.command('remove', moduleDefinition && moduleDefinition.name, () => __awaiter(this, void 0, void 0, function* () {
+        return commandResultWrapper_1.command('ModuleManager.remove', moduleDefinition && moduleDefinition.name, () => __awaiter(this, void 0, void 0, function* () {
             if (!moduleDefinition || !moduleDefinition.canRemove) {
                 throw new Error('Can not remove module');
             }
@@ -107,7 +107,7 @@ class ModuleManager {
         }));
     }
     checkUpdates() {
-        return commandResultWrapper_1.command('checkUpdates', undefined, (result) => __awaiter(this, void 0, void 0, function* () {
+        return commandResultWrapper_1.command('ModuleManager.checkUpdates', undefined, (result) => __awaiter(this, void 0, void 0, function* () {
             const modulesWithUpdate = [];
             const modules = this.moduleRepository.getAll();
             for (const moduleDefinition of modules) {

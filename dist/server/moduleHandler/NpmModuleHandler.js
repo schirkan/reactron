@@ -12,7 +12,7 @@ const fs = require("fs");
 const path = require("path");
 const commandResultWrapper_1 = require("../commandResultWrapper");
 const SystemCommand_1 = require("../SystemCommand");
-const ModuleHelper_1 = require("../ModuleHelper");
+const ModuleHelper_1 = require("./ModuleHelper");
 class NpmModuleHandler {
     constructor(config, moduleRepository) {
         this.config = config;
@@ -51,6 +51,7 @@ class NpmModuleHandler {
                 }
             }
         }
+        console.log('NpmModuleHandler: ' + result.length + ' modules loaded');
         return result;
     }
     loadModuleNames() {
@@ -59,50 +60,12 @@ class NpmModuleHandler {
     }
     loadModule(folderName) {
         const modulePath = path.join(this.modulesPath, folderName);
-        const packageFile = path.join(modulePath, 'package.json');
-        if (!fs.existsSync(packageFile)) {
-            return;
+        const newModule = ModuleHelper_1.loadModule(modulePath);
+        const moduleDefinition = newModule && newModule.definition;
+        if (moduleDefinition) {
+            const requestedType = newModule && newModule.package && newModule.package._requested && newModule.package._requested.type;
+            moduleDefinition.type = requestedType === 'git' ? 'npm+git' : 'npm';
         }
-        const p = ModuleHelper_1.loadPackageJson(packageFile);
-        const moduleDefinition = {
-            name: p.name,
-            displayName: p.displayName || p.name,
-            path: path.join(this.modulesPath, folderName),
-            description: p.description,
-            version: p.version,
-            author: p.author,
-            repository: p.repository && p.repository.url || p.repository,
-            canRemove: true
-        };
-        const escapedModuleName = moduleDefinition.name.replace('/', '@');
-        if (p._requested && p._requested.type === 'git') {
-            moduleDefinition.type = 'npm+git';
-        }
-        else if (p._requested && p._requested.name) {
-            moduleDefinition.type = 'npm';
-        }
-        // TODO other sources
-        // clean repository url
-        moduleDefinition.repository = ModuleHelper_1.cleanRepositoryUrl(moduleDefinition.repository);
-        if (p.browser) {
-            moduleDefinition.browserFile = path.join('modules', escapedModuleName, p.browser);
-            if (!fs.existsSync(path.join(modulePath, p.browser))) {
-                console.log('Missing browserFile for ' + moduleDefinition.name);
-                moduleDefinition.browserFile = undefined;
-            }
-        }
-        if (p.main) {
-            moduleDefinition.serverFile = path.join(this.modulesPath, folderName, p.main);
-            if (!fs.existsSync(moduleDefinition.serverFile)) {
-                console.log('Missing serverFile for ' + moduleDefinition.name);
-                moduleDefinition.serverFile = undefined;
-            }
-        }
-        if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
-            console.log('No module in folder ' + folderName);
-            return;
-        }
-        console.log('Module loaded: ' + moduleDefinition.name);
         return moduleDefinition;
     }
     updateAllModules() {

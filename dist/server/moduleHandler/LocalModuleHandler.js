@@ -12,7 +12,7 @@ const fs = require("fs");
 const path = require("path");
 const commandResultWrapper_1 = require("../commandResultWrapper");
 const SystemCommand_1 = require("../SystemCommand");
-const ModuleHelper_1 = require("../ModuleHelper");
+const ModuleHelper_1 = require("./ModuleHelper");
 class LocalModuleHandler {
     constructor(config, moduleRepository) {
         this.config = config;
@@ -31,7 +31,7 @@ class LocalModuleHandler {
                 }
             }
         }
-        console.log(result.length + ' modules loaded');
+        console.log('LocalModuleHandler: ' + result.length + ' modules loaded');
         return result;
     }
     loadModuleNames() {
@@ -40,47 +40,12 @@ class LocalModuleHandler {
     }
     loadModule(folderName) {
         const modulePath = path.join(this.config.modulesRootPath, folderName);
-        const packageFile = path.join(modulePath, 'package.json');
-        if (!fs.existsSync(packageFile)) {
-            return;
+        const newModule = ModuleHelper_1.loadModule(modulePath);
+        const moduleDefinition = newModule && newModule.definition;
+        if (moduleDefinition) {
+            const gitFolder = path.join(modulePath, '.git');
+            moduleDefinition.type = fs.existsSync(gitFolder) ? 'git' : 'local';
         }
-        const p = ModuleHelper_1.loadPackageJson(packageFile);
-        const moduleDefinition = {
-            name: p.name,
-            displayName: p.displayName || p.name,
-            path: modulePath,
-            description: p.description,
-            version: p.version,
-            author: p.author,
-            repository: p.repository && p.repository.url || p.repository,
-            canRemove: true,
-            type: 'local'
-        };
-        const escapedModuleName = moduleDefinition.name.replace('/', '@');
-        if (moduleDefinition.repository && moduleDefinition.repository.includes('github')) { // TODO
-            moduleDefinition.type = 'git';
-        }
-        // clean repository url
-        moduleDefinition.repository = ModuleHelper_1.cleanRepositoryUrl(moduleDefinition.repository);
-        if (p.browser) {
-            moduleDefinition.browserFile = path.join('modules', escapedModuleName, p.browser);
-            if (!fs.existsSync(path.join(modulePath, p.browser))) {
-                console.log('Missing browserFile for ' + moduleDefinition.name);
-                moduleDefinition.browserFile = undefined;
-            }
-        }
-        if (p.main) {
-            moduleDefinition.serverFile = path.join(modulePath, p.main);
-            if (!fs.existsSync(moduleDefinition.serverFile)) {
-                console.log('Missing serverFile for ' + moduleDefinition.name);
-                moduleDefinition.serverFile = undefined;
-            }
-        }
-        if (!moduleDefinition.browserFile && !moduleDefinition.serverFile) {
-            console.log('No module in folder ' + folderName);
-            return;
-        }
-        console.log('Module loaded: ' + moduleDefinition.name);
         return moduleDefinition;
     }
     ;
