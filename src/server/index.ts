@@ -21,11 +21,14 @@ export const start = async (root: string): Promise<void> => {
   let internalModule = BackendService.instance.moduleManager.get('reactron');
   if (!internalModule) {
     internalModule = BackendService.instance.moduleManager.localModuleHandler.loadModule('../');
+    if(internalModule){
+      BackendService.instance.moduleRepository.add(internalModule);
+    }
   }
-  if (internalModule) {
+  
+  if (internalModule) {    
     internalModule.canRemove = false;
     internalModule.serverFile = './internalModule/index';
-    BackendService.instance.moduleRepository.add(internalModule);
   } else {
     throw new Error('Could not load internalModule');
   }
