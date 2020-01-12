@@ -39,6 +39,6 @@ class ReactronServicesBackend {
         return this._pages;
     }
 }
-ReactronServicesBackend.instance = new ReactronServicesBackend();
 exports.ReactronServicesBackend = ReactronServicesBackend;
+ReactronServicesBackend.instance = new ReactronServicesBackend();
 //# sourceMappingURL=ReactronServicesBackend.js.map

@@ -16,7 +16,7 @@ import { services } from './ReactronServicesFrontend';
 
 // tslint:disable:no-string-literal
 
-const SystemJS = (window as any).System as SystemJSLoader.System;
+const SystemJS = (window as any).System as typeof System;
 
 const externalModules = {};
 

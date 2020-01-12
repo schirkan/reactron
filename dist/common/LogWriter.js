@@ -23,7 +23,7 @@ class LogWriter {
     }
     static prepareData(data) {
         if (data instanceof Error) {
-            return Object.assign({}, data, { 
+            return Object.assign(Object.assign({}, data), { 
                 // Explicitly pull Error's non-enumerable properties
                 name: data.name, message: data.message, stack: data.stack });
         }
