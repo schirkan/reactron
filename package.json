@@ -35,7 +35,7 @@
         "test": "react-scripts test --env=jsdom"
     },
     "dependencies": {
-        "electron": "^3.1.9",
+        "electron": "^11.5.0",
         "electron-shutdown-command": "^0.0.8",
         "electron-store": "^5.1.0",
         "express": "^4.17.1",
